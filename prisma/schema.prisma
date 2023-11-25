@@ -11,12 +11,12 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  email      String    @unique
-  password   String
-  name       String
-  role       String    @default("user")
-  points     Int       @default(0)
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
+  name     String
+  role     Role   @default(USER)
+  points   Int    @default(0)
 
   enrollments Enrollments[]
 }
@@ -29,17 +29,28 @@ model Activity {
   location    String
   capacity    Int
   speakers    String
-  type        String
+  type        Type
 
   enrollments Enrollments[]
 }
 
 model Enrollments {
-  id Int @id @default(autoincrement())
-  user User @relation(fields: [userId], references: [id])
-  userId Int
-  activity Activity @relation(fields: [activityId], references: [id])
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  activity   Activity @relation(fields: [activityId], references: [id])
   activityId Int
 
   @@unique([userId, activityId])
+}
+
+enum Type {
+  WORKSHOP
+  TALK
+  OTHER
+}
+
+enum Role {
+  USER
+  ADMIN
 }
