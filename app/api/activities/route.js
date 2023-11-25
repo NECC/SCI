@@ -1,7 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-// Get all Activities from the database
+/**
+ * Get all Activities from the database
+ * @method GET
+ * @returns [{ id, title, description, speakers, location, capacity, date, type, enrollments }]
+ */
 export async function GET() {
   const prisma = new PrismaClient();
   try {
@@ -30,7 +34,14 @@ export async function GET() {
   }
 }
 
-// Create a new Activity
+/**
+ * Creates a new Activity
+ * @method POST
+ * @param body title, description, speakers, location, capacity, date, type
+ *
+ * @example body: { "title": "Palestra de React", "description": "Palestra sobre React", "speakers": "Pedro Camargo", "location": "Sala 1", "capacity": 50, "date": "2021-10-10T14:00:00.000Z", "type": "Palestra" }
+ * 
+ */
 export async function POST(request) {
   const prisma = new PrismaClient();
   const data = await request.json();

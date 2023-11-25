@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-// Delete a User from the database
+// Delete an User from the database
 export async function DELETE(req, { params: { uuid }}) {
   try {
     const user = await prisma.user.delete({
