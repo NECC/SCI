@@ -1,26 +1,28 @@
-### Check if postgresql is running
+# Project Setup Instructions
+
+## Check if postgresql is running
 
 ```bash
 systemctl status postgresql
 ```
 
-### Setup postgres for prisma
+## Setup postgres for prisma
 
 ```bash
 sudo -iu postgres
 psql
-CREATE ROLE sec LOGIN;
+CREATE ROLE sci LOGIN;
 \du
-CREATE DATABASE sec WITH OWNER = your_role_name;
-GRANT ALL PRIVILEGES ON DATABASE sec TO sec;
-ALTER ROLE sec WITH SUPERUSER CREATEDB;
+CREATE DATABASE sci WITH OWNER = sci;
+GRANT ALL PRIVILEGES ON DATABASE sci TO sci;
+ALTER ROLE sci WITH SUPERUSER CREATEDB;
 ```
 
-### After changing your .env file, type the following commands in your terminal
+## After changing your .env file, type the following commands in your terminal
 
 ```bash
-npx prisma migrate dev --name init
 npx prisma generate
+npx prisma db push
 npx prisma studio
 ```
 
