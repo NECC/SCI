@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 
 /**
  * Get all Users from the database
@@ -31,18 +32,46 @@ export async function GET() {
  * @param body name, email, password
  *
  * @example body: { "name": "Pedro Camargo", "email": "example@gmail.com", "password": "123456" }
- * 
+ *
  */
 export async function POST(req) {
-  const prisma = new PrismaClient();
-  const data = await req.json();
-
   try {
+    const prisma = new PrismaClient();
+    const userData = await req.json();
+    
+    if (!userData.name || !userData.email || !userData.password) {
+      return new NextResponse(
+        JSON.stringify({
+          response: "error",
+          error: "Missing name, email or password",
+        })
+      );
+    }
+
+    // check for duplicate emails
+    const emailExists = await prisma.user.findUnique({
+      where: {
+        email: userData.email,
+      },
+    });
+
+    if (emailExists) {
+      return new NextResponse(
+        JSON.stringify({
+          response: "error",
+          error: "Email already exists",
+        })
+      );
+    }
+
+    const hashPassword = await bcrypt.hash(userData.password, 10);
+    userData.password = hashPassword;
+
     const user = await prisma.user.create({
       data: {
-        name: data.name,
-        email: data.email,
-        password: data.password,
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
       },
       select: {
         id: true,
@@ -53,8 +82,10 @@ export async function POST(req) {
       },
     });
 
+    console.log("User Created Successfully: ", user);
+
     return new NextResponse(
-      JSON.stringify({ response: "success", user: user })
+      JSON.stringify({ response: "User created Successfully.", user: user })
     );
   } catch (error) {
     console.log(error);
