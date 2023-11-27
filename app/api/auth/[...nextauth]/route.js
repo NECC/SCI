@@ -61,7 +61,7 @@ export const authOptions = {
 };
 
 const handler = async (req, context) => {
-  console.log("THIS IS AN HANDLER\n", req.url);
+  // console.log("THIS IS AN HANDLER\n", req.url);
 
   if (req.method == "HEAD") {
     return new Response(null, { status: 200 });

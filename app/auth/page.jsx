@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
+// TODO: Use Axios for http requests instead of fetch()
+
 export default function Auth() {
   const router = useRouter();
   const [formData, setFormData] = useState({});
