@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Montserrat:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Montserrat:wght@600&family=Poppins:wght@500&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,15 +7,15 @@
 
 
 .black_btn {
-  @apply rounded-full border border-black bg-black py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-sm flex items-center justify-center ;
+  @apply rounded-2xl border border-black bg-black py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-base  flex items-center justify-center font-medium  ;
 }
 
 .outline_btn {
-  @apply rounded-full border border-black bg-transparent py-1.5 px-5 text-black transition-all hover:bg-black hover:text-white text-center text-sm flex items-center justify-center ;
+  @apply rounded-2xl border border-black bg-transparent py-1.5 px-5 text-black transition-all hover:bg-black hover:text-white text-center text-base flex items-center justify-center font-medium  ;
 }
 
 .dropdown {
-  @apply absolute right-0 top-full w-full p-5 rounded-lg min-w-[210px] flex flex-col gap-2 justify-start items-start shadow-2xl bg-white ;
+  @apply absolute right-0 top-full w-full p-5  min-w-[210px] flex flex-col gap-2 justify-start items-start shadow-2xl bg-white;
 }
 
 .dropdown_link {
