@@ -16,15 +16,16 @@ const Navbar = (props) => {
 
 
 
+
     return (
-        <div className="w-full bg-blue-200">
-            <nav className='flex justify-between w-4/5 m-auto p-4 relative'>
-                <Link href='/' className='flex items-center gap-2 flex-center'>
+        <div className="w-full bg-gradient-to-r from-custom-blue-1 from-25% via via-30% to-emerald-500 to-90% relative">
+            <nav className='flex justify-between w-11/12 m-auto p-4 sm:w-4/5 '>
+                <Link href='/' className='flex items-end gap-2 '> 
                     <Image
-                        src='/vercel.svg'
+                        src='/logo_4.png'
                         alt='logo'
-                        width={110}
-                        height={110}
+                        width={70}
+                        height={70}
                         className='object-contain'
                     />
 
@@ -34,17 +35,17 @@ const Navbar = (props) => {
 
                 <div className='sm:flex hidden gap-3 md:gap-5'>
                     <div className='flex gap-3 md:gap-5'>
-                        <Link href='/' className='outline_btn'>
+                        <Link href='/' className='outline_btn '>
                             Home
                         </Link>
 
-                        <Link href='/schedule' className='outline_btn'>
+                        <Link href='/schedule' className='outline_btn font-poppin'>
                             schedule
                         </Link>
 
                     </div>
 
-                    {isUserLoggedIn ? (
+                    {isUserLoggedIn  ? (
                         <div className='flex gap-3 md:gap-5'>
                             <button type='button' className='black_btn'>
                                 Sign Out
@@ -52,7 +53,7 @@ const Navbar = (props) => {
 
                             <Link href='/profile' className="flex items-center" >
                                 <Image
-                                    src="/profile.avif"
+                                    src="/user.svg"
                                     width={37}
                                     height={37}
                                     className='rounded-full'
@@ -79,12 +80,12 @@ const Navbar = (props) => {
 
                 <div className='sm:hidden flex'>
 
-                    <div className="text-3xl" onClick={() => setToggleDropdown(!toggleDropdown)}>
+                    <div className="text-3xl flex items-center " onClick={() => setToggleDropdown(!toggleDropdown)}>
                         {toggleDropdown ? <FiX /> : <IoMenu />}
                     </div>
 
-                    {toggleDropdown && (
-                        <div className='dropdown'>
+                    {toggleDropdown &&   (
+                    <div className='dropdown'>
                             <Link href='/' className='dropdown_link' onClick={() => setToggleDropdown(false)}>
                                 Home
                             </Link>
