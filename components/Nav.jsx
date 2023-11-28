@@ -89,50 +89,47 @@ const Navbar = (props) => {
           >
             {toggleDropdown ? <FiX /> : <IoMenu />}
           </div>
+          <div className={`dropdown duration-1000   ${toggleDropdown ? 'transform-none ' : '-translate-x-full '}`}>
+            <Link
+              href="/"
+              className="dropdown_link"
+              onClick={() => setToggleDropdown(false)}
+            >
+              Home
+            </Link>
 
-          {toggleDropdown && (
-            <div className="dropdown">
-              <Link
-                href="/"
-                className="dropdown_link"
-                onClick={() => setToggleDropdown(false)}
-              >
-                Home
-              </Link>
+            <Link
+              href="/schedule"
+              className="dropdown_link"
+              onClick={() => setToggleDropdown(false)}
+            >
+              Schedule
+            </Link>
 
-              <Link
-                href="/schedule"
-                className="dropdown_link"
-                onClick={() => setToggleDropdown(false)}
-              >
-                Schedule
-              </Link>
+            {user ? (
+              <>
+                <Link
+                  href="/profile"
+                  className="dropdown_link"
+                  onClick={() => setToggleDropdown(false)}
+                >
+                  Profile
+                </Link>
 
-              {user ? (
-                <>
-                  <Link
-                    href="/profile"
-                    className="dropdown_link"
-                    onClick={() => setToggleDropdown(false)}
-                  >
-                    Profile
-                  </Link>
-
-                  <button
-                    type="button"
-                    onClick={() => setToggleDropdown(false)}
-                    className="black_btn w-full mt-5"
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <button type="button" className="black_btn w-full mt-5">
-                  Sign in
+                <button
+                  type="button"
+                  onClick={() => setToggleDropdown(false)}
+                  className="black_btn w-full mt-5"
+                >
+                  Sign Out
                 </button>
-              )}
-            </div>
-          )}
+              </>
+            ) : (
+              <button type="button" className="black_btn w-full mt-5">
+                Sign in
+              </button>
+            )}
+          </div>
         </div>
       </nav>
     </div>
