@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { getServerSession } from "next-auth"
 import bcrypt from "bcrypt";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 /**
  * Get all Users from the database
@@ -35,11 +37,23 @@ export async function GET() {
  *
  */
 export async function POST(req) {
+  const session = await getServerSession(authOptions);
+  console.log("SESSION FROM POST: ",session);
+
+  if (session?.user.role != "ADMIN") {
+    return new NextResponse(
+      JSON.stringify({
+        response: "error",
+        error: "You don't have permission to create a new user",
+      })
+    );
+  }
+
   try {
     const prisma = new PrismaClient();
     const userData = await req.json();
     
-    if (!userData.name || !userData.email || !userData.password) {
+    if (!userData.name || !userData.email || !userData.password || !userData.role) {
       return new NextResponse(
         JSON.stringify({
           response: "error",
@@ -72,6 +86,7 @@ export async function POST(req) {
         name: userData.name,
         email: userData.email,
         password: userData.password,
+        role: userData.role,
       },
       select: {
         id: true,
