@@ -26,7 +26,7 @@ const Navbar = (props) => {
   }, [session]);
 
   return (
-    <div className="w-full bg-gradient-to-r from-custom-blue-1 from-25% via via-30% to-emerald-500 to-90% relative">
+    <div className="w-full bg-custom-blue-1  relative">
       <nav className="flex justify-between w-11/12 m-auto p-4 sm:w-4/5 ">
         <Link href="/" className="flex items-end gap-2 ">
           <Image
@@ -89,50 +89,47 @@ const Navbar = (props) => {
           >
             {toggleDropdown ? <FiX /> : <IoMenu />}
           </div>
+          <div className={`dropdown duration-1000 h-screen   ${toggleDropdown ? 'transform-none ' : '-translate-x-full '}`}>
+            <Link
+              href="/"
+              className="dropdown_link"
+              onClick={() => setToggleDropdown(false)}
+            >
+              Home
+            </Link>
 
-          {toggleDropdown && (
-            <div className="dropdown">
-              <Link
-                href="/"
-                className="dropdown_link"
-                onClick={() => setToggleDropdown(false)}
-              >
-                Home
-              </Link>
+            <Link
+              href="/schedule"
+              className="dropdown_link"
+              onClick={() => setToggleDropdown(false)}
+            >
+              Schedule
+            </Link>
 
-              <Link
-                href="/schedule"
-                className="dropdown_link"
-                onClick={() => setToggleDropdown(false)}
-              >
-                Schedule
-              </Link>
+            {user ? (
+              <>
+                <Link
+                  href="/profile"
+                  className="dropdown_link"
+                  onClick={() => setToggleDropdown(false)}
+                >
+                  Profile
+                </Link>
 
-              {user ? (
-                <>
-                  <Link
-                    href="/profile"
-                    className="dropdown_link"
-                    onClick={() => setToggleDropdown(false)}
-                  >
-                    Profile
-                  </Link>
-
-                  <button
-                    type="button"
-                    onClick={() => setToggleDropdown(false)}
-                    className="black_btn w-full mt-5"
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <button type="button" className="black_btn w-full mt-5">
-                  Sign in
+                <button
+                  type="button"
+                  onClick={() => setToggleDropdown(false)}
+                  className="black_btn w-full mt-5"
+                >
+                  Sign Out
                 </button>
-              )}
-            </div>
-          )}
+              </>
+            ) : (
+              <button type="button" className="black_btn w-full mt-5">
+                Sign in
+              </button>
+            )}
+          </div>
         </div>
       </nav>
     </div>
