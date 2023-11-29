@@ -26,7 +26,7 @@ const Navbar = (props) => {
   }, [session]);
 
   return (
-    <div className="w-full bg-gradient-to-r from-custom-blue-1 from-25% via via-30% to-emerald-500 to-90% relative">
+    <div className="w-full bg-custom-blue-1  relative">
       <nav className="flex justify-between w-11/12 m-auto p-4 sm:w-4/5 ">
         <Link href="/" className="flex items-end gap-2 ">
           <Image
@@ -89,7 +89,7 @@ const Navbar = (props) => {
           >
             {toggleDropdown ? <FiX /> : <IoMenu />}
           </div>
-          <div className={`dropdown duration-1000   ${toggleDropdown ? 'transform-none ' : '-translate-x-full '}`}>
+          <div className={`dropdown duration-1000 h-screen   ${toggleDropdown ? 'transform-none ' : '-translate-x-full '}`}>
             <Link
               href="/"
               className="dropdown_link"
