@@ -3,6 +3,16 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Divider,
+  Input,
+  SelectItem,
+  Select,
+} from "@nextui-org/react";
 
 export default function CreateUser() {
   const router = useRouter();
@@ -10,6 +20,7 @@ export default function CreateUser() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
+    console.log(formData);
     const value = e.target.value;
     const name = e.target.name;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
@@ -30,56 +41,70 @@ export default function CreateUser() {
       .catch((err) => {
         setErrorMessage(err.message);
       });
-
   };
+
 
   return (
     <>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center justify-center gap-1"
+        className="flex flex-col items-center justify-center gap-1 mt-1"
       >
-        <h1> Create New User </h1>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          required={true}
-          value={formData.name}
-          onChange={handleChange}
-          className="mx-2 rounded border p-2"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          required={true}
-          value={formData.email}
-          className="mx-2 rounded border p-2"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required={true}
-          value={formData.password}
-          className="mx-2 rounded border p-2"
-        />
-        <select
-          name="role"
-          onChange={handleChange}
-          required={true}
-          value={formData.role}
-          className="mx-2 rounded border p-2"
-        >
-          <option value="USER">USER</option>
-          <option value="ADMIN">ADMIN</option>
-        </select>
-        <button type="submit" className="bg-blue-300 hover:bg-blue-100">
-          Create User
-        </button>
+        <Card className="w-[250px]">
+          <CardHeader className="flex justify-center bg-black text-white">
+            Create New User
+          </CardHeader>
+          <Divider />
+          <CardBody className="flex flex-col items-center justify-center gap-1">
+            <Input
+              key="primary"
+              color="default"
+              type="text"
+              label="Name"
+              name="name"
+              className="max-w-[220px]"
+              required={true}
+              value={formData.name}
+              onChange={handleChange}
+            />
+            <Input
+              key="email"
+              color="default"
+              type="email"
+              label="Email"
+              name="email"
+              className="max-w-[220px]"
+              required={true}
+              value={formData.email}
+              onChange={handleChange}
+            />
+            <Input
+              key="password"
+              color="default"
+              type="password"
+              label="Password"
+              name="password"
+              className="max-w-[220px]"
+              required={true}
+              value={formData.password}
+              onChange={handleChange}
+            />
+            <select
+              name="role"
+              onChange={handleChange}
+              required={true}
+              value={formData.role}
+              className="mx-2 rounded border p-2"
+            >
+              <option value="USER">USER</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
+          </CardBody>
+          <button type="submit" className="bg-black hover:bg-slate-800 text-white">
+            Create User
+          </button>
+        </Card>
+
         {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       </form>
     </>
