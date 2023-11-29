@@ -1,23 +1,26 @@
-import './globals.css'
-
-import Navbar from '@/components/Nav'
 import "./globals.css";
-import AuthProvider from "@/components/AuthProviders";
+
+import Navbar from "@/components/Nav";
+import "./globals.css";
+import AuthProvider from "@components/providers/AuthProviders";
+import NextUI from "@components/providers/NextUIProvider";
 
 export const metadata = {
-  title: 'SCI',
-  description: 'jornadas da ciencia',
-}
+  title: "SCI",
+  description: "jornadas da ciencia",
+};
 
 export default async function RootLayout({ children }) {
   return (
     <html lang="en">
-      <AuthProvider>
-        <body>
-          <Navbar />
-          {children}
-          </body>
-      </AuthProvider>
+      <body>
+        <NextUI>
+          <AuthProvider>
+            <Navbar />
+            {children}
+          </AuthProvider>
+        </NextUI>
+      </body>
     </html>
   );
 }
