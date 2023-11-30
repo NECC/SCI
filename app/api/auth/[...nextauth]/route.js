@@ -6,6 +6,9 @@ import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 export const authOptions = {
+  pages: {
+    signIn: "/auth/signin",
+  },
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({

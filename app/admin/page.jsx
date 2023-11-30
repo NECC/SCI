@@ -1,11 +1,10 @@
 "use client";
 
+import Navbar from "@components/Nav";
 import CreateUser from "@components/admin/CreateUser";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
-// TODO: Use Axios for http requests instead of fetch()
 
 export default function Auth() {
   const [user, setUser] = useState({});
@@ -29,6 +28,7 @@ export default function Auth() {
 
   return (
     <>
+      <Navbar />
       <CreateUser />
     </>
   );

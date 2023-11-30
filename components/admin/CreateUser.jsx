@@ -61,9 +61,9 @@ export default function CreateUser() {
               color="default"
               type="text"
               label="Name"
-              name="name"
               className="max-w-[220px]"
               required={true}
+              name="name"
               value={formData.name}
               onChange={handleChange}
             />

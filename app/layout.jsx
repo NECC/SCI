@@ -16,7 +16,6 @@ export default async function RootLayout({ children }) {
       <body>
         <NextUI>
           <AuthProvider>
-            <Navbar />
             {children}
           </AuthProvider>
         </NextUI>
