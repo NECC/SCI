@@ -6,16 +6,18 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { PiSignOutDuotone } from "react-icons/pi";
-
+import { Avatar, Button, Divider } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 // TODO: Mobile navbar with transition
 // TODO: Transform the Navbar in a Server Component -> This will let the navbar be rendered in the server and not in the client, so it won't load the state of the session
 
 // WARN: Eu so fiz a conexão da navbar com backend para desktop, mobile ainda nao esta feito
 
-const Navbar = (props) => {
+const Nav = (props) => {
   const [user, setUser] = useState({});
   const [toggleDropdown, setToggleDropdown] = useState(false);
+  const router = useRouter();
 
   const { data: session } = useSession({
     required: false,
@@ -26,11 +28,11 @@ const Navbar = (props) => {
   }, [session]);
 
   return (
-    <div className="w-full bg-custom-blue-1  relative">
+    <div className="w-full bg-black  relative">
       <nav className="flex justify-between w-11/12 m-auto p-4 sm:w-4/5 ">
-        <Link href="/" className="flex items-end gap-2 ">
+        <Link href="/" className="flex items-center gap-2 ">
           <Image
-            src="/logo_4.png"
+            src="/sci-logo.png"
             alt="logo"
             width={70}
             height={70}
@@ -41,41 +43,41 @@ const Navbar = (props) => {
         {/* Desktop Navigation */}
 
         <div className="sm:flex hidden gap-3 md:gap-5">
-          <div className="flex gap-3 md:gap-5">
-            <Link href="/" className="outline_btn ">
+          <div className="flex gap-3 md:gap-5 relative items-center justify-center">
+            <Link href="/" className="outline_btn transition">
               Home
             </Link>
 
-            <Link href="/schedule" className="outline_btn font-poppin">
-              schedule
+            <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
+
+            <Link href="/schedule" className="outline_btn">
+              Schedule
             </Link>
+
+            <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
           </div>
 
           {user.name ? (
             <div className="flex gap-3 md:gap-5">
-              <button onClick={signOut} type="button" className="black_btn">
+              <Button color="danger" variant="shadow" className="font-comfortaa font-bold text-white" onClick={signOut}>
                 Sign Out
-              </button>
+              </Button>
 
-              <Link href="/profile" className="flex items-center">
-                <Image
-                  src="/user.svg"
-                  width={37}
-                  height={37}
-                  className="rounded-full"
-                  alt="profile"
-                />
-                Logged as {user.name}
+              <Link
+                href="/profile"
+                className="flex justify-center items-center gap-4"
+              >
+                <Avatar src="/user.svg" alt="profile" />
+                <span className="text-white font-comfortaa text-sm">
+                  Logged as <strong className="font-bold">{user.name}</strong>{" "}
+                </span>
               </Link>
             </div>
           ) : (
             <div className="flex gap-3 md:gap-5">
-              <Link
-                href="/api/auth/signin"
-                className="flex items-center black_btn"
-              >
-                SignIn
-              </Link>
+              <Button color="success" variant="ghost" className="font-comfortaa font-bold" onClick={() => router.push("/auth/signin")}>
+                Sign In
+              </Button>
             </div>
           )}
         </div>
@@ -83,14 +85,35 @@ const Navbar = (props) => {
         {/* Mobile  */}
 
         <div className="sm:hidden flex">
-          <div className='flex w-full justify-center items-center '>
-            <div onClick={() => setToggleDropdown(!toggleDropdown)} className='flex-col flex gap-1 h-full  items-center justify-center'>
-              <div className={`h-[4px] w-[24px] rounded-3xl bg-white  transition-all ${toggleDropdown ? "rotate-45 translate-y-2" : ""}`}></div>
-              <div className={`h-[4px] w-[24px] bg-white rounded-3xl duration-700  ${toggleDropdown ? "-translate-y-32 -translate-x-32 rotate-180" : ""}`}></div>
-              <div className={`h-[4px] w-[24px] bg-white rounded-3xl transition-all  ${toggleDropdown ? "-rotate-45 -translate-y-2" : ""} `}></div>
+          <div className="flex w-full justify-center items-center ">
+            <div
+              onClick={() => setToggleDropdown(!toggleDropdown)}
+              className="flex-col flex gap-1 h-full  items-center justify-center"
+            >
+              <div
+                className={`h-[4px] w-[24px] rounded-3xl bg-white  transition-all ${
+                  toggleDropdown ? "rotate-45 translate-y-2" : ""
+                }`}
+              ></div>
+              <div
+                className={`h-[4px] w-[24px] bg-white rounded-3xl duration-700  ${
+                  toggleDropdown
+                    ? "-translate-y-32 -translate-x-32 rotate-180"
+                    : ""
+                }`}
+              ></div>
+              <div
+                className={`h-[4px] w-[24px] bg-white rounded-3xl transition-all  ${
+                  toggleDropdown ? "-rotate-45 -translate-y-2" : ""
+                } `}
+              ></div>
             </div>
           </div>
-          <div className={`dropdown duration-1000 h-screen ${toggleDropdown ? 'transform-none' : '-translate-x-full '}`}>
+          <div
+            className={`dropdown duration-1000 h-screen ${
+              toggleDropdown ? "transform-none" : "-translate-x-full "
+            }`}
+          >
             <Link
               href="/"
               className="dropdown_link"
@@ -123,7 +146,13 @@ const Navbar = (props) => {
                   className="black_btn w-11/12 m-auto mt-20 "
                 >
                   Sign Out
-                  <span className="ml-[24px]"> <PiSignOutDuotone size={22} color="white hover:black" />  </span>
+                  <span className="ml-[24px]">
+                    {" "}
+                    <PiSignOutDuotone
+                      size={22}
+                      color="white hover:black"
+                    />{" "}
+                  </span>
                 </button>
               </>
             ) : (
@@ -138,4 +167,4 @@ const Navbar = (props) => {
   );
 };
 
-export default Navbar;
+export default Nav;

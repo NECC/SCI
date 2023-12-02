@@ -1,6 +1,6 @@
 "use client";
 
-import Navbar from "@components/Nav";
+import Nav from "@components/Nav";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -34,7 +34,7 @@ export default function Home() {
 
   return (
     <main className="">
-      <Navbar />
+      <Nav />
       <h1 className="text-2xl">Welcome {user.name}</h1>
     </main>
   );

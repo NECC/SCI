@@ -16,6 +16,10 @@ module.exports = {
           2: '#B8E3FF',
         }, // cor do logo das jornadas poderá ser utilizado
       },
+      transitionProperty: {
+        width: 'width',
+        height: 'height',
+      },
       fontFamily: {
         'comfortaa': ['Comfortaa', 'sans-serif'],
         'montserrat': ['Montserrat', 'sans-serif'],
