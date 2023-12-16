@@ -1,7 +1,9 @@
 "use client";
 
 import Navbar from "@components/Nav";
+import CreateActivity from "@components/admin/CreateActivity";
 import CreateUser from "@components/admin/CreateUser";
+import GetDataTable from "@components/admin/GetDataTable";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -29,7 +31,11 @@ export default function Auth() {
   return (
     <>
       <Navbar />
-      <CreateUser />
+      <div className="flex justify-start items-start gap-3 my-4 mx-12">
+        <CreateActivity />
+        <CreateUser />
+      </div>
+      <GetDataTable />
     </>
   );
 }
