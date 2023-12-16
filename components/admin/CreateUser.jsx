@@ -12,7 +12,6 @@ import {
 import { useRouter } from "next/navigation";
 
 export default function CreateUser() {
-  const router = useRouter();
   const [formData, setFormData] = useState({ role: "USER" });
   const [errorMessage, setErrorMessage] = useState("");
 
