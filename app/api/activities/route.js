@@ -55,6 +55,8 @@ export async function POST(request) {
         location: data.location,
         capacity: data.capacity,
         date: new Date(data.date),
+        endTime: data.endTime,
+        startTime: data.startTime,
         type: data.type,
       },
     });
