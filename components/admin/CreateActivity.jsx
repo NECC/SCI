@@ -40,7 +40,7 @@ export default function CreateActivity() {
       })
       .then((res) => {
         if (res.status == 200) {
-          router.push("/");
+          router.push("/admin");
         } else {
           setErrorMessage(res.data.message);
         }

@@ -5,15 +5,14 @@ import axios from "axios";
 import {
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
   Divider,
   Input,
-  SelectItem,
-  Select,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 export default function CreateUser() {
+  const router = useRouter();
   const [formData, setFormData] = useState({ role: "USER" });
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -31,6 +30,7 @@ export default function CreateUser() {
       .post("/api/users", formData)
       .then((res) => {
         if (res.status == 200) {
+          router.push("/admin");
         } else {
           setErrorMessage(res.data.message);
         }
