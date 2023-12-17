@@ -4,6 +4,8 @@ import Nav from "@components/Nav";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+
 
 /**
  * @session {
@@ -35,7 +37,24 @@ export default function Home() {
   return (
     <main className="">
       <Nav />
-      <h1 className="text-2xl">Welcome {user.name}</h1>
+      <div className="bg-[url('/banner.png')] bg-no-repeat bg-cover h-[600px] w-full flex justify-center">
+        <div className="w-4/5 flex items-center">
+          <div className="w-6/12 flex flex-col gap-4">
+            <h1 className="text-white text-6xl font-extrabold leading-tight">SEMANA DA CIÊNCIA E INOVAÇÃO</h1>
+            <p className='text-white text-xl '>14 - 15 MARÇO</p>
+            <div className="mt-4">
+              <Link
+                href="/"
+                className='bg-white font-monteserrat text-black py-2 px-4 rounded-md text-sm font-medium leading-5 hover:text-gray-600'>
+                EVENTOS
+              </Link>
+            </div>
+
+          </div>
+
+
+        </div>
+      </div>
     </main>
   );
 }
