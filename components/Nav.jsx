@@ -23,7 +23,7 @@ const Nav = (props) => {
   }, [session]);  
 
   return (
-    <div className="w-full bg-black  relative">
+    <div className="w-full bg-black relative bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover">
       <nav className="flex justify-between w-11/12 m-auto p-4 sm:w-4/5 ">
         <Link href="/" className="flex items-center gap-2 ">
           <Image
