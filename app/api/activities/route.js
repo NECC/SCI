@@ -20,6 +20,8 @@ export async function GET() {
         date: true,
         type: true,
         enrollments: true,
+        startTime: true,
+        endTime: true,
       },
     });
     console.log(activities);

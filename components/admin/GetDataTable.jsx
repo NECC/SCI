@@ -6,25 +6,34 @@ import {
   TableRow,
   TableCell,
   getKeyValue,
+  Tooltip,
+  User,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import { FaEye } from "react-icons/fa";
+import { MdModeEditOutline } from "react-icons/md";
+import { IoMdTrash } from "react-icons/io";
 
 const columnsUsers = [
   {
-    key: "id",
-    label: "ID",
+    key: "profile",
+    label: "DATA",
   },
   {
     key: "name",
     label: "NAME",
   },
   {
-    key: "email",
-    label: "EMAIL",
-  },
-  {
     key: "role",
     label: "ROLE",
+  },
+  {
+    key: "points",
+    label: "POINTS",
+  },
+  {
+    key: "actions",
+    label: "ACTIONS",
   },
 ];
 
@@ -34,67 +43,107 @@ const columnsActivities = [
     label: "ID",
   },
   {
-    key: "name",
-    label: "NAME",
+    key: "title",
+    label: "Title",
   },
   {
     key: "date",
     label: "DATE",
   },
   {
-    key: "time",
-    label: "TIME",
+    key: "startTime",
+    label: "Start Time",
+  },
+  {
+    key: "endTime",
+    label: "End Time",
   },
   {
     key: "location",
-    label: "LOCATION",
-  },
-  {
-    key: "participants",
-    label: "PARTICIPANTS",
+    label: "Location",
   },
   {
     key: "capacity",
     label: "CAPACITY",
   },
+  {
+    key: "actions",
+    label: "ACTIONS",
+  },
 ];
 
-export default function GetDataTable() {
+export default function GetDataTable(props) {
+  const { data, active } = props;
   const [columns, setColumns] = useState([...columnsUsers]);
   const [rows, setRows] = useState([]);
+
+  const renderCell = (item, columnKey) => {
+    const uid = item.id;
+    // console.log(item);
+
+    switch (columnKey) {
+      case "profile":
+        return (
+          <User
+            name={uid}
+            description={item.email}
+            avatarProps={{ src: "/user.svg", isBordered: true, size: "sm" }}
+          />
+        );
+      case "actions":
+        return (
+          <div className="relative flex items-center gap-2">
+            <Tooltip content="Details">
+              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                <FaEye className="text-black" />
+              </span>
+            </Tooltip>
+            <Tooltip content="Edit user">
+              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                <MdModeEditOutline className="text-black" />
+              </span>
+            </Tooltip>
+            <Tooltip color="danger" content="Delete user">
+              <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                <IoMdTrash />
+              </span>
+            </Tooltip>
+          </div>
+        );
+      default:
+        return getKeyValue(item, columnKey);
+    }
+  };
 
   const handleColumns = (e) => {
     if (columns == columnsUsers) setColumns(columnsActivities);
     else setColumns(columnsUsers);
   };
 
-  const getUsers = async () => {
-    const res = await fetch("/api/users");
-    const { users } = await res.json();
-    console.log(users);
-    setRows(users);
-  };
-
   useEffect(() => {
-    getUsers();
-  }, []);
+    if (active == "users") {
+      setColumns(columnsUsers);
+    } else if (active == "activities") {
+      setColumns(columnsActivities);
+    }
+  }, [active]);
 
   return (
-    <div className="w-full p-10 flex justify-center">
+    <div className="w-full p-4 flex justify-center">
       <Table
         aria-label="Example static collection table"
-        className="w-full max-w-[1500px] box-content"
+        className="w-full max-w-[1700px] box-content"
       >
         <TableHeader columns={columns}>
           {(column) => (
             <TableColumn key={column.key}>{column.label}</TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No data selected"} items={rows}>
+        <TableBody emptyContent={"No data selected"} items={data}>
           {(item) => (
             <TableRow key={item.key}>
               {(columnKey) => (
-                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}
             </TableRow>
           )}
