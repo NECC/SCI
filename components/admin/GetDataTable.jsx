@@ -73,9 +73,10 @@ const columnsActivities = [
 ];
 
 export default function GetDataTable(props) {
-  const { data, active } = props;
-  const [columns, setColumns] = useState([...columnsUsers]);
-  const [rows, setRows] = useState([]);
+  const { data, active, deleteUsers } = props;
+  const [columns, setColumns] = useState([...columnsActivities]);
+
+
 
   const renderCell = (item, columnKey) => {
     const uid = item.id;
@@ -104,7 +105,7 @@ export default function GetDataTable(props) {
               </span>
             </Tooltip>
             <Tooltip color="danger" content="Delete user">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
+              <span onClick={() => deleteUsers(uid)} className="text-lg text-danger cursor-pointer active:opacity-50">
                 <IoMdTrash />
               </span>
             </Tooltip>
@@ -113,11 +114,6 @@ export default function GetDataTable(props) {
       default:
         return getKeyValue(item, columnKey);
     }
-  };
-
-  const handleColumns = (e) => {
-    if (columns == columnsUsers) setColumns(columnsActivities);
-    else setColumns(columnsUsers);
   };
 
   useEffect(() => {
@@ -133,6 +129,8 @@ export default function GetDataTable(props) {
       <Table
         aria-label="Example static collection table"
         className="w-full max-w-[1700px] box-content"
+        isStriped={true}
+        selectionMode="single"
       >
         <TableHeader columns={columns}>
           {(column) => (

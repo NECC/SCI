@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaHome } from "react-icons/fa";
 import { IoMdPerson } from "react-icons/io";
-import { MdLocalActivity } from "react-icons/md";
+import { MdLocalActivity, MdScreenRotationAlt } from "react-icons/md";
 import { ImExit } from "react-icons/im";
 
 export default function Sidebar() {
@@ -25,6 +25,9 @@ export default function Sidebar() {
                 </Link>
                 <Link href="/admin/activities" className={`${LinkClass}`}>
                     <MdLocalActivity className={`${Icons}`}/> Activities
+                </Link>
+                <Link href="/admin" className={`${LinkClass}`}>
+                    <MdScreenRotationAlt className={`${Icons}`}/> Enrollments
                 </Link>
                 <Link href="/" className={`${LinkClass} border-t border-white/30`}>
                     <ImExit className={`${Icons}`}/> Back to Home

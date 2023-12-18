@@ -1,6 +1,7 @@
 "use client";
 
 import GetDataTable from "@components/admin/GetDataTable";
+import TableFilter from "@components/admin/TableFilter";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -12,6 +13,7 @@ export default function Admin() {
   const [user, setUser] = useState({});
   const [active, setActive] = useState("activities");
   const [rows, setRows] = useState([]);
+  const [backupData, setBackupData] = useState([]);
   const router = useRouter();
 
   const { data: session, status } = useSession({
@@ -31,18 +33,27 @@ export default function Admin() {
     const { data } = await axios.get("/api/users");
     console.log(data.users);
     setRows(data.users);
+    setBackupData(data.users);
+  };
+
+  const deleteUsers = async (id) => {
+    console.log(id);
+    const { data } = await axios.delete(`/api/users/delete/${id}`);
+    getUsers();
   };
 
   const getActivities = async () => {
     const { data } = await axios.get("/api/activities");
     console.log(data.activities);
     setRows(data.activities);
+    setBackupData(data.activities);
   }
 
   const getEnrollments = async () => {
     const { data } = await axios.get("/api/enrollments");
     console.log(data.enrollments);
     setRows(data.enrollments);
+    setBackupData(data.enrollments);
   }
 
   useEffect(() => {
@@ -102,8 +113,11 @@ export default function Admin() {
           <MdScreenRotationAlt className={`${Icons}`} />
           Enrollments
         </div>
+
+        <TableFilter active={active} data={backupData} setData={setRows}/>
+
       </div>
-      <GetDataTable data={rows} active={active}/>
+      <GetDataTable data={rows} active={active} deleteUsers={deleteUsers}/>
     </div>
   );
 }
