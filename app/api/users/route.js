@@ -18,7 +18,18 @@ export async function GET() {
       email: true,
       role: true,
       points: true,
-      enrollments: true,
+      enrollments: {
+        select: {
+          id: true,
+          activity: {
+            select: {
+              id: true,
+              title: true,
+              type: true,
+            },
+          },
+        }
+      },
     },
   });
   console.log(users);

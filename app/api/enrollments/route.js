@@ -7,7 +7,13 @@ export async function GET() {
     const enrollments = await prisma.enrollments.findMany({
       select: {
         id: true,
-        user: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          }
+        },
         activity: true,
       },
     });
@@ -28,6 +34,29 @@ export async function POST(request) {
   const data = await request.json();
 
   try {
+
+    // Get activity enrollments and check if it's full
+    const activityEnrollments = await prisma.activity.findUnique({
+      where: {
+        id: data.activityId,
+      },
+      select: {
+        enrollments: true,
+        capacity: true,
+      },
+    });
+
+    // If it's full, return an error
+    if (activityEnrollments.enrollments.length >= activityEnrollments.capacity) {
+      return new NextResponse(
+        JSON.stringify({
+          response: "error",
+          error: "This activity is already full",
+        })
+      );
+    }
+    
+    // If it's not full, create a new enrollment
     const enrollment = await prisma.enrollments.create({
       data: {
         activity: {
@@ -43,7 +72,13 @@ export async function POST(request) {
       },
       select: {
         id: true,
-        user: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
         activity: true,
       },
     });
