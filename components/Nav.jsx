@@ -6,26 +6,21 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { PiSignOutDuotone } from "react-icons/pi";
-import { Avatar, Button, Divider } from "@nextui-org/react";
+import { Avatar, Button, Divider, Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-
-// TODO: Mobile navbar with transition
-// TODO: Transform the Navbar in a Server Component -> This will let the navbar be rendered in the server and not in the client, so it won't load the state of the session
-
-// WARN: Eu so fiz a conexão da navbar com backend para desktop, mobile ainda nao esta feito
 
 const Nav = (props) => {
   const [user, setUser] = useState({});
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const router = useRouter();
 
-  const { data: session } = useSession({
+  const { data: session, status } = useSession({
     required: false,
   });
 
   useEffect(() => {
     if (session) setUser(session.user);
-  }, [session]);
+  }, [session]);  
 
   return (
     <div className="w-full bg-black  relative">
@@ -36,7 +31,6 @@ const Nav = (props) => {
             alt="logo"
             width={70}
             height={70}
-            className="object-contain"
           />
         </Link>
 
@@ -55,11 +49,22 @@ const Nav = (props) => {
             </Link>
 
             <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
+
+            {user.role == 'ADMIN' && (
+              <Link href="/admin" className="outline_btn">
+                Backoffice
+              </Link>
+            )}
           </div>
 
           {user.name ? (
             <div className="flex gap-3 md:gap-5">
-              <Button color="danger" variant="shadow" className="font-comfortaa font-bold text-white" onClick={signOut}>
+              <Button
+                color="danger"
+                variant="shadow"
+                className="font-comfortaa font-bold text-white"
+                onClick={signOut}
+              >
                 Sign Out
               </Button>
 
@@ -69,13 +74,23 @@ const Nav = (props) => {
               >
                 <Avatar src="/user.svg" alt="profile" />
                 <span className="text-white font-comfortaa text-sm">
-                  Logged as <strong className="font-bold">{user.name}</strong>{" "}
+                  Logged as <strong className="font-bold">{user.name}</strong>
                 </span>
               </Link>
             </div>
+          ) : status == "loading" && !user.name ? (
+            <div className="flex items-center gap-3 md:gap-5">
+              <Spinner color="white" size="sm" />
+              <span className="text-white font-poppins text-sm">Loading</span>
+            </div>
           ) : (
             <div className="flex gap-3 md:gap-5">
-              <Button color="success" variant="ghost" className="font-comfortaa font-bold" onClick={() => router.push("/auth/signin")}>
+              <Button
+                color="success"
+                variant="ghost"
+                className="font-comfortaa font-bold"
+                onClick={() => router.push("/auth/signin")}
+              >
                 Sign In
               </Button>
             </div>

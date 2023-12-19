@@ -1,18 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import {
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
   Divider,
   Input,
-  SelectItem,
-  Select,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 export default function CreateUser() {
   const router = useRouter();
@@ -33,7 +30,7 @@ export default function CreateUser() {
       .post("/api/users", formData)
       .then((res) => {
         if (res.status == 200) {
-          router.push("/");
+          router.push("/admin");
         } else {
           setErrorMessage(res.data.message);
         }
@@ -42,7 +39,6 @@ export default function CreateUser() {
         setErrorMessage(err.message);
       });
   };
-
 
   return (
     <>
@@ -100,7 +96,10 @@ export default function CreateUser() {
               <option value="ADMIN">ADMIN</option>
             </select>
           </CardBody>
-          <button type="submit" className="bg-black hover:bg-slate-800 text-white">
+          <button
+            type="submit"
+            className="bg-black hover:bg-slate-800 text-white"
+          >
             Create User
           </button>
         </Card>

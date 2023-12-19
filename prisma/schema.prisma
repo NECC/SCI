@@ -28,6 +28,8 @@ model Activity {
   title       String
   description String
   date        DateTime
+  startTime   String
+  endTime     String
   location    String
   capacity    Int
   speakers    String
@@ -82,4 +84,5 @@ enum Type {
 enum Role {
   USER
   ADMIN
+  STAFF
 }
