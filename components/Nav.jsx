@@ -45,7 +45,7 @@ const Nav = (props) => {
 
             <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
 
-            {user.role == 'ADMIN' && (
+            {user.role == "ADMIN" && (
               <Link href="/admin" className="outline_btn">
                 Backoffice
               </Link>
