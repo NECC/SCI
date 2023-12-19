@@ -20,11 +20,20 @@ const Nav = (props) => {
 
   useEffect(() => {
     if (session) setUser(session.user);
-  }, [session]);  
+  }, [session]);
+
+  useEffect(() => {
+    // Adiciona ou remove a classe que desativa o scroll quando toggleDropdown muda
+    if (toggleDropdown) {
+      document.body.classList.add('overflow-y-hidden');
+    } else {
+      document.body.classList.remove('overflow-y-hidden');
+    }
+  }, [toggleDropdown]);
 
   return (
     <div className="w-full bg-black relative bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover">
-      <nav className="flex justify-between w-11/12 m-auto p-4 sm:w-4/5 ">
+      <nav className="flex justify-between w-11/12 m-auto pt-4 pb-4 sm:w-4/5 ">
         <Link href="/" className="flex items-center gap-2 ">
           <Image
             src="/sci-logo.png"
@@ -99,35 +108,31 @@ const Nav = (props) => {
 
         {/* Mobile  */}
 
-        <div className="sm:hidden flex">
+        <div className="sm:hidden flex ">
           <div className="flex w-full justify-center items-center ">
             <div
               onClick={() => setToggleDropdown(!toggleDropdown)}
               className="flex-col flex gap-1 h-full  items-center justify-center"
             >
               <div
-                className={`h-[4px] w-[24px] rounded-3xl bg-white  transition-all ${
-                  toggleDropdown ? "rotate-45 translate-y-2" : ""
-                }`}
+                className={`h-[4px] w-[24px] rounded-3xl bg-white  transition-all ${toggleDropdown ? "rotate-45 translate-y-2" : ""
+                  }`}
               ></div>
               <div
-                className={`h-[4px] w-[24px] bg-white rounded-3xl duration-700  ${
-                  toggleDropdown
+                className={`h-[4px] w-[24px] bg-white rounded-3xl duration-700  ${toggleDropdown
                     ? "-translate-y-32 -translate-x-32 rotate-180"
                     : ""
-                }`}
+                  }`}
               ></div>
               <div
-                className={`h-[4px] w-[24px] bg-white rounded-3xl transition-all  ${
-                  toggleDropdown ? "-rotate-45 -translate-y-2" : ""
-                } `}
+                className={`h-[4px] w-[24px] bg-white rounded-3xl transition-all  ${toggleDropdown ? "-rotate-45 -translate-y-2" : ""
+                  } `}
               ></div>
             </div>
           </div>
           <div
-            className={`dropdown duration-1000 h-screen ${
-              toggleDropdown ? "transform-none" : "-translate-x-full "
-            }`}
+            className={`dropdown duration-1000 h-screen  ${toggleDropdown ? "transform-none" : "-translate-x-full"
+              }`}
           >
             <Link
               href="/"
