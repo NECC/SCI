@@ -22,30 +22,16 @@ const Nav = (props) => {
     if (session) setUser(session.user);
   }, [session]);
 
-  useEffect(() => {
-    // Adiciona ou remove a classe que desativa o scroll quando toggleDropdown muda
-    if (toggleDropdown) {
-      document.body.classList.add('overflow-y-hidden');
-    } else {
-      document.body.classList.remove('overflow-y-hidden');
-    }
-  }, [toggleDropdown]);
-
   return (
-    <div className="w-full bg-black relative bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover">
-      <nav className="flex justify-between w-11/12 m-auto pt-4 pb-4 sm:w-4/5 ">
+    <div className="w-full bg-black fixed z-50 bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover">
+      <nav className="flex justify-between w-11/12 m-auto py-4 md:w-4/5 ">
         <Link href="/" className="flex items-center gap-2 ">
-          <Image
-            src="/sci-logo.png"
-            alt="logo"
-            width={70}
-            height={70}
-          />
+          <Image src="/sci-logo.png" alt="logo" width={70} height={70} />
         </Link>
 
         {/* Desktop Navigation */}
 
-        <div className="sm:flex hidden gap-3 md:gap-5">
+        <div className="md:flex hidden gap-3 md:gap-5">
           <div className="flex gap-3 md:gap-5 relative items-center justify-center">
             <Link href="/" className="outline_btn transition">
               Home
@@ -59,7 +45,7 @@ const Nav = (props) => {
 
             <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
 
-            {user.role == 'ADMIN' && (
+            {user.role == "ADMIN" && (
               <Link href="/admin" className="outline_btn">
                 Backoffice
               </Link>
@@ -108,31 +94,33 @@ const Nav = (props) => {
 
         {/* Mobile  */}
 
-        <div className="sm:hidden flex ">
-          <div className="flex w-full justify-center items-center ">
+        <div className="md:hidden flex z-10">
+          <div className="flex w-full justify-center items-center">
             <div
               onClick={() => setToggleDropdown(!toggleDropdown)}
               className="flex-col flex gap-1 h-full  items-center justify-center"
             >
               <div
-                className={`h-[4px] w-[24px] rounded-3xl bg-white  transition-all ${toggleDropdown ? "rotate-45 translate-y-2" : ""
-                  }`}
+                className={`h-[4px] w-[24px] rounded-3xl bg-white  transition-all ${
+                  toggleDropdown && "rotate-45 translate-y-2"
+                }`}
               ></div>
               <div
-                className={`h-[4px] w-[24px] bg-white rounded-3xl duration-700  ${toggleDropdown
-                    ? "-translate-y-32 -translate-x-32 rotate-180"
-                    : ""
-                  }`}
+                className={`h-[4px] w-[24px] bg-white rounded-3xl duration-700  ${
+                  toggleDropdown && "-translate-y-32 -translate-x-32 rotate-180"
+                }`}
               ></div>
               <div
-                className={`h-[4px] w-[24px] bg-white rounded-3xl transition-all  ${toggleDropdown ? "-rotate-45 -translate-y-2" : ""
-                  } `}
+                className={`h-[4px] w-[24px] bg-white rounded-3xl transition-all  ${
+                  toggleDropdown && "-rotate-45 -translate-y-2"
+                } `}
               ></div>
             </div>
           </div>
           <div
-            className={`dropdown duration-1000 h-screen  ${toggleDropdown ? "transform-none" : "-translate-x-full"
-              }`}
+            className={`dropdown duration-1000 h-screen  ${
+              toggleDropdown ? "transform-none" : "-translate-x-full"
+            }`}
           >
             <Link
               href="/"

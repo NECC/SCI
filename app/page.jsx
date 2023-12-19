@@ -48,7 +48,7 @@ export default function Home() {
   return (
     <main className="bg-black   ">
       <Nav />
-      <div className="bg-[url('/banner.png')] bg-no-repeat bg-cover lg:h-[550px] h-[400px]  w-full lg:relative ">
+      <div className="bg-[url('/banner.png')] bg-no-repeat bg-cover lg:h-[550px] h-[400px] pt-[32px]  w-full lg:relative ">
         <div className="flex flex-col gap-4 sm:w-4/5 w-11/12 itens-center justify-center  m-auto h-full  ">
           <h1 className="text-white md:text-6xl text-5xl font-extrabold leading-tight text-center lg:text-left lg:w-4/5 ">SEMANA DA CIÊNCIA E INOVAÇÃO</h1>
           <p className='text-white text-xl text-center lg:text-left'>14 - 15 MARÇO</p>
