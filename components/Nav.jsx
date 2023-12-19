@@ -9,11 +9,6 @@ import { PiSignOutDuotone } from "react-icons/pi";
 import { Avatar, Button, Divider, Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
-// TODO: Mobile navbar with transition
-// TODO: Transform the Navbar in a Server Component -> This will let the navbar be rendered in the server and not in the client, so it won't load the state of the session
-
-// WARN: Eu so fiz a conexão da navbar com backend para desktop, mobile ainda nao esta feito
-
 const Nav = (props) => {
   const [user, setUser] = useState({});
   const [toggleDropdown, setToggleDropdown] = useState(false);
@@ -54,6 +49,12 @@ const Nav = (props) => {
             </Link>
 
             <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
+
+            {user.role == 'ADMIN' && (
+              <Link href="/admin" className="outline_btn">
+                Backoffice
+              </Link>
+            )}
           </div>
 
           {user.name ? (

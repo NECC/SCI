@@ -20,6 +20,8 @@ export async function GET() {
         date: true,
         type: true,
         enrollments: true,
+        startTime: true,
+        endTime: true,
       },
     });
     console.log(activities);
@@ -55,6 +57,8 @@ export async function POST(request) {
         location: data.location,
         capacity: data.capacity,
         date: new Date(data.date),
+        endTime: data.endTime,
+        startTime: data.startTime,
         type: data.type,
       },
     });

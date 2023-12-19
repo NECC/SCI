@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 
 async function main() {
     await prisma.user.deleteMany();
+    await prisma.activity.deleteMany();
+    await prisma.enrollments.deleteMany();
 
     const passwordCarlos = await bcrypt.hash('batatadoce', 10);
     const passwordPedro = await bcrypt.hash('123456', 10);
