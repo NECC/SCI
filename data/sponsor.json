@@ -1,0 +1,40 @@
+{
+    "Patrocinadores": [
+        {
+            "name": "Bosh",
+            "path": "/last/last_year_1.png",
+            "link": "http://www.bosch.com.br/",
+            "description": "Bosch é uma empresa alemã de engenharia e eletrônica com sede em Gerlingen, perto de Estugarda. É o maior fornecedor mundial de componentes automotivos medidos em 2011. A empresa foi fundada por Robert Bosch em Stuttgart em 1886. A Bosch é 92% de propriedade da Robert Bosch Stiftung."
+        },
+        {
+            "name": "Google",
+            "path": "/last/last_year_1.png",
+            "link": "https://www.google.com/",
+            "description": "Google é uma empresa multinacional de serviços online e software dos Estados Unidos. O Google hospeda e desenvolve uma série de serviços e produtos baseados na internet e gera lucro principalmente por meio da publicidade pelo AdWords."
+        },
+        {
+            "name": "Apple",
+            "path": "/last/last_year_1.png",
+            "link": "https://www.apple.com/",
+            "description": "Apple é uma empresa multinacional norte-americana que projeta e comercializa produtos eletrônicos de consumo, software de computador e oferece serviços online. Fundada por Steve Jobs, Steve Wozniak e Ronald Wayne, a Apple é conhecida pela inovação em seus produtos."
+        },
+        {
+            "name": "Microsoft",
+            "path": "/last/last_year_1.png",
+            "link": "https://www.microsoft.com/",
+            "description": "Microsoft é uma empresa multinacional de tecnologia dos Estados Unidos que desenvolve, licencia, fabrica, apoia e vende softwares de computador, produtos eletrônicos, computadores e serviços. É conhecida pelo sistema operacional Windows."
+        },
+        {
+            "name": "Amazon",
+            "path": "/last/last_year_1.png",
+            "link": "https://www.amazon.com/",
+            "description": "Amazon é uma empresa multinacional de tecnologia e comércio eletrônico dos Estados Unidos. É a maior plataforma de comércio eletrônico e computação em nuvem do mundo, além de produzir eletrônicos e conteúdo de streaming."
+        },
+        {
+            "name": "Facebook",
+            "path": "/last/last_year_1.png",
+            "link": "https://www.facebook.com/",
+            "description": "Facebook é uma empresa de redes sociais e serviços online com sede nos Estados Unidos. O Facebook permite que os usuários se conectem, compartilhem conteúdo, eventos e ideias, além de oferecer publicidade direcionada."
+        }
+    ]
+}
