@@ -13,12 +13,8 @@ import Sponsor from "@components/Sponsor";
 import sponsorData from "../data/sponsor.json"
 import { Divider } from "@nextui-org/react";
 
-
-
 const image = ImageData.images
 const sponsor = sponsorData.Patrocinadores
-
-
 
 /**
  * @session {
@@ -44,6 +40,8 @@ export default function Home() {
   useEffect(() => {
     if (session) setUser(session.user);
   }, [session]);
+
+
 
   // console.log(user);
 
@@ -84,7 +82,7 @@ export default function Home() {
         <Divider className="w-[15%] h-[4px] bg-white mt-[79px] " />
 
         <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-left lg:w-4/5 mt-[23px]">O QUE É</h1>
-        <p className="text-white mt-[39px] font-poppins font-light leading-8 lg:w-4/5 w-full"> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad repellat soluta aspernatur natus nobis quos porro velit, illum nihil magni cupiditate! Sunt pariatur ratione, maiores velit officiis quod eum quisquam!</p>
+        <p className="text-white mt-[39px] font-poppins font-light leading-8 lg:w-4/5 w-full dark:text-orange"> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad repellat soluta aspernatur natus nobis quos porro velit, illum nihil magni cupiditate! Sunt pariatur ratione, maiores velit officiis quod eum quisquam!</p>
 
         <Divider className="w-[15%] h-[4px] bg-white mt-[79px] " />
 
@@ -98,9 +96,11 @@ export default function Home() {
         </div>
 
         <Divider className="w-[15%] h-[4px] bg-white mt-[79px] " />
-        
+
         <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">NÚCLEOS ORGANIZADORES</h1>
       </div>
+     
+
     </main>
   );
 }
