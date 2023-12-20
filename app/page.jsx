@@ -11,6 +11,8 @@ import { images } from "@next.config";
 import Image from "next/image";
 import Sponsor from "@components/Sponsor";
 import sponsorData from "../data/sponsor.json"
+import { Divider } from "@nextui-org/react";
+
 
 
 const image = ImageData.images
@@ -46,7 +48,7 @@ export default function Home() {
   // console.log(user);
 
   return (
-    <main className="bg-black   ">
+    <main className="bg-black overflow-hidden"> {/* por causa dos translate do hexa */}
       <Nav />
       <div className="bg-[url('/banner.png')] bg-no-repeat bg-cover lg:h-[550px] h-[400px] pt-[32px]  w-full lg:relative ">
         <div className="flex flex-col gap-4 sm:w-4/5 w-11/12 itens-center justify-center  m-auto h-full  ">
@@ -63,8 +65,8 @@ export default function Home() {
         <Hexa />
       </div>
 
-      <div className="sm:w-4/5 w-11/12 m-auto mt-[79px]">
-        <div className="lg:w-4/5 w-full flex lg:flex-wrap overflow-x-auto gap-2 ">
+      <div className="sm:w-4/5 w-11/12  m-auto mt-[79px]">
+        <div className="lg:w-4/5 w-full flex justify-between lg:flex-wrap overflow-x-auto ">
           {
             image.map((images, index) => (
               <Image
@@ -73,31 +75,37 @@ export default function Home() {
                 alt='logo'
                 width={400}
                 height={400}
-                className="lg:w-[32%]"
+                className="lg:w-[32.8%] mt-[8px]"
               />
             ))
           }
         </div>
 
-        <div className="w-[15%] h-[4px] bg-white mt-[79px] "></div>
+        <Divider className="w-[15%] h-[4px] bg-white mt-[79px] " />
+
         <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-left lg:w-4/5 mt-[23px]">O QUE É</h1>
         <p className="text-white mt-[39px] font-poppins font-light leading-8 lg:w-4/5 w-full"> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad repellat soluta aspernatur natus nobis quos porro velit, illum nihil magni cupiditate! Sunt pariatur ratione, maiores velit officiis quod eum quisquam!</p>
 
-        <div className="w-[15%] h-[4px] bg-white mt-[85px] "></div>
+        <Divider className="w-[15%] h-[4px] bg-white mt-[79px] " />
+
         <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">PATRÓCINIOS</h1>
-        <div className="lg:w-4/5 w-full mt-[39px] flex flex-col gap-[80px]">
+        <div className="lg:w-4/5 w-full mt-[89px] flex flex-wrap justify-between gap-12 bg-[url('/bgSponsor.png')]   ">
           {
-            sponsor.map((sponsor, index) => {
-              return (<Sponsor {...sponsor} key={index} />);
-            })
+            sponsor.map((singleSponsor, index) => (
+              <Sponsor {...singleSponsor} key={index} />
+            ))
           }
         </div>
-        <div className="w-[15%] h-[4px] bg-white mt-[85px]"></div>
-        <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">NÚCLEOS ORGANIZADORES</h1>
 
+        <Divider className="w-[15%] h-[4px] bg-white mt-[79px] " />
+        
+        <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">NÚCLEOS ORGANIZADORES</h1>
       </div>
-      <br />  {/* TEM AQUI UM BUG FICA UMA LINHA BRANCA NO FIM DA PAGINA
-        */}
     </main>
   );
 }
+
+
+
+
+
