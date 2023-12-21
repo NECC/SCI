@@ -12,6 +12,7 @@ import Image from "next/image";
 import Sponsor from "@components/Sponsor";
 import sponsorData from "../data/sponsor.json"
 import { Divider } from "@nextui-org/react";
+import ThemeSwitcher from "@components/ThemeSwitcher";
 
 const image = ImageData.images
 const sponsor = sponsorData.Patrocinadores
@@ -46,7 +47,7 @@ export default function Home() {
   // console.log(user);
 
   return (
-    <main className="bg-black overflow-hidden"> {/* por causa dos translate do hexa */}
+    <main className=" dark:bg-lime-950 bg-black overflow-hidden"> {/* por causa dos translate do hexa */}
       <Nav />
       <div className="bg-[url('/banner.png')] bg-no-repeat bg-cover lg:h-[550px] h-[400px] pt-[32px]  w-full lg:relative ">
         <div className="flex flex-col gap-4 sm:w-4/5 w-11/12 itens-center justify-center  m-auto h-full  ">
@@ -98,6 +99,8 @@ export default function Home() {
         <Divider className="w-[15%] h-[4px] bg-white mt-[79px] " />
 
         <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">NÚCLEOS ORGANIZADORES</h1>
+
+        <ThemeSwitcher />
       </div>
      
 
