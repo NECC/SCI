@@ -16,7 +16,9 @@ export default async function RootLayout({ children }) {
       <body>
         <NextUI>
           <AuthProvider>
-            {children}
+            <main className="dark text-foreground bg-background">
+              {children}
+            </main>
           </AuthProvider>
         </NextUI>
       </body>
