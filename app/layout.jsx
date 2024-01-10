@@ -1,9 +1,10 @@
 import "./globals.css";
-
 import Navbar from "@/components/Nav";
 import "./globals.css";
 import AuthProvider from "@components/providers/AuthProviders";
 import NextUI from "@components/providers/NextUIProvider";
+import Providers from "@components/providers/Providers";
+
 
 export const metadata = {
   title: "SCI",
@@ -16,9 +17,11 @@ export default async function RootLayout({ children }) {
       <body>
         <NextUI>
           <AuthProvider>
-            <main className="dark text-foreground bg-background">
-              {children}
-            </main>
+            <Providers>
+              <main className="dark text-foreground bg-background">
+                {children}
+              </main>
+            </Providers>
           </AuthProvider>
         </NextUI>
       </body>
