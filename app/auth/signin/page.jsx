@@ -27,14 +27,14 @@ export default function SignInPage() {
 
   return (
     <div className="flex">
-      <div className="hidden bg-gradient-to-br to-80% from-custom-blue-1  to-blue-700 h-screen flex-1 lg:flex justify-center items-center gap-3 shadow-[15px_0px_30px_rgba(0,0,0,0.3)] border-black ">
-        <div className="h-[300px] w-[300px] bg-[url('/sci-logo.png')] bg-no-repeat bg-contain bg-center"></div>
+      <div className="hidden dark:bg-[url('/rectangle.png')] dark:bg-no-repeat dark:bg-bottom dark:bg-cover bg-gradient-to-br to-80% from-custom-blue-1  to-blue-700 h-screen dark:w-full flex-1 lg:flex dark:justify-start justify-center items-center gap-3 shadow-[15px_0px_30px_rgba(0,0,0,0.3)] border-black">
+        <div className="h-[300px] w-[300px] bg-[url('/sci-logo.png')] dark:ml-[100px] dark:xl:ml-[250px] bg-no-repeat bg-contain bg-center"></div>
       </div>
-      <div className="h-screen flex flex-1 justify-center items-center flex-col bg-gradient-to-br to-80% from-custom-blue-1 to-blue-700 lg:bg-none">
-        <h1 className="font-poppins font-bold text-4xl lg:text-custom-blue-1 text-white">
+      <div className="h-screen flex flex-1 justify-center items-center flex-col dark:lg:bg-none dark:bg-[url('/rectangle.png')] dark:bg-no-repeat dark:bg-bottom dark:bg-cover bg-gradient-to-br to-80% from-custom-blue-1 to-blue-700 lg:bg-none light:bg-white dark:lg:absolute dark:right-[100px] dark:xl:right-[200px]">
+        <h1 className="font-poppins font-bold text-4xl dark:lg:text-white lg:text-custom-blue-1 text-white">
           Login
         </h1>
-        <h2 className="font-comfortaa text-md lg:font-bold  lg:text-black text-white">
+        <h2 className="font-comfortaa text-md lg:font-bold mt-2 -mb-2 dark:lg:text-white lg:text-black text-white">
           The science of today is the technology of tomorrow.
         </h2>
         <Input
@@ -52,7 +52,8 @@ export default function SignInPage() {
               "border-custom-blue-2",
               "rounded-none",
               "rounded-b-lg",
-              "text-black",
+              "light:text-black",
+              "dark:text-white",
               "font-comfortaa",
               "font-bold",
               "text-md",
@@ -94,7 +95,8 @@ export default function SignInPage() {
               "border-custom-blue-2",
               "rounded-none",
               "rounded-b-lg",
-              "text-black",
+              "light:text-black",
+              "dark:text-white",
               "font-comfortaa",
               "font-bold",
               "text-md",
@@ -124,13 +126,13 @@ export default function SignInPage() {
 
         <Link
           href="/auth/signup"
-          className="font-comfortaa text-sm mt-3 lg:text-black text-white cursor-pointer  font-bold underline"
+          className="font-comfortaa text-sm mt-3 dark:lg:text-white lg:text-black text-white cursor-pointer  font-bold underline"
         >
           Don&apos;t have an account? Sign Up!
         </Link>
 
         <Button
-          className="mt-3 w-[300px] lg:font-normal  text-lg text-black bg-white lg:bg-blue-600 lg:text-white font-comfortaa"
+          className="mt-3 w-[300px] lg:font-normal  text-lg dark:lg:bg-white dark:lg:text-black bg-white text-black lg:bg-blue-600 lg:text-white font-comfortaa"
           size="large"
           auto
           color="primary"
