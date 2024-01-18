@@ -86,3 +86,7 @@ enum Role {
   ADMIN
   STAFF
 }
+
+generator zod {
+  provider       = "zod-prisma-types"
+}
