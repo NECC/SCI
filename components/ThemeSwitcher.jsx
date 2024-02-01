@@ -25,9 +25,9 @@ const ThemeSwitcher = () => {
   return (
       <Button className={`${theme === "light" ? "custom-background custom-box border-white " : "bg-white border-black "} border-2 fixed right-4 bottom-16 z-10 h-[80px] w-[70px] rounded-full transition-colors duration-500 ease-in-out hidden lg:flex`} onClick={toggleTheme}>
         {theme === "light" ? (
-          <CiLight size={55} color="white"/>
+          <CiDark size={55} color="white"/>
         ) : (
-          <CiDark size={55} color="black" />
+          <CiLight size={55} color="black" />
         )}
       </Button>
   );

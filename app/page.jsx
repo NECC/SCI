@@ -47,7 +47,7 @@ export default function Home() {
   // console.log(user);
 
   return (
-    <main className=" dark:bg-lime-950 bg-black overflow-hidden"> {/* por causa dos translate do hexa */}
+    <main className=" dark:bg-lime-950 bg-black overflow-hidden"> 
       <Nav />
       <div className="bg-[url('/banner.png')] bg-no-repeat bg-cover lg:h-[550px] h-[400px] pt-[32px]  w-full lg:relative ">
         <div className="flex flex-col gap-4 sm:w-4/5 w-11/12 itens-center justify-center  m-auto h-full  ">
