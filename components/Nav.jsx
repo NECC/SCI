@@ -94,6 +94,7 @@ const Nav = (props) => {
 
         {/* Mobile  */}
 
+
         <div className="md:hidden flex z-10">
           <div className="flex w-full justify-center items-center">
             <div
@@ -101,73 +102,70 @@ const Nav = (props) => {
               className="flex-col flex gap-1 h-full  items-center justify-center"
             >
               <div
-                className={`h-[4px] w-[24px] rounded-3xl bg-white  transition-all ${
-                  toggleDropdown && "rotate-45 translate-y-2"
-                }`}
+                className={`h-[4px] w-[24px] rounded-3xl bg-white  transition-all ${toggleDropdown && "rotate-45 translate-y-2"
+                  }`}
               ></div>
               <div
-                className={`h-[4px] w-[24px] bg-white rounded-3xl duration-700  ${
-                  toggleDropdown && "-translate-y-32 -translate-x-32 rotate-180"
-                }`}
+                className={`h-[4px] w-[24px] bg-white rounded-3xl duration-700  ${toggleDropdown && "-translate-y-32 -translate-x-32 rotate-180"
+                  }`}
               ></div>
               <div
-                className={`h-[4px] w-[24px] bg-white rounded-3xl transition-all  ${
-                  toggleDropdown && "-rotate-45 -translate-y-2"
-                } `}
+                className={`h-[4px] w-[24px] bg-white rounded-3xl transition-all  ${toggleDropdown && "-rotate-45 -translate-y-2"
+                  } `}
               ></div>
             </div>
           </div>
-          <div
-            className={`dropdown duration-1000 h-screen  ${
-              toggleDropdown ? "transform-none" : "-translate-x-full"
-            }`}
-          >
-            <Link
-              href="/"
-              className="dropdown_link"
-              onClick={() => setToggleDropdown(false)}
-            >
-              Home
-            </Link>
-
-            <Link
-              href="/schedule"
-              className="dropdown_link"
-              onClick={() => setToggleDropdown(false)}
-            >
-              Schedule
-            </Link>
-
-            {user ? (
-              <>
+          <div className={`absolute right-0 top-full w-full min-w-[210px] flex backdrop-blur-sm bg-neutral-500/50 duration-1000 h-screen  ${toggleDropdown ? "transform-none" : "-translate-x-full"
+            }`}  >
+            <div className="m-auto w-full">
+              <div className="flex flex-col gap-4 ">
                 <Link
-                  href="/profile"
+                  href="/"
+                  className="dropdown_link "
+                  onClick={() => setToggleDropdown(false)}
+                >
+                  Home
+                </Link>
+
+                <Link
+                  href="/schedule"
                   className="dropdown_link"
                   onClick={() => setToggleDropdown(false)}
                 >
-                  Profile
+                  Schedule
                 </Link>
 
-                <button
-                  type="button"
-                  onClick={() => setToggleDropdown(false)}
-                  className="black_btn w-11/12 m-auto mt-20 "
-                >
-                  Sign Out
-                  <span className="ml-[24px]">
-                    {" "}
-                    <PiSignOutDuotone
-                      size={22}
-                      color="white hover:black"
-                    />{" "}
-                  </span>
-                </button>
-              </>
-            ) : (
-              <button type="button" className="black_btn w-full mt-5">
-                Sign in
-              </button>
-            )}
+                {user ? (
+                  <>
+                    <Link
+                      href="/profile"
+                      className="dropdown_link"
+                      onClick={() => setToggleDropdown(false)}
+                    >
+                      Profile
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={() => setToggleDropdown(false)}
+                      className="black_btn w-11/12 m-auto mt-20 "
+                    >
+                      Sign Out
+                      <span className="ml-[24px]">
+                        <PiSignOutDuotone
+                          size={22}
+                          color="white hover:black"
+                        />
+                      </span>
+                    </button>
+                  </>
+                ) : (
+                  <button type="button" className="black_btn w-full mt-5">
+                    Sign in
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </nav>

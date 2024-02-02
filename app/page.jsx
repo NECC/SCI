@@ -85,19 +85,19 @@ export default function Home() {
 
         <div className="w-[15%] h-[4px] bg-white mt-[85px] "></div>
         <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">PATRÓCINIOS</h1>
-        <div className="lg:w-4/5 w-full mt-[39px] flex flex-col gap-[80px]">
+
+        <div className="lg:w-4/5 w-full mt-[89px] flex flex-wrap justify-between gap-12 ">
           {
-            sponsor.map((sponsor, index) => {
-              return (<Sponsor {...sponsor} key={index} />);
-            })
+            sponsor.map((singleSponsor, index) => (
+              <Sponsor {...singleSponsor} key={index} />
+            ))
           }
         </div>
         <div className="w-[15%] h-[4px] bg-white mt-[85px]"></div>
         <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">NÚCLEOS ORGANIZADORES</h1>
 
       </div>
-      <br />  {/* TEM AQUI UM BUG FICA UMA LINHA BRANCA NO FIM DA PAGINA
-        */}
+
     </main>
   );
 }
