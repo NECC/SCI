@@ -32,3 +32,17 @@
 .dropdown_link {
   @apply  font-black text-white text-2xl font-comfortaa text-center hover:text-white/80;
 }
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari, and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  /* Hide scrollbar for IE, Edge, and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
