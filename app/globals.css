@@ -21,3 +21,14 @@
 .dropdown_link {
   @apply p-3 border-b-1 border-t-1 border-white w-full font-extrabold text-white text-lg bg-gradient-to-r from-custom-blue-1 to-blue-950 font-comfortaa;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scroll {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

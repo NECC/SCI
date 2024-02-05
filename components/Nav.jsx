@@ -23,7 +23,7 @@ const Nav = (props) => {
   }, [session]);
 
   return (
-    <div className="w-full bg-black fixed z-50 bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover">
+    <div className="w-full bg-white dark:bg-black fixed z-50 bg-[url('/rectangle_light.png')] dark:bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover">
       <nav className="flex justify-between w-11/12 m-auto py-4 md:w-4/5 ">
         <Link href="/" className="flex items-center gap-2 ">
           <Image src="/sci-logo.png" alt="logo" width={70} height={70} />
