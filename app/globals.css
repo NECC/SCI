@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Montserrat:wght@600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Montserrat:wght@600&family=Poppins:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -21,17 +22,13 @@
 
 
 .black_btn {
-  @apply rounded-2xl border border-black bg-black py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center  flex items-center justify-center font-extrabold text-lg shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f] font-comfortaa  ;
+  @apply rounded-2xl border border-black bg-black py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center  flex items-center justify-center  text-xl font-black font-comfortaa  ;
 }
 
 .outline_btn {
   @apply font-poppins bg-transparent py-1.5 px-2 text-white transition-width duration-500 font-normal relative text-center text-base flex items-center justify-center hover:text-white/80;
 }
 
-.dropdown {
-  @apply absolute right-0 top-full w-full min-w-[210px] flex flex-col justify-start items-start  bg-blue-950 ;
-}
-
 .dropdown_link {
-  @apply p-3 border-b-1 border-t-1 border-white w-full font-extrabold text-white text-lg bg-gradient-to-r from-custom-blue-1 to-blue-950 font-comfortaa;
+  @apply  font-black text-white text-2xl font-comfortaa text-center hover:text-white/80;
 }
