@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { ActivitySchema } from "/prisma/generated/zod";
 
 /**
  * Get all Activities from the database
@@ -42,34 +43,34 @@ export async function GET() {
  * @param body title, description, speakers, location, capacity, date, type
  *
  * @example body: { "title": "Palestra de React", "description": "Palestra sobre React", "speakers": "Pedro Camargo", "location": "Sala 1", "capacity": 50, "date": "2021-10-10T14:00:00.000Z", "type": "Palestra" }
- * 
+ *
  */
 export async function POST(request) {
   const prisma = new PrismaClient();
   const data = await request.json();
-
-  try {
-    const activity = await prisma.activity.create({
-      data: {
-        title: data.title,
-        description: data.description,
-        speakers: data.speakers,
-        location: data.location,
-        capacity: data.capacity,
-        date: new Date(data.date),
-        endTime: data.endTime,
-        startTime: data.startTime,
-        type: data.type,
-      },
-    });
-
+  const response = ActivitySchema.safeParse(data);
+  if (!response.success) {
+    console.error(response.error);
     return new NextResponse(
-      JSON.stringify({ response: "success", activity: activity })
-    );
-  } catch (error) {
-    console.error(error);
-    return new NextResponse(
-      JSON.stringify({ response: "error", error: error })
+      JSON.stringify({ response: "error", error: "ja fostes" })
     );
   }
+
+  const activity = await prisma.activity.create({
+    data: {
+      title: data.title,
+      description: data.description,
+      speakers: data.speakers,
+      location: data.location,
+      capacity: data.capacity,
+      date: new Date(data.date),
+      endTime: data.endTime,
+      startTime: data.startTime,
+      type: data.type,
+    },
+  });
+
+  return new NextResponse(
+    JSON.stringify({ response: "success", activity: activity })
+  );
 }
