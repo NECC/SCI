@@ -119,9 +119,9 @@ export default function Schedule() {
                   </Chip>
                   <div className="flex flex-row md:flex-col">
                     <div className="bg-black dark:bg-white p-[0.5px] mx-3 md:h-[1px] md:my-3 md:mx-0 md:w-auto"></div>
-                    <div className="flex flex-row md:flex-col gap-3 overflow-scroll -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
+                    <div className="flex flex-row md:flex-col gap-32 -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
                       {activities.map((item, index) => (
-                        <Card key={index} className="min-w-[200px] max-w-[300px]">
+                        <Card key={index} className="min-w-[200px] max-w-[400px]">
                           <CardBody className="gap-2 p-5 rounded-2xl">
                             {item.speakers && (<p className="text-tiny text-black/60 dark:text-white/60 uppercase font-bold mb-1">
                               {getRandomCourse()}
@@ -147,7 +147,7 @@ export default function Schedule() {
                                 {item.speakers}
                               </p>
                               {item.location && (
-                                <div className="flex flex-row ml-auto pl-5 items-center">
+                                <div className="flex flex-row ml-auto px-5 items-center">
                                   <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
                                     {item.location}
                                   </p>
