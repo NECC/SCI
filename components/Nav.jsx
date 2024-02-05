@@ -42,6 +42,10 @@ const Nav = (props) => {
             <Link href="/schedule" className="outline_btn">
               Schedule
             </Link>
+            <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
+            <Link href="/faqs" className="outline_btn">
+            FAQs
+            </Link>
 
             <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
 
@@ -133,6 +137,14 @@ const Nav = (props) => {
                   onClick={() => setToggleDropdown(false)}
                 >
                   Schedule
+                </Link>
+
+                <Link
+                  href="/faqs"
+                  className="dropdown_link"
+                  onClick={() => setToggleDropdown(false)}
+                >
+                  FAQs
                 </Link>
 
                 {user ? (
