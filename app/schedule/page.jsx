@@ -6,16 +6,14 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
-  Image,
   Button,
   ButtonGroup,
   Chip,
 } from "@nextui-org/react";
-import { CiMapPin } from "react-icons/ci";
 import { createMedia } from "@artsy/fresnel";
-import { FaLongArrowAltRight } from "react-icons/fa";
 import { getActivities } from "@app/actions";
+import ThemeSwitcher from "@components/ThemeSwitcher";
+import Activity from "./Activity";
 
 const { MediaContextProvider, Media } = createMedia({
   breakpoints: {
@@ -134,63 +132,9 @@ export default function Schedule() {
                         <div className="bg-black dark:bg-white p-[0.5px] mx-3 md:h-[1px] md:my-3 md:mx-0 md:w-auto"></div>
                         <div className="flex flex-row md:flex-col p-5 overflow-scroll hide-scroll gap-3 -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
                           {activities.map((item, index) => (
-                            <a href={`/schedule/${item.id}`} key={index}>
-                              <Card
-                                className="min-w-[18rem] max-w-[300px]"
-                                shadow="sm"
-                              >
-                                <CardBody className="gap-2 p-5 rounded-2xl">
-                                  {item.speakers && (
-                                    <p className="text-tiny text-black/60 dark:text-white/60 uppercase font-bold mb-1">
-                                      {item.type}
-                                    </p>
-                                  )}
-                                  <h4 className="dark:text-white/90 font-bold text-xl">
-                                    {item.title}
-                                  </h4>
-                                  {item.description && (
-                                    <p className="text-small dark:text-white/60 font-medium">
-                                      {item.description}
-                                    </p>
-                                  )}
-                                  {item.enrollable && (
-                                    <div>
-                                      <Button
-                                        className="mt-4"
-                                        size="sm"
-                                        radius="full"
-                                        color="primary"
-                                        variant="solid"
-                                        endContent={<FaLongArrowAltRight />}
-                                      >
-                                        Enroll
-                                      </Button>
-                                    </div>
-                                  )}
-                                </CardBody>
-                                {(item.location || item.speakers) && (
-                                  <CardFooter className="flex flex-row gap-2 p-3 px-5 bg-gray-200 dark:bg-gray-700/50 mt-1">
-                                    <Image
-                                      src="https://avatars.githubusercontent.com/u/44109954?v=4"
-                                      alt="logo"
-                                      width={30}
-                                      height={30}
-                                    />
-                                    <p className="text-tiny dark:text-white/60 font-medium">
-                                      {item.speakers}
-                                    </p>
-                                    {item.location && (
-                                      <div className="flex flex-row ml-auto pl-5 items-center">
-                                        <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
-                                          {item.location}
-                                        </p>
-                                        <CiMapPin className="inline ml-2" />
-                                      </div>
-                                    )}
-                                  </CardFooter>
-                                )}
-                              </Card>
-                            </a>
+                            <div key={index}>
+                              <Activity item={item} />
+                            </div>
                           ))}
                         </div>
                       </div>

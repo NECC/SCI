@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth"
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET() {
   try {
@@ -32,9 +34,18 @@ export async function GET() {
 export async function POST(request) {
   const prisma = new PrismaClient();
   const data = await request.json();
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return new NextResponse(
+      JSON.stringify({
+        response: "error",
+        error: "You need to be logged in to create an enrollment",
+      })
+    );
+  }
 
   try {
-
     // Get activity enrollments and check if it's full
     const activityEnrollments = await prisma.activity.findUnique({
       where: {
@@ -55,31 +66,37 @@ export async function POST(request) {
         })
       );
     }
-    
+
+    // check if user is already enrolled
+    const userEnrollment = await prisma.enrollments.findFirst({
+      where: {
+        userId: session?.user.id,
+        activityId: data.activityId,
+      },
+    });
+
+    if (userEnrollment) {
+      return new NextResponse(
+        JSON.stringify({
+          response: "already_enrolled",
+          error: "You are already enrolled in this activity",
+        })
+      );
+    }
+
     // If it's not full, create a new enrollment
     const enrollment = await prisma.enrollments.create({
       data: {
+        user: {
+          connect: {
+            id: session?.user.id,
+          },
+        },
         activity: {
           connect: {
             id: data.activityId,
           },
         },
-        user: {
-          connect: {
-            id: data.userId,
-          },
-        },
-      },
-      select: {
-        id: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        activity: true,
       },
     });
 
