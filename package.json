@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@artsy/fresnel": "github:artsy/fresnel",
     "@auth/prisma-adapter": "^1.0.8",
     "@hookform/resolvers": "^3.3.3",
     "@nextui-org/react": "^2.2.9",
