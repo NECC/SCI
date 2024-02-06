@@ -16,6 +16,7 @@ import { CiMapPin } from "react-icons/ci";
 import { createMedia } from "@artsy/fresnel";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { getActivities } from "@app/actions";
+import ThemeSwitcher from "@components/ThemeSwitcher";
 
 const { MediaContextProvider, Media } = createMedia({
   breakpoints: {
@@ -219,6 +220,7 @@ export default function Schedule() {
           </div>
         </Media>
       </div>
+      <ThemeSwitcher />
     </MediaContextProvider>
   );
 }
