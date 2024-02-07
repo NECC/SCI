@@ -1,7 +1,9 @@
 "use client";
 
 import Nav from "@components/Nav";
-import { useEffect, useState } from "react";
+import QRCode from "easyqrcodejs";
+import { colors } from "@nextui-org/react";
+import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import {
     Card,
@@ -21,7 +23,7 @@ import {
 import { IconContext } from "react-icons";
 import { FaRegCalendarAlt } from "react-icons/fa";
 
-export default function Profile () {
+export default function Profile ({ params: { id }} ) {
     const [user, setUser] = useState({});
     const [userEnrollment, setUserEnrollment] = useState([]);
     const [activities, setActivities] = useState ([]);
@@ -36,6 +38,7 @@ export default function Profile () {
     let count = 1;
     let maxCount = 0;
     const router = useRouter();
+    // console.log(id);
 
     const { data: session, status} = useSession({
         required: true,
@@ -44,9 +47,14 @@ export default function Profile () {
         },
     });
 
+    // get profile user
     useEffect(() => {
-        if (session) setUser(session.user);
-    }, [session]);
+        const getUser = async () => {
+            const { data } = await axios.get(`/api/users/${id}`);
+            setUser(data.user);
+        }
+        getUser();
+    }, [id]);
 
     function filterByUser(e) {
         if (e.userId == user.id) { 
@@ -119,9 +127,6 @@ export default function Profile () {
         else setActiveDay(21);
     }
 
-    console.log(activities);
-
-
     return (
         <div className=" dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
             <Nav />
@@ -132,7 +137,7 @@ export default function Profile () {
                         <CardHeader className="dark:bg-black/40 border-b-1 border-default-600 dark:border-default-100 flex-row">
                             <div className="flex flex-grow gap-2 items-center p-2 justify-between">
                                 <div className="flex flex-col text-neutral-700 dark:text-white/90 uppercase font-black text-2xl">
-                                    Bem-vindo {user.name}
+                                    Perfil de {user.name}
                                 </div>
                                 <ButtonGroup>
                                     <Button onClick={() => setActiveScreen(0)} className={(activeScreen != 0) ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"}> Atividades Inscritas </Button>
@@ -151,7 +156,9 @@ export default function Profile () {
                             <Ranking user={user} place={place} firstPlace={firstPlace} />
 
                         ) : (activeScreen == 2) ? (
-                            <></>
+
+                            <Code userId={id}/>
+
                         ) : (<></>)}
                     </Card>
                 ) : (
@@ -166,7 +173,7 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
     return (
         <CardBody className="dark:bg-black/40 flex flex-col">
             <div className="flex flex-col gap-y-1">
-                <h className="mx-1 text-[#494748] dark:text-white font-semibold text-2xl"> Atividades Inscritas </h>
+                <h1 className="mx-1 text-[#494748] dark:text-white font-semibold text-2xl"> Atividades Inscritas </h1>
                 <div className="mx-5 flex flex-row items-center">
                     <h2 className="font-bold text-lg"> Dia {activeDay} </h2>
                     <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => previousDay()}> <SlArrowLeft size={'1em'}/> </Button>
@@ -230,11 +237,44 @@ const Ranking = ({ user, place, firstPlace }) => {
     return (
         <CardBody className="dark:bg-black/40 flex flex-col ">
             <div className="px-1"> 
-                <h className="dark:text-white font-semibold text-l"> Ranking </h>
+                <h2 className="dark:text-white font-semibold text-l"> Ranking </h2>
                 <div>
                 <p> Tens {user.points} pontos </p> 
                 <p> Estás em {place}º lugar </p>
                 {(place > 1) ? (<p> O primeiro lugar têm {firstPlace} pontos</p>) : (<></>)}
+                </div>
+            </div>
+        </CardBody>
+    )
+}
+
+const Code = ({ userId }) => {
+    const qrcode = useRef(null)
+    const currentUrl = process.env.NEXT_PUBLIC_MODE == "development" ? process.env.NEXT_PUBLIC_BACKOFFICE_URL_DEVELOPMENT : process.env.NEXT_PUBLIC_BACKOFFICE_URL_PRODUCTION
+    console.log(currentUrl)
+    useEffect(() => {
+
+        var options = {
+            text: "Bem-vindo ao evento",
+            width: 200,
+            height: 200,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H,
+            
+        }
+
+        const code = new QRCode(qrcode.current, options);
+        code.makeCode(`${currentUrl}/ranking/${userId}`);
+        return () => code.clear()
+    }, [qrcode])
+
+    return (
+        <CardBody className="dark:bg-black/40 flex flex-col ">
+            <div className="px-1"> 
+                <h2 className="dark:text-white font-semibold text-l"> QRCode </h2>
+                <div ref={qrcode}>
+
                 </div>
             </div>
         </CardBody>

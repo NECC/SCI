@@ -40,7 +40,10 @@ export default function Home() {
   });
 
   useEffect(() => {
-    if (session) setUser(session.user);
+    if (session) {
+      setUser(session.user);
+      console.log(session)
+    } 
   }, [session]);
 
 
