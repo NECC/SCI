@@ -18,6 +18,8 @@ const Nav = (props) => {
     required: false,
   });
 
+  // console.log(session)
+
   useEffect(() => {
     if (session) setUser(session.user);
   }, [session]);
@@ -68,7 +70,7 @@ const Nav = (props) => {
               </Button>
 
               <Link
-                href="/profile"
+                href={`/profile/${user.id}`}
                 className="flex justify-center items-center gap-4"
               >
                 <Avatar src="/user.svg" alt="profile" />
@@ -150,7 +152,7 @@ const Nav = (props) => {
                 {user ? (
                   <>
                     <Link
-                      href="/profile"
+                      href={`/profile/${user.id}`}
                       className="dropdown_link"
                       onClick={() => setToggleDropdown(false)}
                     >

@@ -13,6 +13,7 @@ import Sponsor from "@components/Sponsor";
 import sponsorData from "../data/sponsor.json"
 import ColorModeToggle from "@components/ColorModeToggle";
 import Footer from "@components/Footer";
+import Nav from "@components/Nav";
 
 const image = ImageData.images
 const sponsor = sponsorData.Patrocinadores
@@ -40,7 +41,10 @@ export default function Home() {
   });
 
   useEffect(() => {
-    if (session) setUser(session.user);
+    if (session) {
+      setUser(session.user);
+      console.log(session)
+    } 
   }, [session]);
 
 
@@ -62,7 +66,8 @@ export default function Home() {
   useEffect(findDarkHtmlElement, []);
 
   return (
-
+    <>
+    <Nav />
     <div className="bg-white dark:bg-black">
       <div className=" w-full lg:relative lg:pt-[68px] pt-[59px]">
         <div className="lg:h-[560px] md:h-[300px] h-[200px] relative ">
@@ -79,15 +84,15 @@ export default function Home() {
           {
             image.map((images, index) => (
               <Image
-                key={index}
-                src={images.path}
-                alt='logo'
-                width={400}
-                height={400}
-                className="lg:w-[32%] snap-center"
+              key={index}
+              src={images.path}
+              alt='logo'
+              width={400}
+              height={400}
+              className="lg:w-[32%] snap-center"
               />
-            ))
-          }
+              ))
+            }
         </div>
 
         <div className="w-[15%] h-[4px] dark:bg-white bg-black mt-[79px] "></div>
@@ -102,12 +107,12 @@ export default function Home() {
           {
             sponsor.map((singleSponsor, index) => (
               <Sponsor key={index}
-                name={singleSponsor.name}
-                path={!darkMode ? singleSponsor.path_black : singleSponsor.path}
-                link={singleSponsor.link}
+              name={singleSponsor.name}
+              path={!darkMode ? singleSponsor.path_black : singleSponsor.path}
+              link={singleSponsor.link}
               />
-            ))
-          }
+              ))
+            }
 
         </div>
         <div className="w-[15%] h-[4px] dark:bg-white bg-black mt-[70px]"></div>
@@ -123,6 +128,7 @@ export default function Home() {
       </div>
       <Footer />
     </div>
+    </>
   );
 }
 
