@@ -38,7 +38,6 @@ export default function Profile ({ params: { id }} ) {
     let count = 1;
     let maxCount = 0;
     const router = useRouter();
-    // console.log(id);
 
     const { data: session, status} = useSession({
         required: true,
@@ -55,6 +54,8 @@ export default function Profile ({ params: { id }} ) {
         }
         getUser();
     }, [id]);
+
+    console.log(user)
 
     function filterByUser(e) {
         if (e.userId == user.id) { 

@@ -11,7 +11,7 @@ export default function Sidebar() {
     const Icons = "text-lg mr-2 mt-[2px]"
 
     return (
-        <div className="min-w-[170px] h-screen bg-black flex flex-col items-center">
+        <div className="min-w-[170px] h-screen bg-black md:flex hidden flex-col items-center ">
             <div className="border-b border-white/30 w-full flex flex-col items-center pb-3">
                 <Image src="/sci-logo.png" width={100} height={100} alt="logo" className="p-4"/>
                 <span className="text-white text-[.8em] -mt-4 font-montserrat">Admin Dashboard</span>
