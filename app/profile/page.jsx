@@ -1,7 +1,7 @@
 "use client";
 
 import Nav from "@components/Nav";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import {
     Card,
@@ -18,8 +18,9 @@ import {
     SlArrowLeft,
     SlArrowRight 
 } from "react-icons/sl";
-import { IconContext } from "react-icons";
 import { FaRegCalendarAlt } from "react-icons/fa";
+import { TbFileDownload } from "react-icons/tb";
+import Link from 'next/link'
 
 export default function Profile () {
     const [user, setUser] = useState({});
@@ -119,33 +120,48 @@ export default function Profile () {
         else setActiveDay(21);
     }
 
+    const onWheel = e => {
+        e.preventDefault();
+        const container = scrollRef.current;
+        const containerScrollPosition = scrollRef.current.scrollLeft;
+    
+        container.scrollTo({
+          top: 0,
+          left: containerScrollPosition + e.deltaY,
+        });
+      };
+    
+    const scrollRef = useRef(null);
+
     console.log(activities);
 
     return (
         <div className="bg-white dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
             <Nav />
-            <div className="gap-2 px-8 pt-20">
-                {(status != "loading" && activeScreen == 0) ? (
-                <Card isBlurred className="w-full h-[625px]">
+            <div className="flex gap-2 px-8 pt-20 h-full">
+                {(status != "loading" && !activeScreen) ? (
+                <Card isBlurred className="w-full">
                     <CardHeader className="dark:bg-black/40 border-b-1 border-default-600 dark:border-default-100 flex-row">
                         <div className="flex flex-grow gap-2 items-center p-2 justify-between">
                             <div className="flex flex-col text-neutral-700 dark:text-white/90 uppercase font-black text-2xl">
-                                Bem-vindo {user.name}
+                                Welcome {user.name}
                             </div>
                             <ButtonGroup>
-                                <Button onClick={() => setActiveScreen(0)} className="bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"> Atividades Inscritas </Button>
+                                <Button onClick={() => setActiveScreen(0)} className="bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"> Enrolled Activities </Button>
                                 <Button onClick={() => setActiveScreen(1)} className="dark:text-white dark:bg-transparent dark:border-gray-50 border-1"> Ranking </Button>
                             </ButtonGroup>
                         </div>
                     </CardHeader>
                     <CardBody className="dark:bg-black/40 flex flex-col">
-                        <div className="flex flex-col gap-y-1">
-                            <h className="mx-1 text-[#494748] dark:text-white font-semibold text-2xl"> Atividades Inscritas </h>
-                            <div className="mx-5 flex flex-row items-center">
-                                <h2 className="font-bold text-lg"> Dia {activeDay} </h2>
-                                <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => previousDay()}> <SlArrowLeft size={'1em'}/> </Button>
-                                <FaRegCalendarAlt size={'1em'} />
-                                <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => nextDay()}> <SlArrowRight size={'1em'}/> </Button> 
+                        <div className="flex flex-col gap-y-3">
+                            <h className="mx-1 text-[#494748] dark:text-white font-semibold text-2xl"> Enrolled Activities </h>
+                            <div className="mx-5 gap-4 flex flex-row items-center">
+                                <h2 className="font-bold text-lg"> Day {activeDay} </h2>
+                                <ButtonGroup className="border-1 rounded-full">
+                                    <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => previousDay()}> <SlArrowLeft size={'1em'}/> </Button>
+                                    <FaRegCalendarAlt size={'1em'} />
+                                    <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => nextDay()}> <SlArrowRight size={'1em'}/> </Button>
+                                </ButtonGroup>
                             </div>
                             <div className="mx-6 mt-1 -mb-3 flex flex-row h-8">
                                 <ButtonGroup>
@@ -160,10 +176,10 @@ export default function Profile () {
                                     </Button>
                                 </ButtonGroup>
                             </div>
-                            <div className="no-scrollbar mx-6 flex flex-wrap gap-4 flex-col md:flex-row w-[300px] md:w-auto mt-8">
+                            <div id ="container" ref={scrollRef} onWheel={onWheel} className="overflow-x-hidden no-scrollbar mx-6 flex gap-4 flex-col md:flex-row w-[300px] md:w-auto mt-8">
                                 { (activities.length > 0) ? (
                                     activities.map((enrollments, index) => (
-                                        <div className="flex" key={index}>
+                                        <Link href={`profile/activity/${enrollments.activity.id}`} className="flex" key={index}>
                                                 <Card className="w-[300px] border-1 border-[#222327]">
                                                     <CardBody>
                                                         <h4 className="dark:text-white/90 font-bold text-xl">
@@ -174,10 +190,11 @@ export default function Profile () {
                                                         </p>
                                                         )}
                                                     </CardBody>
-                                                    <CardFooter className="flex flex-row gap-2 p-3 px-5 bg-gray-200 dark:bg-gray-700/50 mt-1">
+                                                    <CardFooter className="flex flex-row justify-center gap-2 p-3 px-5 bg-gray-200 dark:bg-gray-700/50 mt-1">
                                                         <p className="text-tiny dark:text-white/60 font-medium">
                                                             {enrollments.activity.speakers}
                                                         </p>
+                                                        <div className="flex flex-row"> <p className="text-tiny"> Certificate </p> <TbFileDownload /> </div> 
                                                         <div className="flex flex-row ml-auto pl-5 items-center gap-3">
                                                             <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
                                                                 {enrollments.activity.startTime}h - {enrollments.activity.endTime}h
@@ -190,24 +207,24 @@ export default function Profile () {
                                                         </div>
                                                     </CardFooter>
                                                 </Card>
-                                        </div>
+                                        </Link>
                                     ))
-                                ) : <p className="h-[117px]"> Não estás inscrito em nenhuma atividade deste tipo </p>
+                                ) : <p className="h-[117px]"> You're not enrolled in any activity of this type </p>
                                 }
                             </div>   
                         </div>
                     </CardBody>    
                 </Card>
-                ) : ((activeScreen == 1) ? (
-                    <Card className="h-[625px] w-full">
+                ) : ((activeScreen) ? (
+                    <Card className="w-full">
                         <CardHeader className="dark:bg-black/40 border-b-1 border-default-600 dark:border-default-100 flex-row">
                             <div className="flex flex-grow gap-2 items-center p-2 justify-between">
                                 <div className="flex flex-col dark:text-white/90 uppercase font-black text-2xl">
-                                    Bem-vindo {user.name}
+                                    Welcome {user.name}
                                 </div>
                                 <div>
                                     <ButtonGroup>
-                                        <Button onClick={() => setActiveScreen(0)} className="dark:text-white dark:bg-transparent dark:border-gray-50 border-1"> Atividades Inscritas </Button>
+                                        <Button onClick={() => setActiveScreen(0)} className="dark:text-white dark:bg-transparent dark:border-gray-50 border-1"> Enrolled Activities </Button>
                                         <Button onClick={() => setActiveScreen(1)} className="bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"> Ranking </Button>
                                     </ButtonGroup>
                                 </div>
@@ -217,9 +234,9 @@ export default function Profile () {
                             <div className="px-1"> 
                                 <h className="dark:text-white font-semibold text-l"> Ranking </h>
                                 <div>
-                                <p> Tens {user.points} pontos </p> 
-                                <p> Estás em {place}º lugar </p>
-                                {(place > 1) ? (<p> O primeiro lugar têm {firstPlace} pontos</p>) : (<></>)}
+                                <p> You have {user.points} points </p> 
+                                <p> You're in {place}º place </p>
+                                {(place > 1) ? (<p> First place has {firstPlace} points</p>) : (<></>)}
                                 </div>
                             </div>
                         </CardBody>
