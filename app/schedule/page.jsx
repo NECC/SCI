@@ -87,8 +87,7 @@ export default function Schedule() {
   }, []);
 
   return (
-    <div className="bg-white dark:bg-black dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">
-      <Nav />
+    <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">
       <div className="gap-2 px-2 md:px-8 pt-20">
         <Card isBlurred className="w-full h-[700px]">
           <CardHeader className="dark:bg-black/40 border-b-1 dark:border-default-600 dark:border-default-100">

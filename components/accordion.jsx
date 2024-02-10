@@ -3,7 +3,7 @@ import { Accordion, AccordionItem } from "@nextui-org/react";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 export default function accordion() {
 
-   const where =" SCI takes place from June 5th to June 7th, at Universidade do Minho in Braga.";
+    const where =" SCI takes place from June 5th to June 7th, at Universidade do Minho in Braga.";
     const free = "Yes, it’s free to all attendees!";
     const participate = "Of course! SCI is open to everyone, regardless if you’re a student or not. Everyone is welcome to participate in our workshops and our talks.";
     const register = "You can participate by registering in this year’s edition through the link below.";
