@@ -1,22 +1,17 @@
 import Image from 'next/image'
 
-const Sponsor = ({ name, path, link, description }) => {
+const Sponsor = ({ name, path, link }) => {
     return (
-
-        <>
-            <div className='flex flex-col gap-4 justify-center items-center'>
-                <Image src={path}
+        <div className='py-8 w-[40%] flex justify-start items-center' >
+            <a href={link} target="blank">
+                <Image
+                    src={path}
                     alt={name}
-                    width={400}
-                    height={400}
-                    className="lg:w-[32%]"
+                    width={150}
+                    height={150}
                 />
-                <p className='text-white'>{name}</p>
-                <p className='text-white'>{link}</p>
-                <p className='text-white'>{description}</p>
-            </div>
-        </>
+            </a>
+        </div>
     )
 }
-
 export default Sponsor

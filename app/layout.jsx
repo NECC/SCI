@@ -1,9 +1,8 @@
 import "./globals.css";
-
-import Navbar from "@/components/Nav";
-import "./globals.css";
 import AuthProvider from "@components/providers/AuthProviders";
 import NextUI from "@components/providers/NextUIProvider";
+import Nav from "@components/Nav";
+
 
 export const metadata = {
   title: "SCI",
@@ -20,6 +19,6 @@ export default async function RootLayout({ children }) {
           </AuthProvider>
         </NextUI>
       </body>
-    </html>
+    </html >
   );
 }
