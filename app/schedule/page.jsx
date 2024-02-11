@@ -163,6 +163,7 @@ export default function Schedule() {
           </div>
         </Media>
       </div>
+      <ThemeSwitcher />
     </MediaContextProvider>
   );
 }
