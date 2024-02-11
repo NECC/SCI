@@ -1,0 +1,29 @@
+{
+    "images": [
+        {
+            "path": "/nucleos/necc.svg",
+            "link" : "https://www.necc.com"
+        },
+        {
+            "path": "/nucleos/cesium.svg",
+            "link" : "https://www.necc.com"
+        },
+        {
+            "path": "/nucleos/nefum.svg",
+            "link" : "https://www.necc.com"
+        },
+        {
+            "path": "/nucleos/necc.svg",
+            "link" : "https://www.necc.com"
+        },
+        {
+            "path": "/nucleos/cesium.svg",
+            "link" : "https://www.necc.com"
+        },
+        {
+            "path": "/nucleos/nefum.svg",
+            "link" : "https://www.necc.com"
+        }
+       
+    ]
+}
