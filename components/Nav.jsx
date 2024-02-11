@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
@@ -24,6 +23,14 @@ const Nav = (props) => {
     if (session) setUser(session.user);
   }, [session]);
 
+  useEffect(() => {
+    if (toggleDropdown) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  }, [toggleDropdown]);
+
   return (
     <div className="w-full block z-50 bg-sky-400">
       <nav className="flex justify-between w-auto m-auto py-4 md:w-4/5 bg-transparent">
@@ -34,7 +41,7 @@ const Nav = (props) => {
               Home
             </Link>
 
-            <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
+          <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
 
             <Link href="/schedule" className="outline_btn">
               Schedule
@@ -44,14 +51,17 @@ const Nav = (props) => {
               FAQs
             </Link>
 
-            <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
 
-            {user.role == "ADMIN" && (
+          {user.role == "ADMIN" && (
+            <>
+              <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
               <Link href="/admin" className="outline_btn">
                 Backoffice
               </Link>
-            )}
-          </div>
+            </>
+
+          )}
+        </div>
 
           <div className="float-right">
             {user.name ? (
@@ -128,31 +138,28 @@ const Nav = (props) => {
                   Home
                 </Link>
 
-                <Link
-                  href="/schedule"
-                  className="dropdown_link"
-                  onClick={() => setToggleDropdown(false)}
-                >
-                  Schedule
-                </Link>
+            <Link
+              href="/schedule"
+              className="dropdown_link"
+              onClick={() => setToggleDropdown(false)}>
+              Schedule
+            </Link>
 
-                <Link
-                  href="/faqs"
-                  className="dropdown_link"
-                  onClick={() => setToggleDropdown(false)}
-                >
-                  FAQs
-                </Link>
+            <Link
+              href="/faqs"
+              className="dropdown_link"
+              onClick={() => setToggleDropdown(false)}>
+              FAQs
+            </Link>
 
-                {user ? (
-                  <>
-                    <Link
-                      href={`/profile/${user.id}`}
-                      className="dropdown_link"
-                      onClick={() => setToggleDropdown(false)}
-                    >
-                      Profile
-                    </Link>
+            {user ? (
+              <>
+                <Link
+                  href={`/profile/${user.id}`}
+                  className="dropdown_link"
+                  onClick={() => setToggleDropdown(false)}>
+                  Profile
+                </Link>
 
                     <button
                       type="button"
@@ -173,9 +180,11 @@ const Nav = (props) => {
               </div>
             </div>
           </div>
+
         </div>
-      </nav>
-    </div>
+      </div>
+
+    </nav>
   );
 };
 

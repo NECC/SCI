@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Nav from "@components/Nav";
 import './page.css';
 import React from "react";
-import Accor from "@components/accordion";
+import Accor from "@components/Accordion";
 import ColorModeToggle from '@components/ColorModeToggle';
 
 

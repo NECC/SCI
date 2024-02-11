@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import ImageData from "../data/images.json"
+import ImageData from "../data/nucleos.json"
 import Hexa from "@components/Hexa";
 import { images } from "@next.config";
 import Image from "next/image";
@@ -14,6 +14,8 @@ import sponsorData from "../data/sponsor.json"
 import ColorModeToggle from "@components/ColorModeToggle";
 import Footer from "@components/Footer";
 import Nav from "@components/Nav";
+import Nucleos from "@components/Nucleos";
+
 
 const image = ImageData.images
 const sponsor = sponsorData.Patrocinadores
@@ -48,23 +50,6 @@ export default function Home() {
   }, [session]);
 
 
-
-  // console.log(user);
-
-
-  const [darkMode, setDarkMode] = useState(false);
-
-  // Função para buscar o elemento <html> com a classe 'dark'
-  const findDarkHtmlElement = () => {
-    const htmlElement = document.querySelector('html.dark');
-    if (htmlElement) {
-      setDarkMode(true);
-    } else {
-      setDarkMode(false);
-    }
-  };
-  useEffect(findDarkHtmlElement, []);
-
   return (
     <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-full">
       <div className=" w-full lg:relative lg:pt-[54px] pt-[62px]">
@@ -85,17 +70,15 @@ export default function Home() {
         <div className="w-[15%] h-[4px] dark:bg-white bg-white mt-[70px] "></div>
         <h1 className="dark:text-white text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">PATROCÍNIOS</h1>
 
-        <div className="lg:w-4/5 w-full mt-[39px] flex flex-wrap justify-between gap-12 ">
+        <div className="lg:w-4/5 w-full mt-9 flex flex-wrap justify-between gap-12 ">
 
           {
             sponsor.map((singleSponsor, index) => (
-              <Sponsor key={index}
-              name={singleSponsor.name}
-              path={!darkMode ? singleSponsor.path_black : singleSponsor.path}
-              link={singleSponsor.link}
+              <Sponsor {...singleSponsor} key={index}
+
               />
-              ))
-            }
+            ))
+          }
 
         </div>
         <div className="w-[15%] h-[4px] dark:bg-white bg-white mt-[70px]"></div>
@@ -105,8 +88,9 @@ export default function Home() {
             <Image src={darkMode ? "/location.svg" : "location_dark.svg"} alt="Banner" layout="fill" objectFit="cover" />
           </div>
         </div>
+
       </div>
-      <div onClick={findDarkHtmlElement}>
+      <div>
         <ColorModeToggle />
       </div>
       <Footer />

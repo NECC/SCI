@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@artsy/fresnel": "github:artsy/fresnel",
     "@auth/prisma-adapter": "^1.0.8",
     "@hookform/resolvers": "^3.3.3",
     "@nextui-org/react": "^2.2.9",
     "@prisma/client": "^5.6.0",
+    "artsy": "^1.8.0",
     "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.3.2",
@@ -24,9 +26,13 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^4.12.0",
-    "zod-prisma-types": "^3.1.6"
+    "react-responsive": "^9.0.2",
+    "react-scrollbars-custom": "^4.1.1",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/node": "20.11.10",
+    "@types/react": "18.2.48",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.3",
