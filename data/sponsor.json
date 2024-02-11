@@ -3,42 +3,34 @@
         {
             "name": "Bosh",
             "path": "/sponsor/bosch.svg",
-            "path_black":"/sponsor/bosch_black.svg",
             "link": "http://www.bosch.com.br/"
         },
         
         {
             "name": "Xpandit",
             "path": "/sponsor/xpandit.svg",
-            "path_black":"/sponsor/xpandit_black.svg",
             "link": "https://www.google.com/"
         },
         {
             "name": "Checkmarx",
             "path": "/sponsor/checkmarx.svg",
-            "path_black":"/sponsor/checkmarx_black.svg",
             "link": "https://www.apple.com/"
         },
        
         {
             "name": "Deloitte",
             "path": "/sponsor/deloitte.svg",
-            "path_black":"/sponsor/deloitte_black.svg",
             "link": "https://www.microsoft.com/"
         },
         {
             "name": "Accenture", 
             "path": "/sponsor/accenture.svg",
-            "path_black":"/sponsor/accenture_black.svg",
             "link": "https://www.facebook.com/"
         },
         {
             "name": "Itsector",
             "path": "/sponsor/itsector.svg",
-            "path_black":"/sponsor/itsector_black.svg",
             "link": "https://www.instagram.com/"
         }
-       
-
     ]
 }
