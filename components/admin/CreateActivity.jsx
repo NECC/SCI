@@ -132,7 +132,7 @@ export default function CreateActivity() {
               className="max-w-xs"
               isInvalid={!!errors.type}
               errorMessage={errors.type?.message}
-              defaultSelectedKeys={[Types[0]]}
+              defaultSelectedKeys={Types[0]}
               {...register('type')}
             >
               {Types.map((type) => (

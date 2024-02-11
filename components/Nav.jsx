@@ -182,9 +182,9 @@ const Nav = (props) => {
           </div>
 
         </div>
-      </div>
+      </nav>
+    </div>
 
-    </nav>
   );
 };
 

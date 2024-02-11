@@ -50,6 +50,24 @@ export default function Home() {
   }, [session]);
 
 
+
+  // console.log(user);
+
+
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Função para buscar o elemento <html> com a classe 'dark'
+  const findDarkHtmlElement = () => {
+    const htmlElement = document.querySelector('html.dark');
+    if (htmlElement) {
+      setDarkMode(true);
+    } else {
+      setDarkMode(false);
+    }
+  };
+  useEffect(findDarkHtmlElement, []);
+
+
   return (
     <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-full">
       <div className=" w-full lg:relative lg:pt-[54px] pt-[62px]">
