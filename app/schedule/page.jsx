@@ -12,7 +12,6 @@ import {
 } from "@nextui-org/react";
 import { createMedia } from "@artsy/fresnel";
 import { getActivities } from "@app/actions";
-import ThemeSwitcher from "@components/ThemeSwitcher";
 import Activity from "./Activity";
 
 const { MediaContextProvider, Media } = createMedia({
@@ -163,7 +162,6 @@ export default function Schedule() {
           </div>
         </Media>
       </div>
-      <ThemeSwitcher />
     </MediaContextProvider>
   );
 }
