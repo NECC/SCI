@@ -50,28 +50,43 @@ export default function Home() {
   }, [session]);
 
 
-  return (
 
-    <div id="footer" className="bg-gradient-to-r from-custom-blue-3 via-custom-blue-1 to-custom-blue-3 dark:bg-gradient-to-r dark:from-black dark:via-black dark:to-black">
-      <Nav />
-      <div className="w-full">
-        <div className="lg:h-[560px] md:h-[300px] h-[200px] relative ">
-          <Image src="/banner.png" alt="Banner" layout="fill" objectFit="cover" />
+  // console.log(user);
+
+
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Função para buscar o elemento <html> com a classe 'dark'
+  const findDarkHtmlElement = () => {
+    const htmlElement = document.querySelector('html.dark');
+    if (htmlElement) {
+      setDarkMode(true);
+    } else {
+      setDarkMode(false);
+    }
+  };
+  useEffect(findDarkHtmlElement, []);
+
+
+  return (
+    <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-full">
+      <div className=" w-full lg:relative lg:pt-[54px] pt-[62px]">
+        <div className=" lg:h-[560px] md:h-[300px] h-[200px] relative ">
+          <Image src="/banner_fixed.png" alt="Banner" layout="fill" objectFit="cover" />
         </div>
-        <div className="flex flex-col gap-4 itens-center justify-center p-2  ">
-          <p className="text-white md:text-2xl text-1xl font-extrabold leading-tight text-center tracking-[0.2npmem]">14 - 15 MARÇO</p>
+        <div className="flex flex-col gap-4 itens-center justify-center p-2">
+          <p className='text-white text-xl text-center font-bold drop-shadow-2xl'>14 - 15 MARÇO</p>
         </div>
         <Hexa />
       </div>
 
       <div className="sm:w-4/5 w-11/12 m-auto mt-[79px] ">
+        <div className="w-[15%] h-[4px] dark:bg-white bg-white mt-[79px] "></div>
+        <h1 className="dark:text-white text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-left lg:w-4/5 mt-[23px]">O QUE É</h1>
+        <p className="dark:text-white text-white mt-[39px] font-poppins font-light leading-8 lg:w-4/5 w-full"> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad repellat soluta aspernatur natus nobis quos porro velit, illum nihil magni cupiditate! Sunt pariatur ratione, maiores velit officiis quod eum quisquam!</p>
 
-        <h1 className="text-white  md:text-5xl text-4xl font-extrabold leading-tight lg:text-left lg:w-4/5 tracking-[0.1em]">WHATS IS IT?</h1>
-
-        <p className="text-white  mt-9 font-poppins font-light leading-8 lg:w-4/5 w-full"> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad repellat soluta aspernatur natus nobis quos porro velit, illum nihil magni cupiditate! Sunt pariatur ratione, maiores velit officiis quod eum quisquam!</p>
-
-        <div className="w-[15%] h-[4px] bg-white mt-20 "></div>
-        <h1 className="text-white  md:text-5xl text-4xl font-extrabold leading-tight lg:text-left lg:w-4/5 mt-6 tracking-[0.1em]">SPONSORS</h1>
+        <div className="w-[15%] h-[4px] dark:bg-white bg-white mt-[70px] "></div>
+        <h1 className="dark:text-white text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">PATROCÍNIOS</h1>
 
         <div className="lg:w-4/5 w-full mt-9 flex flex-wrap justify-between gap-12 ">
 
@@ -84,28 +99,11 @@ export default function Home() {
           }
 
         </div>
-
-        <div className="md:w-[15%] w-[30%] h-[4px]  bg-white mt-20"></div>
-
-        <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-6 tracking-[0.1em]">ORGANIZATION</h1>
-
-        <div className="lg:w-4/5 w-full mt-10 flex flex-wrap gap-12">
-          {
-            image.map((singleImage, index) => (
-              <Nucleos {...singleImage} key={index} />
-            ))
-          }
-        </div>
-        
-        <div className="w-full lg:w-4/5 flex md:flex-row flex-col md:justify-between items-center justify-center gap-12 mt-40">
-          <div className="w-full p-6 md:w-1/2 shadow-2xl shadow-custom-blue-2 bg-custom-blue-2 dark:bg-black  rounded-xl">
-            <p className="text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 tracking-[0.1em]">FIND US</p>
-            <p className="text-white  mt-2 font-poppins font-light leading-8"> The JOIN is free for participants and is organized by volunteers from CeSIUM, NECC, NEFUM, the Department of Informatics, and the School of Science from the university of Minho.
-              This years event will take place at Pedagocic Complex 1, Building 1, Gualtar Campus.
-            </p>
-          </div>
-          <div className="relative  lg:w-96 lg:h-96 md:w-80 md:h-80 w-72 h-72">
-            <Image src={"/location.svg"} alt="Banner" layout="fill" objectFit="cover" />
+        <div className="w-[15%] h-[4px] dark:bg-white bg-white mt-[70px]"></div>
+        <h1 className="dark:text-white text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">NÚCLEOS ORGANIZADORES</h1>
+        <div className="lg:w-4/5 w-full flex justify-end items-center ">
+          <div className="lg:w-[400px] lg:h-[400px] md:w-[300px] md:h-[300px] h-[200px] w-[200px]  relative ">
+            <Image src={darkMode ? "/location.svg" : "location_dark.svg"} alt="Banner" layout="fill" objectFit="cover" />
           </div>
         </div>
 
@@ -115,6 +113,7 @@ export default function Home() {
       </div>
       <Footer />
     </div>
+    
   );
 }
 

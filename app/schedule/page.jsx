@@ -91,9 +91,8 @@ export default function Schedule() {
 
   return (
     <MediaContextProvider>
-      <div className="bg-white dark:bg-black bg-[url('/rectangle_light.png')] dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">
-        <Nav />
-        <div className="p-2 pb-10 md:p-7 md:px-8 pt-[70px] md:pt-[100px] h-full">
+      <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black bg-[url('/rectangle_light.png')] dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">
+          <div className="p-2 pb-10 md:p-7 md:px-8 pt-[70px] md:pt-[100px] h-full">
           <Card isBlurred className="w-full h-full">
             <CardHeader className="dark:bg-black/40 border-b-1 dark:border-default-600 dark:border-default-100">
               <div className="flex gap-2 items-center p-2">

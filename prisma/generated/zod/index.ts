@@ -62,14 +62,15 @@ export type User = z.infer<typeof UserSchema>
 
 export const ActivitySchema = z.object({
   type: TypeSchema,
+  id: z.number().int(),
   title: z.string(),
   description: z.string(),
   date: z.coerce.date(),
   startTime: z.string(),
   endTime: z.string(),
   location: z.string(),
-  capacity: z.preprocess( Number, z.number()),
-  speakers: z.string()
+  capacity: z.number().int(),
+  speakers: z.string(),
 })
 
 export type Activity = z.infer<typeof ActivitySchema>
