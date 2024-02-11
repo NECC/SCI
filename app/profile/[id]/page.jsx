@@ -130,7 +130,6 @@ export default function Profile ({ params: { id }} ) {
 
     return (
         <div className=" dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
-            <Nav />
             <div className="gap-2 px-8 pt-20">                
                 {status != "loading" ? (
                     <Card isBlurred className="w-full h-[625px]">
