@@ -137,7 +137,6 @@ export default function Profile () {
 
     return (
         <div className="bg-white dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
-            <Nav />
             <div className="flex gap-2 px-8 pt-20 h-full">
                 {(status != "loading" && !activeScreen) ? (
                 <Card isBlurred className="w-full">
@@ -209,7 +208,7 @@ export default function Profile () {
                                                 </Card>
                                         </Link>
                                     ))
-                                ) : <p className="h-[117px]"> You're not enrolled in any activity of this type </p>
+                                ) : <p className="h-[117px]"> You&apos;re not enrolled in any activity of this type </p>
                                 }
                             </div>   
                         </div>
@@ -235,7 +234,7 @@ export default function Profile () {
                                 <h className="dark:text-white font-semibold text-l"> Ranking </h>
                                 <div>
                                 <p> You have {user.points} points </p> 
-                                <p> You're in {place}º place </p>
+                                <p> You&apos;re in {place}º place </p>
                                 {(place > 1) ? (<p> First place has {firstPlace} points</p>) : (<></>)}
                                 </div>
                             </div>
