@@ -5,6 +5,13 @@ const prisma = new PrismaClient();
 // Delete an Activity from the database
 export async function DELETE(req, { params: { id } }) {
   try {
+    
+    await prisma.enrollments.deleteMany({
+      where: {
+        activityId: parseInt(id),
+      },
+    });
+
     const user = await prisma.activity.delete({
       where: {
         id: parseInt(id),

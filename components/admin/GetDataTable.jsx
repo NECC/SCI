@@ -67,13 +67,28 @@ const columnsActivities = [
     label: "CAPACITY",
   },
   {
-    key: "actions",
-    label: "ACTIONS",
+    key: "deleteActivities",
+    label: "DELETE",
+  }
+];
+
+const columnsEnrollments = [
+  {
+    key: "id",
+    label: "Enrollment ID",
   },
+  {
+    key: "profileEnrollments",
+    label: "PROFILE",
+  },
+  {
+    key: "activityId",
+    label: "ACTIVITY ID",
+  }
 ];
 
 export default function GetDataTable(props) {
-  const { data, active, deleteUsers } = props;
+  const { data, active, deleteUsers, deleteActivities } = props;
   const [columns, setColumns] = useState([...columnsActivities]);
 
 
@@ -89,7 +104,7 @@ export default function GetDataTable(props) {
             name={uid}
             description={item.email}
             avatarProps={{ src: "/user.svg", isBordered: true, size: "sm" }}
-          />
+            />
         );
       case "actions":
         return (
@@ -111,6 +126,24 @@ export default function GetDataTable(props) {
             </Tooltip>
           </div>
         );
+      case "deleteActivities":
+        return (
+          <div className="relative flex justify-center items-center gap-2">
+            <Tooltip color="danger" content="Delete Activity">
+              <span onClick={() => deleteActivities(uid)} className="text-lg text-danger cursor-pointer active:opacity-50">
+                <IoMdTrash />
+              </span>
+            </Tooltip>
+          </div>
+        );
+      case "profileEnrollments":
+        return (
+          <User
+            name={item.userId}
+            description={item.userName}
+            avatarProps={{ src: "/user.svg", isBordered: true, size: "sm" }}
+          />
+        );
       default:
         return getKeyValue(item, columnKey);
     }
@@ -121,6 +154,8 @@ export default function GetDataTable(props) {
       setColumns(columnsUsers);
     } else if (active == "activities") {
       setColumns(columnsActivities);
+    } else if (active == "enrollments") {
+      setColumns(columnsEnrollments);
     }
   }, [active]);
 

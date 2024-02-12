@@ -19,7 +19,7 @@ export async function GET() {
         activity: true,
       },
     });
-    console.log(enrollments);
+    // console.log(enrollments);
 
     return new NextResponse(
       JSON.stringify({ response: "success", enrollments: enrollments })
