@@ -133,6 +133,19 @@ export async function PUT(req) {
   const data = await req.json();
   const uuid = data.uuid;
 
+  const session = await getServerSession(authOptions);
+  // console.log("SESSION FROM POST: ",session);
+
+  if (session?.user.role != "ADMIN") {
+    return new NextResponse(
+      JSON.stringify({
+        response: "error",
+        error: "You don't have permission to delete an user",
+      })
+    );
+  }
+
+
   try {
     const user = await prisma.user.updateMany({
       where: {
