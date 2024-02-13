@@ -13,8 +13,11 @@ module.exports = {
     extend: {
       colors: {
         'custom-blue': {
-          1: '#16a6df',
-          2: '#B8E3FF',
+          1: '#08a4de', /* esta a ser usado */
+          2: '#10639f',
+          3: '#2281c4 ' /* esta a ser usado */
+
+        
         }, // cor do logo das jornadas poderá ser utilizado
       },
       transitionProperty: {

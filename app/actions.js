@@ -28,7 +28,7 @@ export async function getActivities() {
       ...activity,
       enrollable: activity.capacity > activity.enrollments.length,
       alreadyEnrolled: activity.enrollments.some(
-        (enrollment) => enrollment.userId === session.user.id
+        (enrollment) => enrollment.userId === session?.user.id
       ),
     };
   });
