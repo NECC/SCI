@@ -22,6 +22,7 @@ import {
 } from "react-icons/sl";
 import { IconContext } from "react-icons";
 import { FaRegCalendarAlt } from "react-icons/fa";
+import Link from "next/link";
 
 export default function Profile ({ params: { id }} ) {
     const [user, setUser] = useState({});
@@ -196,7 +197,7 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                 <div className="no-scrollbar mx-6 flex flex-wrap gap-4 flex-col md:flex-row w-[300px] md:w-auto mt-8">
                     { (activities.length > 0) ? (
                         activities.map((enrollments, index) => (
-                            <div className="flex" key={index}>
+                            <Link href={`/profile/activity/${enrollments.activity.id}`} className="flex" key={index}>
                                     <Card className="w-[300px] border-1 border-[#222327]">
                                         <CardBody>
                                             <h4 className="dark:text-white/90 font-bold text-xl">
@@ -223,7 +224,7 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                                             </div>
                                         </CardFooter>
                                     </Card>
-                            </div>
+                            </Link>
                         ))
                     ) : <p className="h-[117px]"> Não estás inscrito em nenhuma atividade deste tipo </p>
                     }
