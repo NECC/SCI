@@ -61,6 +61,7 @@ export default function Admin() {
     setRows(data.enrollments.map((enrollment) => {
       return {
         activityId: enrollment.activity.id,
+        activityName: enrollment.activity.title,
         userId: enrollment.user.id,
         userName: enrollment.user.name,
         id: enrollment.id,

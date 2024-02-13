@@ -3,7 +3,13 @@ import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-// Get activity enrollments by id 
+/**
+ * Get all Enrollments from the database
+ * @method GET
+ * @requires AUTH
+ * @param {string} activityId
+ * @returns [{ enrollments }]
+ */
 export async function GET(request, context) {
     const id = context.params.activityId;
 

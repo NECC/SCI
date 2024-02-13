@@ -84,6 +84,10 @@ const columnsEnrollments = [
   {
     key: "activityId",
     label: "ACTIVITY ID",
+  },
+  {
+    key: "activityName",
+    label: "ACTIVITY NAME",
   }
 ];
 
@@ -165,7 +169,6 @@ export default function GetDataTable(props) {
         aria-label="Example static collection table"
         className="w-full max-w-[1700px] box-content"
         isStriped={true}
-        selectionMode="single"
       >
         <TableHeader columns={columns}>
           {(column) => (

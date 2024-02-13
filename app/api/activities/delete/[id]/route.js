@@ -2,17 +2,25 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
-// Delete an Activity from the database
+/**
+ * Deletes an Activity by ID
+ * @method DELETE
+ * @requires ADMIN
+ * @param {string} id Activity id to delete
+ * @returns {response: "success", activityDeleted: { id, title, description, speakers, location, capacity, date, type, enrollments } | {response: "error", error: error}}
+**/
 export async function DELETE(req, { params: { id } }) {
   try {
     
+    // first we must delete the enrollments that have the activity
     await prisma.enrollments.deleteMany({
       where: {
         activityId: parseInt(id),
       },
     });
 
-    const user = await prisma.activity.delete({
+    // then we delete the activity
+    const activity = await prisma.activity.delete({
       where: {
         id: parseInt(id),
       },
@@ -30,7 +38,7 @@ export async function DELETE(req, { params: { id } }) {
     });
 
     return new NextResponse(
-      JSON.stringify({ response: "success", activityDeleted: user })
+      JSON.stringify({ response: "success", activityDeleted: activity })
     );
   } catch (error) {
     console.log(error);
