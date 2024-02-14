@@ -1,7 +1,6 @@
 "use client";
 
 import Activity from "@app/schedule/Activity";
-import { TbFileDownload } from "react-icons/tb";
 import QRCode from "easyqrcodejs";
 import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
@@ -21,6 +20,7 @@ import {
     SlArrowRight 
 } from "react-icons/sl";
 import { FaRegCalendarAlt } from "react-icons/fa";
+import Link from 'next/link'
 
 export default function Profile ({ params: { id }} ) {
     const [user, setUser] = useState({});
@@ -38,7 +38,7 @@ export default function Profile ({ params: { id }} ) {
     let maxCount = 0;
     const router = useRouter();
 
-    const { data: session, status} = useSession({
+    const { status} = useSession({
         required: true,
         onUnauthenticated() {
             router.push("/api/auth/signin");
@@ -66,9 +66,11 @@ export default function Profile ({ params: { id }} ) {
     const getUserEnrollments = async () => {
         // gets enrollments and filters them by the current user
         const { data } = await axios.get("/api/enrollments");
-        const fdata = data.enrollments.filter(filterByUser);
-        setUserEnrollment(fdata);
-        setType("WORKSHOP");
+        if (data.enrollments != null) {
+            const fdata = data.enrollments.filter(filterByUser);
+            setUserEnrollment(fdata);
+            setType("WORKSHOP");
+        }
     }
 
     function filterByType(e) {
@@ -126,6 +128,7 @@ export default function Profile ({ params: { id }} ) {
         if (activeDay < 21) setActiveDay(activeDay + 1);
         else setActiveDay(21);
     }
+    console.log(activities)
 
     return (
         <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
@@ -184,9 +187,6 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                         <Button className={(type != "WORKSHOP") ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"} onClick={() => setType("WORKSHOP")}>
                             Workshops : {workshops}
                         </Button>
-                        <Button className={(type != "TALK") ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"} onClick={() => setType("TALK")}>
-                            Talks : {talks}
-                        </Button>
                         <Button className={(type != "OTHER") ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"} onClick={() => setType("OTHER")}>
                             Others : {others}
                         </Button>
@@ -195,34 +195,10 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                 <div className="no-scrollbar mx-6 flex flex-wrap gap-4 flex-col md:flex-row w-[300px] md:w-auto mt-8">
                     { (activities.length > 0) ? (
                         activities.map((enrollments, index) => (
-                            <div className="flex" key={index}>
-                                    <Card className="w-[300px] text-black/60">
-                                        <CardBody>
-                                            <h4 className="dark:text-white/90 font-bold text-xl">
-                                                {enrollments.activity.title}
-                                            </h4>
-                                            {enrollments.activity.description && (<p className="text-small dark:text-white/60 font-medium">
-                                                {enrollments.activity.description}
-                                            </p>
-                                            )}
-                                        </CardBody>
-                                        <CardFooter className="flex flex-row gap-2 p-3 px-5 bg-gray-200 dark:bg-gray-700/50 mt-1">
-                                            <p className="text-tiny dark:text-white/60 font-medium">
-                                                {enrollments.activity.speakers}
-                                            </p>
-                                            <div className="flex flex-row"> <p className="text-tiny"> Certificate </p> <TbFileDownload /> </div>
-                                            <div className="flex flex-row ml-auto pl-5 items-center gap-3">
-                                                <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
-                                                    {enrollments.activity.startTime}h - {enrollments.activity.endTime}h
-                                                </p>
-                                                {enrollments.activity.location && (
-                                                <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
-                                                    {enrollments.activity.location}
-                                                </p>
-                                                )}            
-                                            </div>
-                                        </CardFooter>
-                                    </Card>
+                            <div key={index}>
+                                <Link href={`${enrollments.user.id}/activity/${enrollments.activity.id}`}>
+                                    <Activity item={enrollments.activity} attended={enrollments.attended}/>
+                                </Link>                               
                             </div>
                         ))
                     ) : <p className="h-[117px]"> Não estás inscrito em nenhuma atividade deste tipo </p>

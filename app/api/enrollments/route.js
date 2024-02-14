@@ -17,6 +17,7 @@ export async function GET() {
           }
         },
         activity: true,
+        attended: true,
       },
     });
     console.log(enrollments);
@@ -97,6 +98,7 @@ export async function POST(request) {
             id: data.activityId,
           },
         },
+        attended: false,
       },
     });
 
