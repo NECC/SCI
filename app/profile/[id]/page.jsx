@@ -1,8 +1,8 @@
 "use client";
 
-import Nav from "@components/Nav";
+import Activity from "@app/schedule/Activity";
+import { TbFileDownload } from "react-icons/tb";
 import QRCode from "easyqrcodejs";
-import { colors } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import {
@@ -20,7 +20,6 @@ import {
     SlArrowLeft,
     SlArrowRight 
 } from "react-icons/sl";
-import { IconContext } from "react-icons";
 import { FaRegCalendarAlt } from "react-icons/fa";
 
 export default function Profile ({ params: { id }} ) {
@@ -129,7 +128,7 @@ export default function Profile ({ params: { id }} ) {
     }
 
     return (
-        <div className=" dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
+        <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
             <div className="gap-2 px-8 pt-20">                
                 {status != "loading" ? (
                     <Card isBlurred className="w-full h-[625px]">
@@ -197,7 +196,7 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                     { (activities.length > 0) ? (
                         activities.map((enrollments, index) => (
                             <div className="flex" key={index}>
-                                    <Card className="w-[300px] border-1 border-[#222327]">
+                                    <Card className="w-[300px] text-black/60">
                                         <CardBody>
                                             <h4 className="dark:text-white/90 font-bold text-xl">
                                                 {enrollments.activity.title}
@@ -211,6 +210,7 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                                             <p className="text-tiny dark:text-white/60 font-medium">
                                                 {enrollments.activity.speakers}
                                             </p>
+                                            <div className="flex flex-row"> <p className="text-tiny"> Certificate </p> <TbFileDownload /> </div>
                                             <div className="flex flex-row ml-auto pl-5 items-center gap-3">
                                                 <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
                                                     {enrollments.activity.startTime}h - {enrollments.activity.endTime}h
