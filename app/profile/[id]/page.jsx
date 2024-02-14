@@ -1,8 +1,8 @@
 "use client";
 
-import Nav from "@components/Nav";
+import Activity from "@app/schedule/Activity";
+import { TbFileDownload } from "react-icons/tb";
 import QRCode from "easyqrcodejs";
-import { colors } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import {
@@ -16,11 +16,10 @@ import {
   } from "@nextui-org/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { 
+import {
     SlArrowLeft,
-    SlArrowRight 
+    SlArrowRight
 } from "react-icons/sl";
-import { IconContext } from "react-icons";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import Link from "next/link";
 
@@ -59,7 +58,7 @@ export default function Profile ({ params: { id }} ) {
     console.log(user)
 
     function filterByUser(e) {
-        if (e.userId == user.id) { 
+        if (e.userId == user.id) {
             return true;
         }
         return false;
@@ -82,7 +81,7 @@ export default function Profile ({ params: { id }} ) {
 
     useEffect (() => {
         // sets which activities to show to the user
-        setActivities(userEnrollment.filter(filterByType));   
+        setActivities(userEnrollment.filter(filterByType));
     },[type])
 
     function getNumberOfActivity(a,t) {
@@ -92,10 +91,10 @@ export default function Profile ({ params: { id }} ) {
     }
 
     useEffect (() => {
-        // get amount of each activity that the user is enrolled in 
+        // get amount of each activity that the user is enrolled in
         setWorkshops(getNumberOfActivity(userEnrollment,"WORKSHOP"));
         setTalks(getNumberOfActivity(userEnrollment,"TALK"));
-        setOthers(getNumberOfActivity(userEnrollment,"OTHER")); 
+        setOthers(getNumberOfActivity(userEnrollment,"OTHER"));
     },[userEnrollment])
 
     useEffect (() => {
@@ -106,7 +105,7 @@ export default function Profile ({ params: { id }} ) {
         // compares current user points with the rest of the users to determine current user's place and how many points first place has
         const {data} = await axios.get("/api/users");
         for (let i = 0; i < data.users.length; i++) {
-            if (data.users[i].points > user.points && data.users[i].id != user.id){ 
+            if (data.users[i].points > user.points && data.users[i].id != user.id){
                 count++;
             }
             if (data.users[i].points > maxCount) {maxCount = data.users[i].points};
@@ -130,11 +129,11 @@ export default function Profile ({ params: { id }} ) {
     }
 
     return (
-        <div className=" dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
-            <div className="gap-2 px-8 pt-20">                
+        <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
+            <div className="gap-2 px-8 pt-20">
                 {status != "loading" ? (
                     <Card isBlurred className="w-full h-[625px]">
-                        
+
                         <CardHeader className="dark:bg-black/40 border-b-1 border-default-600 dark:border-default-100 flex-row">
                             <div className="flex flex-grow gap-2 items-center p-2 justify-between">
                                 <div className="flex flex-col text-neutral-700 dark:text-white/90 uppercase font-black text-2xl">
@@ -153,7 +152,7 @@ export default function Profile ({ params: { id }} ) {
                             <ActivitiesSubscribed activeDay={activeDay} type={type} workshops={workshops} talks={talks} others={others} activities={activities} setType={setType} nextDay={nextDay} previousDay={previousDay} />
 
                         ) : (activeScreen == 1) ? (
-                        
+
                             <Ranking user={user} place={place} firstPlace={firstPlace} />
 
                         ) : (activeScreen == 2) ? (
@@ -164,7 +163,7 @@ export default function Profile ({ params: { id }} ) {
                     </Card>
                 ) : (
                     <Spinner color="white" size="lg"/>
-                )}                
+                )}
             </div>
         </div>
     );
@@ -179,7 +178,7 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                     <h2 className="font-bold text-lg"> Dia {activeDay} </h2>
                     <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => previousDay()}> <SlArrowLeft size={'1em'}/> </Button>
                     <FaRegCalendarAlt size={'1em'} />
-                    <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => nextDay()}> <SlArrowRight size={'1em'}/> </Button> 
+                    <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => nextDay()}> <SlArrowRight size={'1em'}/> </Button>
                 </div>
                 <div className="mx-6 mt-1 -mb-3 flex flex-row h-8">
                     <ButtonGroup>
@@ -197,8 +196,8 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                 <div className="no-scrollbar mx-6 flex flex-wrap gap-4 flex-col md:flex-row w-[300px] md:w-auto mt-8">
                     { (activities.length > 0) ? (
                         activities.map((enrollments, index) => (
-                            <Link href={`/profile/activity/${enrollments.activity.id}`} className="flex" key={index}>
-                                    <Card className="w-[300px] border-1 border-[#222327]">
+                            <div className="flex" key={index}>
+                                    <Card className="w-[300px] text-black/60">
                                         <CardBody>
                                             <h4 className="dark:text-white/90 font-bold text-xl">
                                                 {enrollments.activity.title}
@@ -212,6 +211,7 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                                             <p className="text-tiny dark:text-white/60 font-medium">
                                                 {enrollments.activity.speakers}
                                             </p>
+                                            <div className="flex flex-row"> <p className="text-tiny"> Certificate </p> <TbFileDownload /> </div>
                                             <div className="flex flex-row ml-auto pl-5 items-center gap-3">
                                                 <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
                                                     {enrollments.activity.startTime}h - {enrollments.activity.endTime}h
@@ -220,7 +220,7 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                                                 <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
                                                     {enrollments.activity.location}
                                                 </p>
-                                                )}            
+                                                )}
                                             </div>
                                         </CardFooter>
                                     </Card>
@@ -228,19 +228,19 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                         ))
                     ) : <p className="h-[117px]"> Não estás inscrito em nenhuma atividade deste tipo </p>
                     }
-                </div>   
+                </div>
             </div>
-        </CardBody>    
+        </CardBody>
     )
 }
 
 const Ranking = ({ user, place, firstPlace }) => {
     return (
         <CardBody className="dark:bg-black/40 flex flex-col ">
-            <div className="px-1"> 
+            <div className="px-1">
                 <h2 className="dark:text-white font-semibold text-l"> Ranking </h2>
                 <div>
-                <p> Tens {user.points} pontos </p> 
+                <p> Tens {user.points} pontos </p>
                 <p> Estás em {place}º lugar </p>
                 {(place > 1) ? (<p> O primeiro lugar têm {firstPlace} pontos</p>) : (<></>)}
                 </div>
@@ -262,7 +262,7 @@ const Code = ({ userId }) => {
             colorDark : "#000000",
             colorLight : "#ffffff",
             correctLevel: QRCode.CorrectLevel.H,
-            
+
         }
 
         const code = new QRCode(qrcode.current, options);
@@ -272,7 +272,7 @@ const Code = ({ userId }) => {
 
     return (
         <CardBody className="dark:bg-black/40 flex flex-col ">
-            <div className="px-1"> 
+            <div className="px-1">
                 <h2 className="dark:text-white font-semibold text-l"> QRCode </h2>
                 <div ref={qrcode}>
 
