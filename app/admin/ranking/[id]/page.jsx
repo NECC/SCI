@@ -16,9 +16,10 @@ export default function RankingId({ params: { id } }) {
     const sendPdf = async () => {        
         const doc = new jsPDF();
         doc.text("Hello world!", 10, 10);
+        doc.save("certificate.pdf");
 
-        await axios.post("/api/email", { id, pdf: doc.output("datauristring") });
-
+        // const res = await axios.post("/api/email", { id, pdf: doc.output("datauristring") });
+        // console.log(res)
         setPdf(true);
     }
 
