@@ -17,8 +17,11 @@ module.exports = {
           2: '#10639f',
           3: '#2281c4 ' /* esta a ser usado */
 
-        
+
         }, // cor do logo das jornadas poderá ser utilizado
+        'custom-yellow': {
+          1: '#F6DA7D'
+        }
       },
       transitionProperty: {
         width: 'width',
@@ -36,5 +39,5 @@ module.exports = {
   darkMode: "class",
   plugins: [nextui()],
 
-  
+
 };
