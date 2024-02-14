@@ -32,7 +32,7 @@ const Nav = (props) => {
   }, [toggleDropdown]);
 
   return (
-    <div className="w-full block z-50 bg-sky-400">
+    <div className="w-full block z-50 bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">
       <nav className="flex justify-between w-auto m-auto py-4 md:w-4/5 bg-transparent">
         {/* Desktop Navigation */}
         <div className="md:flex hidden gap-3 md:gap-5">
@@ -180,7 +180,6 @@ const Nav = (props) => {
               </div>
             </div>
           </div>
-
         </div>
       </nav>
     </div>
