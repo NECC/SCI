@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function ActivityPage({ params }) {
+    console.log(params)
     const [activity, setActivity] = useState({});
 
     const getActivity = async () => {
@@ -24,7 +25,7 @@ export default function ActivityPage({ params }) {
     return (activity) ? (
         <div className="bg-white dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
             <div className="h-20 flex">
-                <Link className="my-auto align-middle pl-4 flex gap-x-2 text-center" href="/profile">
+                <Link className="my-auto align-middle pl-4 flex gap-x-2 text-center" href={`/profile`}>
                     <MdArrowBackIosNew size={'2em'} /> 
                     <p className="pt-0.5"> Go Back </p> 
                 </Link>

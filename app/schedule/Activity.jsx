@@ -3,8 +3,9 @@ import axios from "axios";
 import { Card, CardBody, CardFooter, Image, Button } from "@nextui-org/react";
 import { FaCheck, FaLongArrowAltRight } from "react-icons/fa";
 import { CiMapPin } from "react-icons/ci";
+import { TbFileDownload } from "react-icons/tb";
 
-export default function Activity({ item }) {
+export default function Activity({ item }, attended) {
   const [loading, setLoading] = useState(false);
   const [enrolled, setEnrolled] = useState(false);
 
@@ -78,6 +79,10 @@ export default function Activity({ item }) {
               </Button>
             </div>
           )}
+          {(attended) && (
+              <div className="flex flex-row ml-auto"> <p className="text-tiny"> Certificate </p> <TbFileDownload /> </div>
+            )
+          }
         </CardFooter>
       )}
     </Card>
