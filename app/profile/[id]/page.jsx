@@ -190,12 +190,18 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
     return (
         <CardBody className="dark:bg-black/40 flex flex-col">
             <div className="flex flex-col gap-y-1">
-                <h1 className="mx-1 text-[#494748] dark:text-white font-semibold text-2xl"> Atividades Inscritas </h1>
-                <div className="mx-5 flex flex-row items-center">
-                    <h2 className="font-bold text-lg"> Dia {activeDay} </h2>
-                    <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => previousDay()}> <SlArrowLeft size={'1em'}/> </Button>
-                    <FaRegCalendarAlt size={'1em'} />
-                    <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => nextDay()}> <SlArrowRight size={'1em'}/> </Button>
+                <div className="bg-selectday w-100 flex flex-row justify-center items-center">
+                    <p className="pt-2 mr-[20px] text-2xl font-poppins font-bold leading-5 text-center text-custom-grey tracking-[2.4px]">
+                        {activeDay-1}
+                    </p>
+                    <p onClick={() => previousDay()}> <ArrowRight className={"rotate-180"}/> </p>
+                    <p className="pt-2 px-4 text-2xl font-poppins font-bold leading-5 text-center text-white tracking-[2.4px]">
+                        {activeDay} <br/> <span className="text-xl tracking-[2px] font-light"> MARCH </span>
+                    </p>
+                    <p onClick={() => nextDay()}> <ArrowRight/> </p>
+                    <p className="pt-2 ml-[18px] text-2xl font-poppins font-bold leading-5 text-center text-custom-grey tracking-[2.4px]">
+                        {activeDay+1}
+                    </p>
                 </div>
                 <div className="mx-6 mt-1 -mb-3 flex flex-row h-8">
                     <ButtonGroup>
