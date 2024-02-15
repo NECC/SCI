@@ -189,7 +189,7 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
     return (
         <CardBody className="dark:bg-black/40 flex flex-col">
             <div className="flex flex-col gap-y-1">
-                <div className="bg-selectday w-100 flex flex-row justify-center items-center">
+                <div className="gap-10 bg-gradient-to-r from-transparent from-20% via-custom-blue-1/60 to-transparent to-80% w-full flex flex-row justify-center items-center">
                     <p className="pt-2 mr-[20px] text-2xl font-poppins font-bold leading-5 text-center text-custom-grey tracking-[2.4px]">
                         {activeDay-1}
                     </p>
