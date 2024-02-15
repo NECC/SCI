@@ -131,7 +131,7 @@ export default function Schedule() {
                         <div className="flex flex-row md:flex-col p-5 overflow-scroll hide-scroll gap-3 -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
                           {activities.map((item, index) => (
                             <div key={index}>
-                              <Activity item={item} />
+                              <Activity item={item} attended={false}/>
                             </div>
                           ))}
                         </div>
