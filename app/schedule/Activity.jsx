@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, CardBody, CardFooter, Image, Button } from "@nextui-org/react";
-import { FaCheck, FaLongArrowAltRight } from "react-icons/fa";
+import { FaCheck, FaLongArrowAltRight, FaRegClock } from "react-icons/fa";
 import { CiMapPin } from "react-icons/ci";
 import { TbFileDownload } from "react-icons/tb";
 
-export default function Activity({ item }, attended) {
+export default function Activity({ item, attended }) {
   const [loading, setLoading] = useState(false);
   const [enrolled, setEnrolled] = useState(false);
 
@@ -48,6 +48,14 @@ export default function Activity({ item }, attended) {
             </p>
           </div>
         )}
+        {(!attended) && (
+          <div className="flex flex-row mr-auto items-center">
+            <FaRegClock className="inline mr-2" />
+            <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
+              {item.startTime}h - {item.endTime}h
+            </p>
+          </div>
+        )}
       </CardBody>
       {(item.location || item.speakers) && (
         <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
@@ -80,7 +88,20 @@ export default function Activity({ item }, attended) {
             </div>
           )}
           {(attended) && (
-              <div className="flex flex-row ml-auto"> <p className="text-tiny"> Certificate </p> <TbFileDownload /> </div>
+              <div className="flex flex-row ml-auto"> 
+                <Button 
+                  size="sm" 
+                  radius="full" 
+                  color="primary"
+                  className="text-tiny" 
+                  onClick={(e) => {
+                    e.preventDefault(); 
+                    e.stopPropagation();
+                  }}
+                >
+                   Certificate <TbFileDownload /> 
+                </Button> 
+              </div>
             )
           }
         </CardFooter>
