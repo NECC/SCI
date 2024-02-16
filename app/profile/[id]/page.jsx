@@ -89,7 +89,7 @@ export default function Profile ({ params: { id }} ) {
 
     function getNumberOfActivity(a,t) {
         let count = 0;
-        a.forEach((v) => (v.activity.type == t && count++));
+        a.forEach((v) => (v.activity.type == t && ++count));
         return count;
     }
 
@@ -133,7 +133,7 @@ export default function Profile ({ params: { id }} ) {
     console.log(activities)
 
     return (
-        <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
+        <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
             <div className="gap-2 px-8 pt-20">                
                 {status != "loading" ? (
                     <div className="bg-transparent w-full h-[625px]">
