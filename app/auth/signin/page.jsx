@@ -6,6 +6,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({});
@@ -27,7 +28,8 @@ export default function SignInPage() {
 
   return (
     <div className="h-screen w-screen bg-gradient-to-b to-20% from-custom-blue-1  to-custom-blue-3 flex justify-around items-center ">
-      <div className="h-[500px] w-[500px] bg-[url('/sci-logo.png')] dark:ml-[100px] dark:xl:ml-[250px] bg-no-repeat bg-contain bg-center"></div>
+
+      <Image width={500} height={500} src="/sci-logo.png" alt="Logo" className="lg:block hidden"></Image>
 
       <div className="flex justify-center items-center flex-col">
         <h1 className="font-bold text-4xl text-white cursor-default">Login</h1>
