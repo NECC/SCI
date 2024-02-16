@@ -3,7 +3,12 @@ import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-// Get user by id   
+/**
+ * Get an User by ID
+ * @method GET
+ * @param {string} id User id to get
+ * @returns 
+ */
 export async function GET(request, context) {
     const id = context.params.id;
     const user = await prisma.user.findUnique({

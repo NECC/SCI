@@ -3,6 +3,11 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]/route";
 
+/**
+ * Get all Enrollments from the database
+ * @method GET
+ * @returns [{ enrollments }]
+**/
 export async function GET() {
   try {
     const prisma = new PrismaClient();
@@ -20,7 +25,7 @@ export async function GET() {
         attended: true,
       },
     });
-    console.log(enrollments);
+    // console.log(enrollments);
 
     return new NextResponse(
       JSON.stringify({ response: "success", enrollments: enrollments })
@@ -32,6 +37,13 @@ export async function GET() {
   }
 }
 
+/**
+  * Creates a new Enrollment
+  * @requires AUTH
+  * @method POST
+  * @param body activityId
+  * @returns {response: "success", enrollment: enrollment || {response: "error", error: error}}
+ */
 export async function POST(request) {
   const prisma = new PrismaClient();
   const data = await request.json();

@@ -36,6 +36,12 @@ export default function Admin() {
     setBackupData(data.users);
   };
 
+  const deleteActivities = async (id) => {
+    console.log(id);
+    const { data } = await axios.delete(`/api/activities/delete/${id}`);
+    getActivities();
+  }
+
   const deleteUsers = async (id) => {
     console.log(id);
     const { data } = await axios.delete(`/api/users/delete/${id}`);
@@ -52,7 +58,14 @@ export default function Admin() {
   const getEnrollments = async () => {
     const { data } = await axios.get("/api/enrollments");
     console.log(data.enrollments);
-    setRows(data.enrollments);
+    setRows(data.enrollments.map((enrollment) => {
+      return {
+        activityId: enrollment.activity.id,
+        activityName: enrollment.activity.title,
+        userId: enrollment.user.id,
+        userName: enrollment.user.name,
+        id: enrollment.id,
+      }}));
     setBackupData(data.enrollments);
   }
 
@@ -76,8 +89,9 @@ export default function Admin() {
   const Icons = "text-lg mr-2 mt-[1px]";
 
   const handleActive = (e) => {
-    console.log(e.target.innerText.toLowerCase());
-    setActive(e.target.innerText.toLowerCase());
+    const active = e.target.innerText?.toLowerCase();
+    console.log(active);
+    setActive(active);
   };
 
   return (
@@ -117,7 +131,7 @@ export default function Admin() {
         <TableFilter active={active} data={backupData} setData={setRows}/>
 
       </div>
-      <GetDataTable data={rows} active={active} deleteUsers={deleteUsers}/>
+      <GetDataTable data={rows} active={active} deleteUsers={deleteUsers} deleteActivities={deleteActivities}/>
     </div>
   );
 }
