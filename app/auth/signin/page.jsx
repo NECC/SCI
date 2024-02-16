@@ -33,7 +33,7 @@ export default function SignInPage() {
 
       <div className="flex justify-center items-center flex-col">
         <h1 className="font-bold text-4xl text-white cursor-default">Login</h1>
-        <h2 className="text-md font-normal lg:font-bold mt-2 -mb-2 text-white cursor-default">
+        <h2 className="text-md font-normal mt-2 -mb-2 text-white cursor-default">
           The science of today is the technology of tomorrow.
         </h2>
         <Input
@@ -128,7 +128,7 @@ export default function SignInPage() {
           </span>
         </Link>
         <Button
-          className="mt-3 w-[300px] lg:font-normal text-lg text-black bg-white font-bold "
+          className="mt-3 w-[300px] font-normal text-lg text-black bg-white"
           size="large"
           auto
           color="primary"

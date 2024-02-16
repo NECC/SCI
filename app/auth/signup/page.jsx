@@ -68,7 +68,7 @@ export default function SignUpPage() {
 
     <div className="h-screen bg-gradient-to-b to-20% from-custom-blue-1 to-custom-blue-3 flex justify-around items-center">
 
-      <Image width={500} height={500} src="/sci-logo.png" alt="Logo" className="md:block hidden"></Image>
+      <Image width={500} height={500} src="/sci-logo.png" alt="Logo" className="lg:block hidden"></Image>
 
       <div className="flex justify-center items-center flex-col ">
         <h1 className="font-bold text-4xl text-white cursor-default ">Register</h1>
