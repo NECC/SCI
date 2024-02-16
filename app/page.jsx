@@ -13,6 +13,9 @@ import Sponsor from "@components/Sponsor";
 import sponsorData from "../data/sponsor.json"
 import Footer from "@components/Footer";
 import Nucleos from "@components/Nucleos";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from 'react-intersection-observer';
+
 
 
 const nucleos = Nucleos_logo.logo
@@ -50,7 +53,15 @@ export default function Home() {
 
 
 
+  const [ref, inView] = useInView({
+    triggerOnce: false, // Set to false to trigger the animation every time the element comes in view
+    threshold: 0.2, // 0.5 means the animation will trigger when 50% of the element is in view
+  });
 
+  const [ref_2, inView_2] = useInView({
+    triggerOnce: false, // Set to false to trigger the animation every time the element comes in view
+    threshold: 0.3, // 0.5 means the animation will trigger when 50% of the element is in view
+  });
 
 
 
@@ -73,6 +84,7 @@ export default function Home() {
         />
 
         <div className="bg-custom-blue-3 w-full">
+
 
           <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto">
             <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">WHAT IS IT?</h1>
@@ -110,6 +122,18 @@ export default function Home() {
             </div>
           </div>
 
+          <motion.div
+            ref={ref_2}
+            variants={{
+              hidden: { opacity: 0, y: 60 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            initial="hidden"
+            animate={inView_2 ? 'visible' : 'hidden'}
+            transition={{ duration: 0.4, delay: 0.4 }}
+            className="overflow-hidden"
+          >
+
           <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
             <div className="lg:w-4/5 w-full mt-9 flex flex-wrap justify-between gap-12 ">
 
@@ -123,6 +147,7 @@ export default function Home() {
 
             </div>
           </div>
+          </motion.div>
 
 
 
@@ -172,32 +197,49 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
-            <div className="lg:w-4/5 w-full md:flex md:justify-start flex-row justify-center items-center mt-9">
-              <div className="relative lg:w-[400px] lg:h-[400px] w-[300px] h-[300px]  m-auto md:ml-0">
-                <Image src={"/location.svg"} alt="Banner" fill />
-              </div>
-              <div className="md:w-5/12 md:mt-0 mt-9 text-white font-poppins font-light leading-8">
-                <p>Lorem  ipsum dolor sit amet consectetur adipisicing elit. Quam ea ipsa consequatur culpa assumenda atque eius suscipit veritatis neque dolore sed explicabo perferendis quae mollitia provident, optio facere voluptatum. Dolores?
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum, ut facere eos, voluptate repellendus iusto praesentium totam quas natus quo, libero veritatis! Magni, voluptatum laborum beatae dolorum saepe recusandae numquam?
-                </p>
+
+          <motion.div
+            ref={ref}
+            variants={{
+              hidden: { opacity: 0, y: 60 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            initial="hidden"
+            animate={inView ? 'visible' : 'hidden'}
+            transition={{ duration: 0.4, delay: 0.4}}
+            className="overflow-hidden"
+          >
+
+            <div className="sm:w-4/5 w-11/12 m-auto mt-[70px]">
+              <div className="lg:w-4/5 w-full md:flex md:justify-start flex-row justify-center items-center mt-9">
+                <div className="relative lg:w-[400px] lg:h-[400px] w-[300px] h-[300px]  m-auto md:ml-0">
+                  <Image src={"/location.svg"} alt="Banner" fill />
+                </div>
+                <div className="md:w-5/12 md:mt-0 mt-9 text-white font-poppins font-light leading-8">
+                  <p>Lorem  ipsum dolor sit amet consectetur adipisicing elit. Quam ea ipsa consequatur culpa assumenda atque eius suscipit veritatis neque dolore sed explicabo perferendis quae mollitia provident, optio facere voluptatum. Dolores?
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum, ut facere eos, voluptate repellendus iusto praesentium totam quas natus quo, libero veritatis! Magni, voluptatum laborum beatae dolorum saepe recusandae numquam?
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="h-[100px] sm:w-[80%] w-[90%] lg:w-full relative m-auto mt-[70px]">
-            <div className="bottom-0 right-[160px] absolute lg:block hidden">
+          </motion.div>
+            <div className="h-[100px] sm:w-[80%] w-[90%] lg:w-full relative m-auto mt-[70px]">
+              <div className="bottom-0 right-[160px] absolute lg:block hidden">
 
-              <Image src={"/robot.png"} alt="Banner" width={100} height={100} />
+                <Image src={"/robot.png"} alt="Banner" width={100} height={100} />
+              </div>
             </div>
 
-          </div>
+
+
+
 
         </div >
 
       </div>
       <Footer />
-    </div>
+    </div >
 
   );
 }
