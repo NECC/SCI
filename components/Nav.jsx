@@ -100,7 +100,7 @@ const Nav = (props) => {
 
         {/* Mobile  */}
 
-        <div className="md:hidden flex z-10">
+        <div className="md:hidden flex z-10 h-[72px]">
           <div className="flex w-full justify-center items-center">
             <div
               onClick={() => setToggleDropdown(!toggleDropdown)}
