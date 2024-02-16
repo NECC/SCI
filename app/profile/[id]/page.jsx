@@ -89,7 +89,7 @@ export default function Profile ({ params: { id }} ) {
 
     function getNumberOfActivity(a,t) {
         let count = 0;
-        a.forEach((v) => (v.activity.type == t && count++));
+        a.forEach((v) => (v.activity.type == t && ++count));
         return count;
     }
 
