@@ -21,6 +21,7 @@
     "dotenv": "^16.3.2",
     "easyqrcodejs": "^4.6.1",
     "framer-motion": "^10.18.0",
+    "jspdf": "^2.5.1",
     "next": "14.0.3",
     "next-auth": "^4.24.5",
     "next-themes": "^0.2.1",
@@ -31,6 +32,7 @@
     "react-intersection-observer": "^9.8.0",
     "react-responsive": "^9.0.2",
     "react-scrollbars-custom": "^4.1.1",
+    "resend": "^3.1.0",
     "zod": "^3.22.4",
     "zod-prisma-types": "^3.1.6"
   },
