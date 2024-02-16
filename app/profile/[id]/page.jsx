@@ -1,8 +1,7 @@
 "use client";
 
-import Nav from "@components/Nav";
+import Activity from "@app/schedule/Activity";
 import QRCode from "easyqrcodejs";
-import { colors } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import {
@@ -20,9 +19,10 @@ import {
     SlArrowLeft,
     SlArrowRight 
 } from "react-icons/sl";
-import { IconContext } from "react-icons";
 import { FaRegCalendarAlt } from "react-icons/fa";
-import Link from "next/link";
+import Link from 'next/link'
+import { Line } from "@components/Line";
+import { ArrowRight } from "@components/ArrowRight";
 
 export default function Profile ({ params: { id }} ) {
     const [user, setUser] = useState({});
@@ -40,7 +40,7 @@ export default function Profile ({ params: { id }} ) {
     let maxCount = 0;
     const router = useRouter();
 
-    const { data: session, status} = useSession({
+    const { status} = useSession({
         required: true,
         onUnauthenticated() {
             router.push("/api/auth/signin");
@@ -68,9 +68,11 @@ export default function Profile ({ params: { id }} ) {
     const getUserEnrollments = async () => {
         // gets enrollments and filters them by the current user
         const { data } = await axios.get("/api/enrollments");
-        const fdata = data.enrollments.filter(filterByUser);
-        setUserEnrollment(fdata);
-        setType("WORKSHOP");
+        if (data.enrollments != null) {
+            const fdata = data.enrollments.filter(filterByUser);
+            setUserEnrollment(fdata);
+            setType("WORKSHOP");
+        }
     }
 
     function filterByType(e) {
@@ -87,7 +89,7 @@ export default function Profile ({ params: { id }} ) {
 
     function getNumberOfActivity(a,t) {
         let count = 0;
-        a.forEach((v) => (v.activity.type == t && count++));
+        a.forEach((v) => (v.activity.type == t && ++count));
         return count;
     }
 
@@ -128,22 +130,33 @@ export default function Profile ({ params: { id }} ) {
         if (activeDay < 21) setActiveDay(activeDay + 1);
         else setActiveDay(21);
     }
+    console.log(activities)
 
     return (
-        <div className=" dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
+        <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
             <div className="gap-2 px-8 pt-20">                
                 {status != "loading" ? (
-                    <Card isBlurred className="w-full h-[625px]">
-                        
+                    <div className="bg-transparent w-full h-[625px]">
+                        <Card className="bg-transparent shadow-none">
                         <CardHeader className="dark:bg-black/40 border-b-1 border-default-600 dark:border-default-100 flex-row">
                             <div className="flex flex-grow gap-2 items-center p-2 justify-between">
-                                <div className="flex flex-col text-neutral-700 dark:text-white/90 uppercase font-black text-2xl">
+                                <div className="flex flex-col text-neutral-700 text-white uppercase font-black text-2xl">
                                     Perfil de {user.name}
                                 </div>
-                                <ButtonGroup>
-                                    <Button onClick={() => setActiveScreen(0)} className={(activeScreen != 0) ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"}> Atividades Inscritas </Button>
-                                    <Button onClick={() => setActiveScreen(1)} className={(activeScreen != 1) ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"}> Ranking </Button>
-                                    <Button onClick={() => setActiveScreen(2)} className={(activeScreen != 2) ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"}> QRCode </Button>
+                                <ButtonGroup className="px-2" disableRipple={true}>
+                                    {(activeScreen == 0) && <Line/>}
+                                    <Button radius={"none"} onClick={() => setActiveScreen(0)} className={(activeScreen != 0) ? "flex flex-col text-white bg-transparent" : "-ml-1.5 overflow-visible flex flex-row bg-custombutton text-white"}> 
+                                        
+                                        <p className="text-2xl font-roboto font-extrabold leading-5 mt-1.5 mb-1 ml-[17px] mr-1.5"> ENROLLED ACTIVITIES </p> 
+                                    </Button>
+                                    {(activeScreen == 1) && <Line/>}
+                                    <Button radius={"none"} onClick={() => setActiveScreen(1)} className={(activeScreen != 1) ? "flex flex-col text-white bg-transparent" : "-ml-1.5 overflow-visible flex flex-row bg-custombutton text-white"}> 
+                                        <p className="text-2xl font-roboto font-extrabold leading-5 mt-1.5 mb-1 ml-[17px] mr-1.5"> RANKING </p> 
+                                    </Button>
+                                    {(activeScreen == 2) && <Line/>}
+                                    <Button radius={"none"} onClick={() => setActiveScreen(2)} className={(activeScreen != 2) ? "flex flex-col text-white bg-transparent" : "-ml-1.5 overflow-visible flex flex-row bg-custombutton text-white"}> 
+                                        <p className="text-2xl font-roboto font-extrabold leading-5 mt-1.5 mb-1 ml-[17px] mr-1.5"> QRCODE </p> 
+                                    </Button>
                                 </ButtonGroup>
                             </div>
                         </CardHeader>
@@ -162,9 +175,11 @@ export default function Profile ({ params: { id }} ) {
 
                         ) : (<></>)}
                     </Card>
+                    </div>
                 ) : (
                     <Spinner color="white" size="lg"/>
-                )}                
+                )}
+                               
             </div>
         </div>
     );
@@ -174,22 +189,25 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
     return (
         <CardBody className="dark:bg-black/40 flex flex-col">
             <div className="flex flex-col gap-y-1">
-                <h1 className="mx-1 text-[#494748] dark:text-white font-semibold text-2xl"> Atividades Inscritas </h1>
-                <div className="mx-5 flex flex-row items-center">
-                    <h2 className="font-bold text-lg"> Dia {activeDay} </h2>
-                    <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => previousDay()}> <SlArrowLeft size={'1em'}/> </Button>
-                    <FaRegCalendarAlt size={'1em'} />
-                    <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => nextDay()}> <SlArrowRight size={'1em'}/> </Button> 
+                <div className="gap-10 bg-gradient-to-r from-transparent from-20% via-custom-blue-1/60 to-transparent to-80% w-full flex flex-row justify-center items-center">
+                    <p className="pt-2 mr-[20px] text-2xl font-poppins font-bold leading-5 text-center text-custom-grey tracking-[2.4px]">
+                        {activeDay-1}
+                    </p>
+                    <p onClick={() => previousDay()}> <ArrowRight className={"rotate-180"}/> </p>
+                    <p className="pt-2 px-4 text-2xl font-poppins font-bold leading-5 text-center text-white tracking-[2.4px]"> 
+                        {activeDay} <br/> <span className="text-xl tracking-[2px] font-light"> MARCH </span> 
+                    </p>
+                    <p onClick={() => nextDay()}> <ArrowRight/> </p>
+                    <p className="pt-2 ml-[18px] text-2xl font-poppins font-bold leading-5 text-center text-custom-grey tracking-[2.4px]">
+                        {activeDay+1}
+                    </p>
                 </div>
                 <div className="mx-6 mt-1 -mb-3 flex flex-row h-8">
                     <ButtonGroup>
-                        <Button className={(type != "WORKSHOP") ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"} onClick={() => setType("WORKSHOP")}>
+                        <Button className={(type != "WORKSHOP") ? "text-white bg-neutral-500" : "bg-white text-black"} onClick={() => setType("WORKSHOP")}>
                             Workshops : {workshops}
                         </Button>
-                        <Button className={(type != "TALK") ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"} onClick={() => setType("TALK")}>
-                            Talks : {talks}
-                        </Button>
-                        <Button className={(type != "OTHER") ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"} onClick={() => setType("OTHER")}>
+                        <Button className={(type != "OTHER") ? "text-white bg-neutral-500" : "bg-white text-black"} onClick={() => setType("OTHER")}>
                             Others : {others}
                         </Button>
                     </ButtonGroup>
@@ -197,36 +215,13 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                 <div className="no-scrollbar mx-6 flex flex-wrap gap-4 flex-col md:flex-row w-[300px] md:w-auto mt-8">
                     { (activities.length > 0) ? (
                         activities.map((enrollments, index) => (
-                            <Link href={`/profile/activity/${enrollments.activity.id}`} className="flex" key={index}>
-                                    <Card className="w-[300px] border-1 border-[#222327]">
-                                        <CardBody>
-                                            <h4 className="dark:text-white/90 font-bold text-xl">
-                                                {enrollments.activity.title}
-                                            </h4>
-                                            {enrollments.activity.description && (<p className="text-small dark:text-white/60 font-medium">
-                                                {enrollments.activity.description}
-                                            </p>
-                                            )}
-                                        </CardBody>
-                                        <CardFooter className="flex flex-row gap-2 p-3 px-5 bg-gray-200 dark:bg-gray-700/50 mt-1">
-                                            <p className="text-tiny dark:text-white/60 font-medium">
-                                                {enrollments.activity.speakers}
-                                            </p>
-                                            <div className="flex flex-row ml-auto pl-5 items-center gap-3">
-                                                <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
-                                                    {enrollments.activity.startTime}h - {enrollments.activity.endTime}h
-                                                </p>
-                                                {enrollments.activity.location && (
-                                                <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
-                                                    {enrollments.activity.location}
-                                                </p>
-                                                )}            
-                                            </div>
-                                        </CardFooter>
-                                    </Card>
-                            </Link>
+                            <div key={index}>
+                                <Link href={`${enrollments.user.id}/activity/${enrollments.activity.id}`}>
+                                    <Activity item={enrollments.activity} attended={enrollments.attended}/>
+                                </Link>                               
+                            </div>
                         ))
-                    ) : <p className="h-[117px]"> Não estás inscrito em nenhuma atividade deste tipo </p>
+                    ) : <p className="text-white h-[117px]"> Não estás inscrito em nenhuma atividade deste tipo </p>
                     }
                 </div>   
             </div>

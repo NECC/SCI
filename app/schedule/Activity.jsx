@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, CardBody, CardFooter, Image, Button } from "@nextui-org/react";
-import { FaCheck, FaLongArrowAltRight } from "react-icons/fa";
+import { FaCheck, FaLongArrowAltRight, FaRegClock } from "react-icons/fa";
 import { CiMapPin } from "react-icons/ci";
+import { TbFileDownload } from "react-icons/tb";
 
-export default function Activity({ item }) {
+export default function Activity({ item, attended }) {
   const [loading, setLoading] = useState(false);
   const [enrolled, setEnrolled] = useState(false);
 
@@ -39,28 +40,25 @@ export default function Activity({ item }) {
             {item.description}
           </p>
         )}
-        {(item.enrollable || item.alreadyEnrolled) && (
-          <div>
-            <Button
-              isLoading={loading}
-              className="mt-4"
-              size="sm"
-              radius="full"
-              color="primary"
-              isDisabled={enrolled}
-              variant="solid"
-              endContent={!enrolled ? <FaLongArrowAltRight /> : <FaCheck />}
-              onClick={(e) => {
-                createEnrollment(item.id);
-              }}
-            >
-              {enrolled ? "Enrolled" : "Enroll"}
-            </Button>
+        {item.location && (
+          <div className="flex flex-row mr-auto items-center">
+            <CiMapPin className="inline mr-2" />
+            <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
+              {item.location}
+            </p>
+          </div>
+        )}
+        {(!attended) && (
+          <div className="flex flex-row mr-auto items-center">
+            <FaRegClock className="inline mr-2" />
+            <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
+              {item.startTime}h - {item.endTime}h
+            </p>
           </div>
         )}
       </CardBody>
       {(item.location || item.speakers) && (
-        <CardFooter className="flex flex-row gap-2 p-3 px-5 bg-gray-200 dark:bg-gray-700/50 mt-1">
+        <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
           <Image
             src="https://avatars.githubusercontent.com/u/44109954?v=4"
             alt="logo"
@@ -70,14 +68,42 @@ export default function Activity({ item }) {
           <p className="text-tiny dark:text-white/60 font-medium">
             {item.speakers}
           </p>
-          {item.location && (
-            <div className="flex flex-row ml-auto pl-5 items-center">
-              <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
-                {item.location}
-              </p>
-              <CiMapPin className="inline ml-2" />
+          {(item.enrollable || item.alreadyEnrolled) && (
+            <div class="ml-auto">
+              <Button
+                isLoading={loading}
+                className=""
+                size="sm"
+                radius="full"
+                color="primary"
+                isDisabled={enrolled}
+                variant="solid"
+                endContent={!enrolled ? <FaLongArrowAltRight /> : <FaCheck />}
+                onClick={(e) => {
+                  createEnrollment(item.id);
+                }}
+              >
+                {enrolled ? "Enrolled" : "Enroll"}
+              </Button>
             </div>
           )}
+          {(attended) && (
+              <div className="flex flex-row ml-auto"> 
+                <Button 
+                  size="sm" 
+                  radius="full" 
+                  color="primary"
+                  className="text-tiny" 
+                  onClick={(e) => {
+                    e.preventDefault(); 
+                    e.stopPropagation();
+                  }}
+                >
+                   Certificate <TbFileDownload /> 
+                </Button> 
+              </div>
+            )
+          }
         </CardFooter>
       )}
     </Card>

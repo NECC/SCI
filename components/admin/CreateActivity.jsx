@@ -13,7 +13,7 @@ import {
 } from "@nextui-org/react";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Types, ActivitySchema } from "/prisma/generated/zod";
+import { Types, ActivitySchema } from "/prisma/zod";
 
 export default function CreateActivity() {
   const router = useRouter();

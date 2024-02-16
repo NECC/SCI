@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { ActivitySchema } from "/prisma/generated/zod";
+import { ActivitySchema } from "/prisma/zod";
 
 /**
  * Get all Activities from the database

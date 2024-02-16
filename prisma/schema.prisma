@@ -44,6 +44,7 @@ model Enrollments {
   userId     String
   activity   Activity @relation(fields: [activityId], references: [id])
   activityId Int
+  attended   Boolean
 
   @@unique([userId, activityId])
 }

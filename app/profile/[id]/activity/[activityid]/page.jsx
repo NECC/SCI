@@ -7,10 +7,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function ActivityPage({ params }) {
+    console.log(params)
     const [activity, setActivity] = useState({});
 
     const getActivity = async () => {
-        const { data } = await axios.get(`/api/activities/${params.id}`);
+        const { data } = await axios.get(`/api/activities/${params.activityid}`);
         setActivity(data.activity[0]); 
     }
 
@@ -22,16 +23,16 @@ export default function ActivityPage({ params }) {
     console.log(activity.title)
 
     return (activity) ? (
-        <div className="bg-white dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
+        <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
             <div className="h-20 flex">
-                <Link className="my-auto align-middle pl-4 flex gap-x-2 text-center" href="/profile">
+                <Link className="text-white my-auto align-middle pl-4 flex gap-x-2 text-center" href={`/profile/${params.id}`}>
                     <MdArrowBackIosNew size={'2em'} /> 
                     <p className="pt-0.5"> Go Back </p> 
                 </Link>
             </div>
             <div className="flex gap-2 px-8 h-full">
-                <Card isBlurred className="w-full border-1 border-[#222327]">
-                    <CardHeader className="dark:bg-black/40 border-b-1 border-default-600 dark:border-default-100 flex-row">
+                <Card isBlurred className="w-full">
+                    <CardHeader className="dark:bg-black/40 flex-row">
                         <h4 className="flex flex-col text-neutral-700 dark:text-white/90 uppercase font-black text-2xl">
                             {activity.title}
                         </h4>

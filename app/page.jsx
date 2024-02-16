@@ -3,21 +3,22 @@
 
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import ImageData from "../data/nucleos.json"
+import Nucleos_logo from "../data/nucleos.json"
 import Hexa from "@components/Hexa";
 import { images } from "@next.config";
 import Image from "next/image";
 import Sponsor from "@components/Sponsor";
 import sponsorData from "../data/sponsor.json"
-import ColorModeToggle from "@components/ColorModeToggle";
 import Footer from "@components/Footer";
-import Nav from "@components/Nav";
 import Nucleos from "@components/Nucleos";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from 'react-intersection-observer';
 
 
-const image = ImageData.images
+
+const nucleos = Nucleos_logo.logo
 const sponsor = sponsorData.Patrocinadores
 
 
@@ -36,6 +37,7 @@ const sponsor = sponsorData.Patrocinadores
  */
 
 export default function Home() {
+
   const [user, setUser] = useState({});
 
   const { data: session } = useSession({
@@ -46,74 +48,199 @@ export default function Home() {
     if (session) {
       setUser(session.user);
       console.log(session)
-    } 
+    }
   }, [session]);
 
 
 
-  // console.log(user);
+  const [ref, inView] = useInView({
+    triggerOnce: false, // Set to false to trigger the animation every time the element comes in view
+    threshold: 0.2, // 0.5 means the animation will trigger when 50% of the element is in view
+  });
+
+  const [ref_2, inView_2] = useInView({
+    triggerOnce: false, // Set to false to trigger the animation every time the element comes in view
+    threshold: 0.3, // 0.5 means the animation will trigger when 50% of the element is in view
+  });
 
 
-  const [darkMode, setDarkMode] = useState(false);
-
-  // Função para buscar o elemento <html> com a classe 'dark'
-  const findDarkHtmlElement = () => {
-    const htmlElement = document.querySelector('html.dark');
-    if (htmlElement) {
-      setDarkMode(true);
-    } else {
-      setDarkMode(false);
-    }
-  };
-  useEffect(findDarkHtmlElement, []);
 
 
   return (
-    <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-full">
-      <div className=" w-full lg:relative lg:pt-[54px] pt-[62px]">
-        <div className=" lg:h-[560px] md:h-[300px] h-[200px] relative ">
-          <Image src="/banner_fixed.png" alt="Banner" layout="fill" objectFit="cover" />
-        </div>
-        <div className="flex flex-col gap-4 itens-center justify-center p-2">
-          <p className='text-white text-xl text-center font-bold drop-shadow-2xl'>14 - 15 MARÇO</p>
-        </div>
-        <Hexa />
-      </div>
-
-      <div className="sm:w-4/5 w-11/12 m-auto mt-[79px] ">
-        <div className="w-[15%] h-[4px] dark:bg-white bg-white mt-[79px] "></div>
-        <h1 className="dark:text-white text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-left lg:w-4/5 mt-[23px]">O QUE É</h1>
-        <p className="dark:text-white text-white mt-[39px] font-poppins font-light leading-8 lg:w-4/5 w-full"> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad repellat soluta aspernatur natus nobis quos porro velit, illum nihil magni cupiditate! Sunt pariatur ratione, maiores velit officiis quod eum quisquam!</p>
-
-        <div className="w-[15%] h-[4px] dark:bg-white bg-white mt-[70px] "></div>
-        <h1 className="dark:text-white text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">PATROCÍNIOS</h1>
-
-        <div className="lg:w-4/5 w-full mt-9 flex flex-wrap justify-between gap-12 ">
-
-          {
-            sponsor.map((singleSponsor, index) => (
-              <Sponsor {...singleSponsor} key={index}
-
-              />
-            ))
-          }
-
-        </div>
-        <div className="w-[15%] h-[4px] dark:bg-white bg-white mt-[70px]"></div>
-        <h1 className="dark:text-white text-white md:text-5xl text-4xl font-extrabold leading-tight after:lg:text-left lg:w-4/5 mt-[23px]">NÚCLEOS ORGANIZADORES</h1>
-        <div className="lg:w-4/5 w-full flex justify-end items-center ">
-          <div className="lg:w-[400px] lg:h-[400px] md:w-[300px] md:h-[300px] h-[200px] w-[200px]  relative ">
-            <Image src={darkMode ? "/location.svg" : "location_dark.svg"} alt="Banner" layout="fill" objectFit="cover" />
+    <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">
+      <div className="lg:relative ">
+        <div className="sm:w-4/5 w-11/12 m-auto">
+          <div className="lg:w-4/5 w-full flex-col gap-12 flex pt-20 ">
+            <Image src="/sci-logo.png" alt="Banner" width={400} height={400} />
+            <p className='text-white lg:text-7xl md:text-6xl text-5xl text-start font-extrabold'>SEMANA DA CIÊNCIA E INVOCAÇÃO</p>
+            <div className="flex justify-start items-center gap-4 mb-[70px]">
+              <button className="py-2 px-6 bg-yellow-300 rounded-lg hover:opacity-80">Events </button>
+              <p className='text-white text-xl text-start '>14 - 15 MARCH</p>
+            </div>
           </div>
         </div>
+        <Hexa
+
+        />
+
+        <div className="bg-custom-blue-3 w-full">
+
+
+          <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto">
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">WHAT IS IT?</h1>
+            <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
+            <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
+
+            <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute lg:block hidden">
+              <div className="w-full h-full relative">
+                <div className="bg-yellow-300 h-5 w-5 rounded-full -translate-y-2/4 translate-x-2/4 absolute top-0 right-0 "></div>
+                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 translate-x-2/4 absolute bottom-0 right-0 "></div>
+                <div className="bg-blue-950 h-5 w-5 rounded-full -translate-y-2/4 -translate-x-2/4 absolute top-0 left-0 "></div>
+                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 -translate-x-2/4 absolute bottom-0 left-0 "></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
+            <p className="text-white font-poppins font-light leading-8 lg:w-[70%] "> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad repellat soluta aspernatur natus nobis quos porro velit, illum nihil magni cupiditate! Sunt pariatur ratione, maiores velit officiis quod eum quisquam!</p>
+          </div>
+
+
+
+          <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto mt-[70px] ">
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">SPONSORS</h1>
+            <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
+            <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
+
+            <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute  lg:block hidden">
+              <div className="w-full h-full relative">
+                <div className="bg-yellow-300 h-5 w-5 rounded-full -translate-y-2/4 translate-x-2/4 absolute top-0 right-0 "></div>
+                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 translate-x-2/4 absolute bottom-0 right-0 "></div>
+                <div className="bg-blue-950 h-5 w-5 rounded-full -translate-y-2/4 -translate-x-2/4 absolute top-0 left-0 "></div>
+                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 -translate-x-2/4 absolute bottom-0 left-0 "></div>
+              </div>
+            </div>
+          </div>
+
+          <motion.div
+            ref={ref_2}
+            variants={{
+              hidden: { opacity: 0, y: 60 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            initial="hidden"
+            animate={inView_2 ? 'visible' : 'hidden'}
+            transition={{ duration: 0.4, delay: 0.4 }}
+            className="overflow-hidden"
+          >
+
+          <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
+            <div className="lg:w-4/5 w-full mt-9 flex flex-wrap justify-between gap-12 ">
+
+              {
+                sponsor.map((singleSponsor, index) => (
+                  <Sponsor {...singleSponsor} key={index}
+
+                  />
+                ))
+              }
+
+            </div>
+          </div>
+          </motion.div>
+
+
+
+          <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto mt-[70px] ">
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">ORGANIZATION</h1>
+            <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
+            <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
+            <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute lg:block hidden">
+              <div className="w-full h-full relative">
+                <div className="bg-yellow-300 h-5 w-5 rounded-full -translate-y-2/4 translate-x-2/4 absolute top-0 right-0 "></div>
+                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 translate-x-2/4 absolute bottom-0 right-0 "></div>
+                <div className="bg-blue-950 h-5 w-5 rounded-full -translate-y-2/4 -translate-x-2/4 absolute top-0 left-0 "></div>
+                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 -translate-x-2/4 absolute bottom-0 left-0 "></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
+            <div className="lg:w-4/5 w-full mt-9 flex flex-wrap gap-9 ">
+
+              {
+                nucleos.map((logos, index) => (
+                  <Nucleos {...logos} key={index}
+
+                  />
+                ))
+              }
+
+            </div>
+          </div>
+
+
+
+          <div className="sm:w-[80%] w-[90%] lg:w-full relative m-auto mt-[70px]">
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">FIND US</h1>
+            <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
+            <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
+
+
+            <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute lg:block hidden">
+              <div className="w-full h-full relative">
+                <div className="bg-yellow-300 h-5 w-5 rounded-full -translate-y-2/4 translate-x-2/4 absolute top-0 right-0 "></div>
+                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 translate-x-2/4 absolute bottom-0 right-0 "></div>
+                <div className="bg-blue-950 h-5 w-5 rounded-full -translate-y-2/4 -translate-x-2/4 absolute top-0 left-0 "></div>
+                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 -translate-x-2/4 absolute bottom-0 left-0 "></div>
+              </div>
+            </div>
+          </div>
+
+
+          <motion.div
+            ref={ref}
+            variants={{
+              hidden: { opacity: 0, y: 60 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            initial="hidden"
+            animate={inView ? 'visible' : 'hidden'}
+            transition={{ duration: 0.4, delay: 0.4}}
+            className="overflow-hidden"
+          >
+
+            <div className="sm:w-4/5 w-11/12 m-auto mt-[70px]">
+              <div className="lg:w-4/5 w-full md:flex md:justify-start flex-row justify-center items-center mt-9">
+                <div className="relative lg:w-[400px] lg:h-[400px] w-[300px] h-[300px]  m-auto md:ml-0">
+                  <Image src={"/location.svg"} alt="Banner" fill />
+                </div>
+                <div className="md:w-5/12 md:mt-0 mt-9 text-white font-poppins font-light leading-8">
+                  <p>Lorem  ipsum dolor sit amet consectetur adipisicing elit. Quam ea ipsa consequatur culpa assumenda atque eius suscipit veritatis neque dolore sed explicabo perferendis quae mollitia provident, optio facere voluptatum. Dolores?
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum, ut facere eos, voluptate repellendus iusto praesentium totam quas natus quo, libero veritatis! Magni, voluptatum laborum beatae dolorum saepe recusandae numquam?
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </motion.div>
+            <div className="h-[100px] sm:w-[80%] w-[90%] lg:w-full relative m-auto mt-[70px]">
+              <div className="bottom-0 right-[160px] absolute lg:block hidden">
+
+                <Image src={"/robot.png"} alt="Banner" width={100} height={100} />
+              </div>
+            </div>
+
+
+
+
+
+        </div >
 
       </div>
-      <div>
-        <ColorModeToggle />
-      </div>
       <Footer />
-    </div>
-    
+    </div >
+
   );
 }
 
