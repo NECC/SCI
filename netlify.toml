@@ -1,5 +1,5 @@
 [context.production]
-command = "npx prisma generate && npx prisma db seed && npm run build"
+command = "npx prisma generate && npm run build"
 
 [context.deploy-preview]
 command = "npx prisma generate && npm run build"
