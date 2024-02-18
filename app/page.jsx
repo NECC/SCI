@@ -72,7 +72,7 @@ export default function Home() {
         <div className="sm:w-4/5 w-11/12 m-auto">
           <div className="lg:w-4/5 w-full flex-col gap-12 flex pt-20 ">
             <Image src="/sci-logo.png" alt="Banner" width={400} height={400} />
-            <p className='text-white lg:text-7xl md:text-6xl text-5xl text-start font-extrabold'>SEMANA DA CIÊNCIA E INVOCAÇÃO</p>
+            <p className='text-white lg:text-7xl md:text-6xl text-5xl text-start font-extrabold'>SEMANA DA CIÊNCIA E INOVAÇÃO</p>
             <div className="flex justify-start items-center gap-4 mb-[70px]">
               <button className="py-2 px-6 bg-yellow-300 rounded-lg hover:opacity-80">Events </button>
               <p className='text-white text-xl text-start '>14 - 15 MARCH</p>
