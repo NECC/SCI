@@ -1,0 +1,13 @@
+[context.production]
+command = "npx prisma generate && npm run build"
+
+[context.deploy-preview]
+command = "npx prisma generate && npm run build"
+
+[build]
+   publish = ".next"
+   ignore = "/bin/false"
+
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
