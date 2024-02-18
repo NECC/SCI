@@ -69,7 +69,7 @@ export default function Activity({ item, attended }) {
             {item.speakers}
           </p>
           {(item.enrollable || item.alreadyEnrolled) && (
-            <div class="ml-auto">
+            <div className="ml-auto">
               <Button
                 isLoading={loading}
                 className=""
@@ -88,19 +88,19 @@ export default function Activity({ item, attended }) {
             </div>
           )}
           {(attended) && (
-              <div className="flex flex-row ml-auto"> 
-                <Button 
-                  size="sm" 
-                  radius="full" 
+              <div className="flex flex-row ml-auto">
+                <Button
+                  size="sm"
+                  radius="full"
                   color="primary"
-                  className="text-tiny" 
+                  className="text-tiny"
                   onClick={(e) => {
-                    e.preventDefault(); 
+                    e.preventDefault();
                     e.stopPropagation();
                   }}
                 >
-                   Certificate <TbFileDownload /> 
-                </Button> 
+                  Certificate <TbFileDownload />
+                </Button>
               </div>
             )
           }

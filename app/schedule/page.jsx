@@ -3,9 +3,9 @@
 import Nav from "@components/Nav";
 import React, { useEffect, useState } from "react";
 import { Card, Button, ButtonGroup, Chip } from "@nextui-org/react";
-import { getActivities } from "@app/actions";
+import { getActivitiesGroupedByDay } from "@app/actions";
 import Activity from "./Activity";
-import { ArrowRight } from "@components/ArrowRight";
+import ActivityDayFilter from "@components/ActivityDayFilter";
 
 export default function Schedule() {
   const [selectedDay, setSelectedDay] = useState(null);
@@ -13,27 +13,6 @@ export default function Schedule() {
 
   const getDays = (activities) => {
     return activities.map(([day, _]) => day);
-  };
-
-  const groupActivitiesByDay = (activities) => {
-    // Group activities by date
-    const groups = activities.reduce((groups, activity) => {
-      const date = new Date(activity.date);
-      const day = date.getUTCDate();
-      const month = date.getUTCMonth() + 1; // Months are 0-based
-      const year = date.getUTCFullYear();
-      const dateString = `${day}`;
-
-      const group = groups[dateString] || [];
-      group.push(activity);
-      groups[dateString] = group;
-      return groups;
-    }, {});
-
-    // Convert groups to an array and sort by date
-    return Object.entries(groups).sort(
-      ([dateA], [dateB]) => new Date(dateA) - new Date(dateB)
-    );
   };
 
   const groupActivitiesByStartTime = (activities) => {
@@ -64,10 +43,10 @@ export default function Schedule() {
 
   useEffect(() => {
     const fetchActivities = async () => {
-      const data = await getActivities();
-      const groupedByDay = groupActivitiesByDay(data);
-      setActivities(groupedByDay);
-      setSelectedDay(getDays(groupedByDay)[0]);
+      const data = await getActivitiesGroupedByDay();
+      console.log(data)
+      setActivities(data);
+      setSelectedDay(getDays(data)[0]);
     };
 
     fetchActivities();
@@ -77,30 +56,7 @@ export default function Schedule() {
     <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black bg-[url('/rectangle_light.png')] dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">
       <div className="p-2 pb-10 md:p-7 md:px-8 h-full">
         <div className="w-full h-full">
-          <div className="hidden md:flex flex-row items-center w-full justify-center text-white gap-10 bg-gradient-to-r from-transparent from-20% via-custom-blue-1/60 to-transparent to-80%">
-            {getDays(activities).map((day) => (
-              <div
-                key={day}
-                className="flex flex-row items-center"
-                onClick={() => setSelectedDay(day)}
-              >
-                {selectedDay === day && (
-                  <>
-                    <ArrowRight className="rotate-180" />
-                    <div className="flex flex-col items-center mx-5">
-                      <h1 className="text-2xl font-bold">{day}</h1>
-                      <h2 className="uppercase text-lg">March</h2>
-                    </div>
-                    <ArrowRight />
-                  </>
-                )}
-
-                {selectedDay !== day && (
-                  <h1 className="text-2xl font-bold opacity-50">{day}</h1>
-                )}
-              </div>
-            ))}
-          </div>
+          <ActivityDayFilter selectedDay={selectedDay} setSelectedDay={setSelectedDay} days={getDays(activities)}/>
           <div className="flex flex-col md:flex-row mt-5">
             <div className="flex flex-col md:flex-row">
               {getActivitiesOfDay(selectedDay).map(
