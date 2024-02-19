@@ -6,12 +6,8 @@
 
 
 
-
-
-
-
-.black_btn {
-  @apply font-poppins text-white font-normal text-center rounded-2xl border border-black bg-black py-1.5 px-5   hover:bg-white hover:text-black  flex items-center justify-center text-xl w-11/12 m-auto mt-5 gap-3;
+.blue_btn {
+  @apply font-poppins font-normal py-1.5 px-5 text-2xl text-white bg-blue-950 w-11/12 m-auto;
 }
 
 .nav_btn {

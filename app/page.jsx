@@ -69,10 +69,10 @@ export default function Home() {
   });
 
   return (
-    <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">
+    <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 h-screen">
       <div className="lg:relative ">
         <div className="sm:w-4/5 w-11/12 m-auto">
-          <div className="lg:w-4/5 w-full flex-col gap-12 flex pt-20 ">
+          <div className="lg:w-4/5 w-full flex-col gap-12 flex md:pt-20 pt-10 ">
             <Image src="/sci-logo.png" alt="Banner" width={400} height={400} />
             <p className='text-white lg:text-7xl md:text-6xl text-5xl text-start font-extrabold'>SEMANA DA CIÊNCIA E INVOCAÇÃO</p>
             <div className="flex justify-start items-center gap-4 mb-[70px]">

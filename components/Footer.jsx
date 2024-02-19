@@ -5,7 +5,7 @@ import { FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <div className='w-full'>
+    <div className='w-full bg-gradient-to-l from-custom-blue-3 to-custom-blue-1'>
       <div className='flex md:flex-row flex-col justify-between items-center gap-4 p-4 w-11/12 m-auto z-50'>
         <div className="flex gap-4 md:order-1">
           <IoLogoGithub className="hover:opacity-60 cursor-pointer" size={25} color={"white"} />

@@ -7,7 +7,6 @@ import { signOut } from "next-auth/react";
 import { PiSignOutDuotone } from "react-icons/pi";
 import { Button, Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { Divider } from "@nextui-org/divider";
 
 const Nav = (props) => {
   const [user, setUser] = useState({});
@@ -38,14 +37,15 @@ const Nav = (props) => {
         <Link href="/" className="nav_btn text-base">
           Home
         </Link>
-        {/* colocar divider */}
+        <div className="w-[1px] h-[20px] rounded-full bg-white"></div>
         <Link href="/schedule" className="nav_btn text-base">
           Schedule
         </Link>
+        <div className="w-[1px] h-[20px] rounded-full bg-white"></div>
         <Link href="/faqs" className="nav_btn text-base">
           FAQs
         </Link>
-
+        <div className="w-[1px] h-[20px] rounded-full bg-white"></div>
         {user.role == "ADMIN" && (
           <Link href="/admin" className="nav_btn text-base">
             Backoffice
@@ -59,7 +59,6 @@ const Nav = (props) => {
             </Link>
 
             <Button
-              
               className="font-poppins font-normal text-base text-white bg-blue-950"
               onClick={signOut}>
               Sign Out
@@ -117,20 +116,18 @@ const Nav = (props) => {
                   Profile
                 </Link>
 
-                <button
-                  type="button"
+                <Button
                   onClick={() => {
                     setToggleDropdown(false);
                     signOut();
                   }}
-                  className="black_btn "
-                >
+                  className="blue_btn">
                   Sign Out
-                  <PiSignOutDuotone size={22} color="white hover:black" />
-                </button>
+                </Button>
               </>
             ) : (
-              <button type="button" className="black_btn"
+              <Button
+                className="blue_btn"
                 onClick={() => {
                   router.push("/auth/signin")
                   setToggleDropdown(false);
@@ -138,7 +135,7 @@ const Nav = (props) => {
                 }
               >
                 Sign in
-              </button>
+              </Button>
             )}
           </div>
         </div>
