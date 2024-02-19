@@ -11,7 +11,7 @@ export default function accordion() {
     return (
         <Accordion
             variant="splitted"
-            className="dark:text-white text-black "
+            className="relative dark:text-white text-black "
 
             motionProps={{
                 variants: {

@@ -52,19 +52,21 @@ export default function Home() {
   }, [session]);
 
 
-
   const [ref, inView] = useInView({
-    triggerOnce: false, // Set to false to trigger the animation every time the element comes in view
-    threshold: 0.2, // 0.5 means the animation will trigger when 50% of the element is in view
+    triggerOnce: true, // Set to false to trigger the animation every time the element comes in view
   });
 
   const [ref_2, inView_2] = useInView({
-    triggerOnce: false, // Set to false to trigger the animation every time the element comes in view
-    threshold: 0.3, // 0.5 means the animation will trigger when 50% of the element is in view
+    triggerOnce: true, // 
   });
 
+  const [ref_3, inView_3] = useInView({
+    triggerOnce: true, 
+  });
 
-
+  const [ref_4, inView_4] = useInView({
+    triggerOnce: true,
+  });
 
   return (
     <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">
@@ -101,9 +103,22 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
-            <p className="text-white font-poppins font-light leading-8 lg:w-[70%] "> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad repellat soluta aspernatur natus nobis quos porro velit, illum nihil magni cupiditate! Sunt pariatur ratione, maiores velit officiis quod eum quisquam!</p>
-          </div>
+          <motion.div
+            ref={ref}
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            initial="hidden"
+            animate={inView ? 'visible' : 'hidden'}
+            transition={{ duration: 0.8, delay: 0.5, transition: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
+              <p className="text-white font-poppins font-light leading-8 lg:w-[70%] "> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad repellat soluta aspernatur natus nobis quos porro velit, illum nihil magni cupiditate! Sunt pariatur ratione, maiores velit officiis quod eum quisquam!</p>
+            </div>
+
+          </motion.div>
 
 
 
@@ -125,28 +140,28 @@ export default function Home() {
           <motion.div
             ref={ref_2}
             variants={{
-              hidden: { opacity: 0, y: 60 },
+              hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
             initial="hidden"
             animate={inView_2 ? 'visible' : 'hidden'}
-            transition={{ duration: 0.4, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.5, transition: "easeInOut" }}
             className="overflow-hidden"
           >
 
-          <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
-            <div className="lg:w-4/5 w-full mt-9 flex flex-wrap justify-between gap-12 ">
+            <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
+              <div className="lg:w-4/5 w-full mt-9 flex flex-wrap justify-between gap-12 ">
 
-              {
-                sponsor.map((singleSponsor, index) => (
-                  <Sponsor {...singleSponsor} key={index}
+                {
+                  sponsor.map((singleSponsor, index) => (
+                    <Sponsor {...singleSponsor} key={index}
 
-                  />
-                ))
-              }
+                    />
+                  ))
+                }
 
+              </div>
             </div>
-          </div>
           </motion.div>
 
 
@@ -165,20 +180,34 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
-            <div className="lg:w-4/5 w-full mt-9 flex flex-wrap gap-9 ">
+          <motion.div
+            ref={ref_3}
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            initial="hidden"
+            animate={inView_3 ? 'visible' : 'hidden'}
+            transition={{ duration: 0.8, delay: 0.5, transition: "easeInOut" }}
+            className="overflow-hidden"
+          >
 
-              {
-                nucleos.map((logos, index) => (
-                  <Nucleos {...logos} key={index}
 
-                  />
-                ))
-              }
+            <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
+              <div className="lg:w-4/5 w-full mt-9 flex flex-wrap gap-9 ">
 
+                {
+                  nucleos.map((logos, index) => (
+                    <Nucleos {...logos} key={index}
+
+                    />
+                  ))
+                }
+
+              </div>
             </div>
-          </div>
 
+          </motion.div>
 
 
           <div className="sm:w-[80%] w-[90%] lg:w-full relative m-auto mt-[70px]">
@@ -199,14 +228,14 @@ export default function Home() {
 
 
           <motion.div
-            ref={ref}
+            ref={ref_4}
             variants={{
-              hidden: { opacity: 0, y: 60 },
+              hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
             initial="hidden"
-            animate={inView ? 'visible' : 'hidden'}
-            transition={{ duration: 0.4, delay: 0.4}}
+            animate={inView_4 ? 'visible' : 'hidden'}
+            transition={{ duration: 0.8, delay: 0.5, transition: "easeInOut" }}
             className="overflow-hidden"
           >
 
@@ -224,16 +253,13 @@ export default function Home() {
             </div>
 
           </motion.div>
-            <div className="h-[100px] sm:w-[80%] w-[90%] lg:w-full relative m-auto mt-[70px]">
-              <div className="bottom-0 right-[160px] absolute lg:block hidden">
+          
+          <div className="h-[100px] sm:w-[80%] w-[90%] lg:w-full relative m-auto mt-[70px]">
+            <div className="bottom-0 right-[160px] absolute lg:block hidden">
 
-                <Image src={"/robot.png"} alt="Banner" width={100} height={100} />
-              </div>
+              <Image src={"/robot.png"} alt="Banner" width={100} height={100} />
             </div>
-
-
-
-
+          </div>
 
         </div >
 

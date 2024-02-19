@@ -5,32 +5,19 @@
 @tailwind utilities;
 
 
-.custom-background {
-  background: hsla(233, 89%, 17%, 1);
-  background: radial-gradient(circle, hsla(233, 89%, 17%, 1) 0%, hsla(0, 0%, 0%, 1) 100%);
-  background: -moz-radial-gradient(circle, hsla(233, 89%, 17%, 1) 0%, hsla(0, 0%, 0%, 1) 100%);
-  background: -webkit-radial-gradient(circle, hsla(233, 89%, 17%, 1) 0%, hsla(0, 0%, 0%, 1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#050E53", endColorstr="#000000", GradientType=1);
-}
-.custom-box{
-  box-shadow:  8px 8px 10px #000d54,
-  -8px -8px 10px #001174;
-             border-radius: 22px;
-}
+
+
 
 
 
 .black_btn {
-  @apply rounded-2xl border border-black bg-black py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center  flex items-center justify-center  text-xl font-black font-comfortaa  ;
+  @apply font-poppins text-white font-normal text-center rounded-2xl border border-black bg-black py-1.5 px-5   hover:bg-white hover:text-black  flex items-center justify-center text-xl w-11/12 m-auto mt-5 gap-3;
 }
 
-.outline_btn {
-  @apply font-poppins bg-transparent py-1.5 px-2 text-white transition-width duration-500 font-normal relative text-center text-base flex items-center justify-center hover:text-white/80;
+.nav_btn {
+  @apply font-poppins text-white font-normal text-center hover:text-white/80;
 }
 
-.dropdown_link {
-  @apply  font-black text-white text-2xl font-comfortaa text-center hover:text-white/80;
-}
 
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari, and Opera */
