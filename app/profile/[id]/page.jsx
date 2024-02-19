@@ -58,35 +58,18 @@ export default function Profile({ params: { id } }) {
 
   return (
     <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
-      <div className="gap-2 px-8 flex flex-col md:flex-row">
+      <div className="gap-2 p-2 md:p-7 flex flex-col md:flex-row">
         <div className="flex flex-col flex-grow gap-2 p-2 justify-between">
           <div className="px-2 flex flex-col items-left">
             <ProfileNav
               activeScreen={activeScreen}
               setActiveScreen={setActiveScreen}
             />
-            <div className="flex flex-row items-center">
-              {activeScreen == 2 && <Line />}
-              <Button
-                radius={"none"}
-                onClick={() => setActiveScreen(2)}
-                className={
-                  activeScreen != 2
-                    ? "flex flex-col text-white bg-transparent"
-                    : "-ml-1.5 overflow-visible flex flex-row bg-custombutton text-white"
-                }
-              >
-                <p className="text-2xl font-extrabold leading-5 mt-1.5 mb-1 ml-[17px] mr-1.5">
-                  {" "}
-                  QRCODE{" "}
-                </p>
-              </Button>
-            </div>
           </div>
         </div>
 
         {status != "loading" ? (
-          <div className="bg-transparent w-full h-[625px]">
+          <div className="bg-transparent w-full">
             {activeScreen == 0 ? (
               <ActivitiesSubscribed />
             ) : activeScreen == 1 ? (
@@ -109,36 +92,53 @@ const ProfileNav = ({ activeScreen, setActiveScreen }) => {
   return (
     <>
       <div className="flex flex-row items-center">
-        {activeScreen == 0 && <Line />}
         <Button
+          disableRipple={true}
           radius={"none"}
           onClick={() => setActiveScreen(0)}
           className={
             activeScreen != 0
-              ? "flex flex-col text-white bg-transparent"
-              : "-ml-1.5 overflow-visible flex flex-row bg-custombutton text-white"
+              ? "flex flex-col text-white bg-transparent py-7"
+              : "pl-8 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold"
           }
         >
-          <p className="text-2xl font-extrabold leading-5 mt-1.5 mb-1 ml-[17px] mr-1.5">
-            {" "}
-            ENROLLED ACTIVITIES{" "}
+          {activeScreen == 0 && <Line className="-ml-10" />}
+          <p className="text-2xl leading-5">
+            ENROLLED ACTIVITIES
           </p>
         </Button>
       </div>
       <div className="flex flex-row items-center">
-        {activeScreen == 1 && <Line />}
         <Button
+          disableRipple={true}
           radius={"none"}
           onClick={() => setActiveScreen(1)}
           className={
             activeScreen != 1
-              ? "flex flex-col text-white bg-transparent"
-              : "-ml-1.5 overflow-visible flex flex-row bg-custombutton text-white"
+              ? "flex flex-col text-white bg-transparent py-7"
+              : "pl-8 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold"
           }
         >
-          <p className="text-2xl font-extrabold leading-5 mt-1.5 mb-1 ml-[17px] mr-1.5">
-            {" "}
-            RANKING{" "}
+          {activeScreen == 1 && <Line className="-ml-10" />}
+          <p className="text-2xl leading-5">
+            RANKING
+          </p>
+        </Button>
+      </div>
+      <div className="flex flex-row items-center">
+        <Button
+          disableRipple={true}
+          radius={"none"}
+          onClick={() => setActiveScreen(2)}
+          className={
+            activeScreen != 2
+              ? "flex flex-col text-white bg-transparent py-7"
+              : "pl-8 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold"
+          }
+        >
+          {activeScreen == 2 && <Line className="-ml-10" />}
+          <p className="text-2xl leading-5">
+            QRCODE
           </p>
         </Button>
       </div>
@@ -150,6 +150,7 @@ const ActivitiesSubscribed = ({}) => {
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([]);
   const [type, setType] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const getDays = (activities) => {
     return activities.map(([day, _]) => day);
@@ -179,6 +180,7 @@ const ActivitiesSubscribed = ({}) => {
       const data = await getUserEnrolledActivitiesGroupedByDay();
       setActivities(data);
       setSelectedDay(getDays(data)[0]);
+      setLoading(false);
     };
 
     fetchActivities();
@@ -186,47 +188,56 @@ const ActivitiesSubscribed = ({}) => {
 
   return (
     <div className="dark:bg-black/40 flex flex-col">
-      <div className="flex flex-col gap-y-1">
+      <div className="flex flex-col gap-y-1 px-5 ">
         <ActivityDayFilter
           selectedDay={selectedDay}
           setSelectedDay={setSelectedDay}
           days={getDays(activities)}
-        />
-        <div className="mt-1 -mb-3 flex flex-row h-8">
-          <ButtonGroup>
-            <Button
-              className={type == null && "bg-white text-black"}
-              onClick={() => setType(null)}
-            >
-              All
-            </Button>
-            <Button
-              className={type == "WORKSHOP" && "bg-white text-black"}
-              onClick={() => setType("WORKSHOP")}
-            >
-              Workshops : {getWorkshopCount()}
-            </Button>
-            <Button
-              className={type == "OTHER" && "bg-white text-black"}
-              onClick={() => setType("OTHER")}
-            >
-              Others : {getOtherCount()}
-            </Button>
-          </ButtonGroup>
-        </div>
-        <div className="no-scrollbar flex flex-wrap gap-4 flex-col md:flex-row w-[300px] md:w-auto mt-8">
-          {getActivitiesOfDayAndType(selectedDay, type).length == 0 ? (
-            <p className="text-white h-[117px]">
-              You aren't enrolled in an activity of this type
-            </p>
-          ) : (
-            getActivitiesOfDayAndType(selectedDay, type).map((item, index) => (
-              <div key={index}>
-                <Activity item={item} attended={item.attended} />
+        >
+          {!loading ? (
+            <>
+              <div className="mt-1 -mb-3 flex flex-row h-8">
+                <ButtonGroup>
+                  <Button
+                    className={type == null && "bg-white text-black"}
+                    onClick={() => setType(null)}
+                  >
+                    All
+                  </Button>
+                  <Button
+                    className={type == "WORKSHOP" && "bg-white text-black"}
+                    onClick={() => setType("WORKSHOP")}
+                  >
+                    Workshops : {getWorkshopCount()}
+                  </Button>
+                  <Button
+                    className={type == "OTHER" && "bg-white text-black"}
+                    onClick={() => setType("OTHER")}
+                  >
+                    Others : {getOtherCount()}
+                  </Button>
+                </ButtonGroup>
               </div>
-            ))
+              <div className="no-scrollbar flex flex-wrap gap-4 flex-col md:flex-row w-[300px] md:w-auto mt-8">
+                {getActivitiesOfDayAndType(selectedDay, type).length == 0 ? (
+                  <p className="text-white h-[117px]">
+                    {"You aren't enrolled in an activity of this type"}
+                  </p>
+                ) : (
+                  getActivitiesOfDayAndType(selectedDay, type).map(
+                    (item, index) => (
+                      <div key={index}>
+                        <Activity item={item} attended={item.attended} />
+                      </div>
+                    )
+                  )
+                )}
+              </div>
+            </>
+          ) : (
+            <Spinner className="w-full" color="white" size="lg" />
           )}
-        </div>
+        </ActivityDayFilter>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import Nav from "@components/Nav";
 import React, { useEffect, useState } from "react";
-import { Card, Button, ButtonGroup, Chip } from "@nextui-org/react";
+import { Chip, Spinner } from "@nextui-org/react";
 import { getActivitiesGroupedByDay } from "@app/actions";
 import Activity from "./Activity";
 import ActivityDayFilter from "@components/ActivityDayFilter";
@@ -10,6 +10,7 @@ import ActivityDayFilter from "@components/ActivityDayFilter";
 export default function Schedule() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getDays = (activities) => {
     return activities.map(([day, _]) => day);
@@ -44,9 +45,9 @@ export default function Schedule() {
   useEffect(() => {
     const fetchActivities = async () => {
       const data = await getActivitiesGroupedByDay();
-      console.log(data)
       setActivities(data);
       setSelectedDay(getDays(data)[0]);
+      setLoading(false);
     };
 
     fetchActivities();
@@ -56,46 +57,40 @@ export default function Schedule() {
     <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black bg-[url('/rectangle_light.png')] dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">
       <div className="p-2 pb-10 md:p-7 md:px-8 h-full">
         <div className="w-full h-full">
-          <ActivityDayFilter selectedDay={selectedDay} setSelectedDay={setSelectedDay} days={getDays(activities)}/>
-          <div className="flex flex-col md:flex-row mt-5">
-            <div className="flex flex-col md:flex-row">
-              {getActivitiesOfDay(selectedDay).map(
-                ([startTime, activities]) => (
-                  <React.Fragment key={startTime}>
-                    <Chip className="bg-custom-yellow-1 text-black md:mb-0 z-10">
-                      {startTime}
-                    </Chip>
-                    <div className="flex flex-row md:flex-col">
-                      <div className="bg-white p-[1px] mx-3 md:h-[2px] md:my-3 md:mx-0 md:w-auto"></div>
-                      <div className="flex flex-row md:flex-col p-5 overflow-scroll hide-scroll gap-3 -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
-                        {activities.map((item, index) => (
-                          <div key={index}>
-                            <Activity item={item} attended={false} />
+          <ActivityDayFilter
+            selectedDay={selectedDay}
+            setSelectedDay={setSelectedDay}
+            days={getDays(activities)}
+          >
+            {!loading ? (
+              <div className="flex flex-col md:flex-row mt-5">
+                <div className="flex flex-col md:flex-row">
+                  {getActivitiesOfDay(selectedDay).map(
+                    ([startTime, activities]) => (
+                      <React.Fragment key={startTime}>
+                        <Chip className="bg-custom-yellow-1 text-black md:mb-0 z-10">
+                          {startTime}
+                        </Chip>
+                        <div className="flex flex-row md:flex-col">
+                          <div className="bg-white p-[1px] mx-3 md:h-[2px] md:my-3 md:mx-0 md:w-auto"></div>
+                          <div className="flex flex-row md:flex-col p-5 overflow-scroll hide-scroll gap-3 -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
+                            {activities.map((item, index) => (
+                              <div key={index}>
+                                <Activity item={item} attended={false} />
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  </React.Fragment>
-                )
-              )}
-            </div>
-          </div>
+                        </div>
+                      </React.Fragment>
+                    )
+                  )}
+                </div>
+              </div>
+            ) : (
+              <Spinner className="w-full" color="white" size="lg" />
+            )}
+          </ActivityDayFilter>
         </div>
-      </div>
-      <div className="absolute bottom-3 w-full flex md:hidden">
-        <Card className="mx-auto p-2">
-          <ButtonGroup>
-            {getDays(activities).map((day) => (
-              <Button
-                key={day}
-                variant={selectedDay === day ? "solid" : "bordered"}
-                onClick={() => setSelectedDay(day)}
-              >
-                {day}
-              </Button>
-            ))}
-          </ButtonGroup>
-        </Card>
       </div>
     </div>
   );

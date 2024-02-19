@@ -1,4 +1,4 @@
-export const ArrowRight = ({ className }) => {
+export const ArrowRight = ({ className, ...props }) => {
   return (
     <svg
       className={className}
@@ -7,6 +7,7 @@ export const ArrowRight = ({ className }) => {
       viewBox="0 0 45 75"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <rect
         x="9.85864"

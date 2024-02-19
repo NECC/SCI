@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, CardBody, CardFooter, Image, Button } from "@nextui-org/react";
-import { FaCheck, FaLongArrowAltRight, FaRegClock } from "react-icons/fa";
-import { CiMapPin } from "react-icons/ci";
+import { FaCheck, FaLongArrowAltRight } from "react-icons/fa";
+import { CiMapPin, CiClock2 } from "react-icons/ci";
 import { TbFileDownload } from "react-icons/tb";
 
 export default function Activity({ item, attended }) {
@@ -36,7 +36,7 @@ export default function Activity({ item, attended }) {
         )}
         <h4 className="dark:text-white/90 font-bold text-xl">{item.title}</h4>
         {item.description && (
-          <p className="text-small dark:text-white/60 font-medium">
+          <p className="text-small dark:text-white/60 font-medium mb-2">
             {item.description}
           </p>
         )}
@@ -50,7 +50,7 @@ export default function Activity({ item, attended }) {
         )}
         {(!attended) && (
           <div className="flex flex-row mr-auto items-center">
-            <FaRegClock className="inline mr-2" />
+            <CiClock2 className="inline mr-2" />
             <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
               {item.startTime}h - {item.endTime}h
             </p>
