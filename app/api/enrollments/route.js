@@ -71,7 +71,7 @@ export async function POST(request) {
     });
 
     // If it's full, return an error
-    if (activityEnrollments.enrollments.length >= activityEnrollments.capacity) {
+    if (activityEnrollments.enrollments && activityEnrollments.enrollments.length >= activityEnrollments.capacity) {
       return new NextResponse(
         JSON.stringify({
           response: "error",

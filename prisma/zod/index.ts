@@ -16,7 +16,7 @@ export const UserScalarFieldEnumSchema = z.enum(['id','email','password','name',
 
 export const ActivityScalarFieldEnumSchema = z.enum(['id','title','description','date','startTime','endTime','location','capacity','speakers','type']);
 
-export const EnrollmentsScalarFieldEnumSchema = z.enum(['id','userId','activityId']);
+export const EnrollmentsScalarFieldEnumSchema = z.enum(['id','userId','activityId','attended']);
 
 export const AccountScalarFieldEnumSchema = z.enum(['id','userId','type','provider','providerAccountId','refresh_token','access_token','expires_at','token_type','scope','id_token','session_state']);
 
@@ -82,6 +82,7 @@ export const EnrollmentsSchema = z.object({
   id: z.number().int(),
   userId: z.string(),
   activityId: z.number().int(),
+  attended: z.boolean(),
 })
 
 export type Enrollments = z.infer<typeof EnrollmentsSchema>
@@ -215,6 +216,7 @@ export const EnrollmentsSelectSchema: z.ZodType<Prisma.EnrollmentsSelect> = z.ob
   id: z.boolean().optional(),
   userId: z.boolean().optional(),
   activityId: z.boolean().optional(),
+  attended: z.boolean().optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   activity: z.union([z.boolean(),z.lazy(() => ActivityArgsSchema)]).optional(),
 }).strict()
@@ -444,6 +446,7 @@ export const EnrollmentsWhereInputSchema: z.ZodType<Prisma.EnrollmentsWhereInput
   id: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   activityId: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  attended: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   activity: z.union([ z.lazy(() => ActivityRelationFilterSchema),z.lazy(() => ActivityWhereInputSchema) ]).optional(),
 }).strict();
@@ -452,6 +455,7 @@ export const EnrollmentsOrderByWithRelationInputSchema: z.ZodType<Prisma.Enrollm
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   activityId: z.lazy(() => SortOrderSchema).optional(),
+  attended: z.lazy(() => SortOrderSchema).optional(),
   user: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   activity: z.lazy(() => ActivityOrderByWithRelationInputSchema).optional()
 }).strict();
@@ -476,6 +480,7 @@ export const EnrollmentsWhereUniqueInputSchema: z.ZodType<Prisma.EnrollmentsWher
   NOT: z.union([ z.lazy(() => EnrollmentsWhereInputSchema),z.lazy(() => EnrollmentsWhereInputSchema).array() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   activityId: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
+  attended: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   activity: z.union([ z.lazy(() => ActivityRelationFilterSchema),z.lazy(() => ActivityWhereInputSchema) ]).optional(),
 }).strict());
@@ -484,6 +489,7 @@ export const EnrollmentsOrderByWithAggregationInputSchema: z.ZodType<Prisma.Enro
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   activityId: z.lazy(() => SortOrderSchema).optional(),
+  attended: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => EnrollmentsCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => EnrollmentsAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => EnrollmentsMaxOrderByAggregateInputSchema).optional(),
@@ -498,6 +504,7 @@ export const EnrollmentsScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.E
   id: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
   userId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   activityId: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  attended: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
 }).strict();
 
 export const AccountWhereInputSchema: z.ZodType<Prisma.AccountWhereInput> = z.object({
@@ -835,6 +842,7 @@ export const ActivityUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ActivityUn
 }).strict();
 
 export const EnrollmentsCreateInputSchema: z.ZodType<Prisma.EnrollmentsCreateInput> = z.object({
+  attended: z.boolean(),
   user: z.lazy(() => UserCreateNestedOneWithoutEnrollmentsInputSchema),
   activity: z.lazy(() => ActivityCreateNestedOneWithoutEnrollmentsInputSchema)
 }).strict();
@@ -842,10 +850,12 @@ export const EnrollmentsCreateInputSchema: z.ZodType<Prisma.EnrollmentsCreateInp
 export const EnrollmentsUncheckedCreateInputSchema: z.ZodType<Prisma.EnrollmentsUncheckedCreateInput> = z.object({
   id: z.number().int().optional(),
   userId: z.string(),
-  activityId: z.number().int()
+  activityId: z.number().int(),
+  attended: z.boolean()
 }).strict();
 
 export const EnrollmentsUpdateInputSchema: z.ZodType<Prisma.EnrollmentsUpdateInput> = z.object({
+  attended: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutEnrollmentsNestedInputSchema).optional(),
   activity: z.lazy(() => ActivityUpdateOneRequiredWithoutEnrollmentsNestedInputSchema).optional()
 }).strict();
@@ -854,21 +864,25 @@ export const EnrollmentsUncheckedUpdateInputSchema: z.ZodType<Prisma.Enrollments
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activityId: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  attended: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const EnrollmentsCreateManyInputSchema: z.ZodType<Prisma.EnrollmentsCreateManyInput> = z.object({
   id: z.number().int().optional(),
   userId: z.string(),
-  activityId: z.number().int()
+  activityId: z.number().int(),
+  attended: z.boolean()
 }).strict();
 
 export const EnrollmentsUpdateManyMutationInputSchema: z.ZodType<Prisma.EnrollmentsUpdateManyMutationInput> = z.object({
+  attended: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const EnrollmentsUncheckedUpdateManyInputSchema: z.ZodType<Prisma.EnrollmentsUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activityId: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  attended: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const AccountCreateInputSchema: z.ZodType<Prisma.AccountCreateInput> = z.object({
@@ -1256,6 +1270,11 @@ export const EnumTypeWithAggregatesFilterSchema: z.ZodType<Prisma.EnumTypeWithAg
   _max: z.lazy(() => NestedEnumTypeFilterSchema).optional()
 }).strict();
 
+export const BoolFilterSchema: z.ZodType<Prisma.BoolFilter> = z.object({
+  equals: z.boolean().optional(),
+  not: z.union([ z.boolean(),z.lazy(() => NestedBoolFilterSchema) ]).optional(),
+}).strict();
+
 export const UserRelationFilterSchema: z.ZodType<Prisma.UserRelationFilter> = z.object({
   is: z.lazy(() => UserWhereInputSchema).optional(),
   isNot: z.lazy(() => UserWhereInputSchema).optional()
@@ -1274,7 +1293,8 @@ export const EnrollmentsUserIdActivityIdCompoundUniqueInputSchema: z.ZodType<Pri
 export const EnrollmentsCountOrderByAggregateInputSchema: z.ZodType<Prisma.EnrollmentsCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
-  activityId: z.lazy(() => SortOrderSchema).optional()
+  activityId: z.lazy(() => SortOrderSchema).optional(),
+  attended: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const EnrollmentsAvgOrderByAggregateInputSchema: z.ZodType<Prisma.EnrollmentsAvgOrderByAggregateInput> = z.object({
@@ -1285,18 +1305,28 @@ export const EnrollmentsAvgOrderByAggregateInputSchema: z.ZodType<Prisma.Enrollm
 export const EnrollmentsMaxOrderByAggregateInputSchema: z.ZodType<Prisma.EnrollmentsMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
-  activityId: z.lazy(() => SortOrderSchema).optional()
+  activityId: z.lazy(() => SortOrderSchema).optional(),
+  attended: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const EnrollmentsMinOrderByAggregateInputSchema: z.ZodType<Prisma.EnrollmentsMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
-  activityId: z.lazy(() => SortOrderSchema).optional()
+  activityId: z.lazy(() => SortOrderSchema).optional(),
+  attended: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const EnrollmentsSumOrderByAggregateInputSchema: z.ZodType<Prisma.EnrollmentsSumOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   activityId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const BoolWithAggregatesFilterSchema: z.ZodType<Prisma.BoolWithAggregatesFilter> = z.object({
+  equals: z.boolean().optional(),
+  not: z.union([ z.boolean(),z.lazy(() => NestedBoolWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedBoolFilterSchema).optional(),
+  _max: z.lazy(() => NestedBoolFilterSchema).optional()
 }).strict();
 
 export const StringNullableFilterSchema: z.ZodType<Prisma.StringNullableFilter> = z.object({
@@ -1647,6 +1677,10 @@ export const ActivityCreateNestedOneWithoutEnrollmentsInputSchema: z.ZodType<Pri
   connect: z.lazy(() => ActivityWhereUniqueInputSchema).optional()
 }).strict();
 
+export const BoolFieldUpdateOperationsInputSchema: z.ZodType<Prisma.BoolFieldUpdateOperationsInput> = z.object({
+  set: z.boolean().optional()
+}).strict();
+
 export const UserUpdateOneRequiredWithoutEnrollmentsNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutEnrollmentsNestedInput> = z.object({
   create: z.union([ z.lazy(() => UserCreateWithoutEnrollmentsInputSchema),z.lazy(() => UserUncheckedCreateWithoutEnrollmentsInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutEnrollmentsInputSchema).optional(),
@@ -1831,6 +1865,19 @@ export const NestedEnumTypeWithAggregatesFilterSchema: z.ZodType<Prisma.NestedEn
   _max: z.lazy(() => NestedEnumTypeFilterSchema).optional()
 }).strict();
 
+export const NestedBoolFilterSchema: z.ZodType<Prisma.NestedBoolFilter> = z.object({
+  equals: z.boolean().optional(),
+  not: z.union([ z.boolean(),z.lazy(() => NestedBoolFilterSchema) ]).optional(),
+}).strict();
+
+export const NestedBoolWithAggregatesFilterSchema: z.ZodType<Prisma.NestedBoolWithAggregatesFilter> = z.object({
+  equals: z.boolean().optional(),
+  not: z.union([ z.boolean(),z.lazy(() => NestedBoolWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedBoolFilterSchema).optional(),
+  _max: z.lazy(() => NestedBoolFilterSchema).optional()
+}).strict();
+
 export const NestedStringNullableFilterSchema: z.ZodType<Prisma.NestedStringNullableFilter> = z.object({
   equals: z.string().optional().nullable(),
   in: z.string().array().optional().nullable(),
@@ -1961,12 +2008,14 @@ export const SessionCreateManyUserInputEnvelopeSchema: z.ZodType<Prisma.SessionC
 }).strict();
 
 export const EnrollmentsCreateWithoutUserInputSchema: z.ZodType<Prisma.EnrollmentsCreateWithoutUserInput> = z.object({
+  attended: z.boolean(),
   activity: z.lazy(() => ActivityCreateNestedOneWithoutEnrollmentsInputSchema)
 }).strict();
 
 export const EnrollmentsUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.EnrollmentsUncheckedCreateWithoutUserInput> = z.object({
   id: z.number().int().optional(),
-  activityId: z.number().int()
+  activityId: z.number().int(),
+  attended: z.boolean()
 }).strict();
 
 export const EnrollmentsCreateOrConnectWithoutUserInputSchema: z.ZodType<Prisma.EnrollmentsCreateOrConnectWithoutUserInput> = z.object({
@@ -2062,15 +2111,18 @@ export const EnrollmentsScalarWhereInputSchema: z.ZodType<Prisma.EnrollmentsScal
   id: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   activityId: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  attended: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
 }).strict();
 
 export const EnrollmentsCreateWithoutActivityInputSchema: z.ZodType<Prisma.EnrollmentsCreateWithoutActivityInput> = z.object({
+  attended: z.boolean(),
   user: z.lazy(() => UserCreateNestedOneWithoutEnrollmentsInputSchema)
 }).strict();
 
 export const EnrollmentsUncheckedCreateWithoutActivityInputSchema: z.ZodType<Prisma.EnrollmentsUncheckedCreateWithoutActivityInput> = z.object({
   id: z.number().int().optional(),
-  userId: z.string()
+  userId: z.string(),
+  attended: z.boolean()
 }).strict();
 
 export const EnrollmentsCreateOrConnectWithoutActivityInputSchema: z.ZodType<Prisma.EnrollmentsCreateOrConnectWithoutActivityInput> = z.object({
@@ -2367,7 +2419,8 @@ export const SessionCreateManyUserInputSchema: z.ZodType<Prisma.SessionCreateMan
 
 export const EnrollmentsCreateManyUserInputSchema: z.ZodType<Prisma.EnrollmentsCreateManyUserInput> = z.object({
   id: z.number().int().optional(),
-  activityId: z.number().int()
+  activityId: z.number().int(),
+  attended: z.boolean()
 }).strict();
 
 export const AccountUpdateWithoutUserInputSchema: z.ZodType<Prisma.AccountUpdateWithoutUserInput> = z.object({
@@ -2431,36 +2484,43 @@ export const SessionUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.
 }).strict();
 
 export const EnrollmentsUpdateWithoutUserInputSchema: z.ZodType<Prisma.EnrollmentsUpdateWithoutUserInput> = z.object({
+  attended: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   activity: z.lazy(() => ActivityUpdateOneRequiredWithoutEnrollmentsNestedInputSchema).optional()
 }).strict();
 
 export const EnrollmentsUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.EnrollmentsUncheckedUpdateWithoutUserInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   activityId: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  attended: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const EnrollmentsUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.EnrollmentsUncheckedUpdateManyWithoutUserInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   activityId: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  attended: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const EnrollmentsCreateManyActivityInputSchema: z.ZodType<Prisma.EnrollmentsCreateManyActivityInput> = z.object({
   id: z.number().int().optional(),
-  userId: z.string()
+  userId: z.string(),
+  attended: z.boolean()
 }).strict();
 
 export const EnrollmentsUpdateWithoutActivityInputSchema: z.ZodType<Prisma.EnrollmentsUpdateWithoutActivityInput> = z.object({
+  attended: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutEnrollmentsNestedInputSchema).optional()
 }).strict();
 
 export const EnrollmentsUncheckedUpdateWithoutActivityInputSchema: z.ZodType<Prisma.EnrollmentsUncheckedUpdateWithoutActivityInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  attended: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const EnrollmentsUncheckedUpdateManyWithoutActivityInputSchema: z.ZodType<Prisma.EnrollmentsUncheckedUpdateManyWithoutActivityInput> = z.object({
   id: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  attended: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 /////////////////////////////////////////
