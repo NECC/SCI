@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]/route";
+const prisma = new PrismaClient();
 
 /**
  * Get all Enrollments from the database
@@ -10,7 +11,6 @@ import { authOptions } from "../auth/[...nextauth]/route";
 **/
 export async function GET() {
   try {
-    const prisma = new PrismaClient();
     const enrollments = await prisma.enrollments.findMany({
       select: {
         id: true,
@@ -45,7 +45,6 @@ export async function GET() {
   * @returns {response: "success", enrollment: enrollment || {response: "error", error: error}}
  */
 export async function POST(request) {
-  const prisma = new PrismaClient();
   const data = await request.json();
   const session = await getServerSession(authOptions);
 
