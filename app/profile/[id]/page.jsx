@@ -13,8 +13,6 @@ import { getUserEnrolledActivitiesGroupedByDay } from "@app/actions";
 
 export default function Profile({ params: { id } }) {
   const [user, setUser] = useState({});
-  const [place, setPlace] = useState(0);
-  const [firstPlace, setFirstPlace] = useState(0);
   const [activeScreen, setActiveScreen] = useState(0);
   let count = 1;
   let maxCount = 0;
@@ -37,28 +35,9 @@ export default function Profile({ params: { id } }) {
     getUser();
   }, [id]);
 
-  useEffect(() => {
-    const getUserPlace = async () => {
-      // compares current user points with the rest of the users to determine current user's place and how many points first place has
-      const { data } = await axios.get("/api/users");
-      for (let i = 0; i < data.users.length; i++) {
-        if (data.users[i].points > user.points && data.users[i].id != user.id) {
-          count++;
-        }
-        if (data.users[i].points > maxCount) {
-          maxCount = data.users[i].points;
-        }
-      }
-      setPlace(count);
-      setFirstPlace(maxCount);
-    };
-
-    getUserPlace();
-  }, [user]);
-
   return (
     <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
-      <div className="gap-2 p-2 md:p-7 flex flex-col md:flex-row">
+      <div className="gap-2 p-2 md:p-7 flex flex-col md:flex-row h-full">
         <div className="flex flex-col flex-grow gap-2 p-2 justify-between">
           <div className="px-2 flex flex-col items-left">
             <ProfileNav
@@ -69,13 +48,11 @@ export default function Profile({ params: { id } }) {
         </div>
 
         {status != "loading" ? (
-          <div className="bg-transparent w-full">
+          <div className="bg-transparent w-full h-full">
             {activeScreen == 0 ? (
               <ActivitiesSubscribed />
-            ) : activeScreen == 1 ? (
-              <Ranking user={user} place={place} firstPlace={firstPlace} />
-            ) : activeScreen == 2 ? (
-              <Code userId={id} />
+            ) :  activeScreen == 2 ? (
+              <Code user={user} />
             ) : (
               <></>
             )}
@@ -105,23 +82,6 @@ const ProfileNav = ({ activeScreen, setActiveScreen }) => {
           {activeScreen == 0 && <Line className="-ml-10" />}
           <p className="text-2xl leading-5">
             ENROLLED ACTIVITIES
-          </p>
-        </Button>
-      </div>
-      <div className="flex flex-row items-center">
-        <Button
-          disableRipple={true}
-          radius={"none"}
-          onClick={() => setActiveScreen(1)}
-          className={
-            activeScreen != 1
-              ? "flex flex-col text-white bg-transparent py-7"
-              : "pl-8 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold"
-          }
-        >
-          {activeScreen == 1 && <Line className="-ml-10" />}
-          <p className="text-2xl leading-5">
-            RANKING
           </p>
         </Button>
       </div>
@@ -243,22 +203,7 @@ const ActivitiesSubscribed = ({}) => {
   );
 };
 
-const Ranking = ({ user, place, firstPlace }) => {
-  return (
-    <div className="dark:bg-black/40 flex flex-col ">
-      <div className="px-1">
-        <h2 className="dark:text-white font-semibold text-l"> Ranking </h2>
-        <div>
-          <p> Tens {user.points} pontos </p>
-          <p> Estás em {place}º lugar </p>
-          {place > 1 ? <p> O primeiro lugar têm {firstPlace} pontos</p> : <></>}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Code = ({ userId }) => {
+const Code = ({ user }) => {
   const qrcode = useRef(null);
   const currentUrl =
     process.env.NEXT_PUBLIC_MODE == "development"
@@ -268,23 +213,25 @@ const Code = ({ userId }) => {
   useEffect(() => {
     var options = {
       text: "Bem-vindo ao evento",
-      width: 200,
-      height: 200,
+      width: 300,
+      height: 300,
       colorDark: "#000000",
       colorLight: "#ffffff",
       correctLevel: QRCode.CorrectLevel.H,
     };
 
     const code = new QRCode(qrcode.current, options);
-    code.makeCode(`${currentUrl}/ranking/${userId}`);
+    code.makeCode(`${currentUrl}/ranking/${user.userId}`);
     return () => code.clear();
-  }, [qrcode, currentUrl, userId]);
+  }, [qrcode, currentUrl, user.userId]);
 
   return (
-    <div className="dark:bg-black/40 flex flex-col ">
-      <div className="px-1">
-        <h2 className="dark:text-white font-semibold text-l"> QRCode </h2>
-        <div ref={qrcode}></div>
+    <div className="dark:bg-black/40 h-full">
+      <div className="px-5 md:px-1 gap-3 flex flex-col h-full">
+        <h2 className="text-white font-normal text-2xl md:text-lg leading-5"> Points: {user.points} </h2>
+        <div className="flex flex-wrap content-center justify-center h-full">
+            <div className="-mt-56 md:-mt-28" ref={qrcode}></div>
+        </div>    
       </div>
     </div>
   );
