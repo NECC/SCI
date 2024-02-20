@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { PiSignOutDuotone } from "react-icons/pi";
-import { Avatar, Button, Divider, Spinner } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
 const Nav = (props) => {
@@ -16,8 +16,6 @@ const Nav = (props) => {
   const { data: session, status } = useSession({
     required: false,
   });
-
-  // console.log(session)
 
   useEffect(() => {
     if (session) setUser(session.user);
@@ -34,65 +32,47 @@ const Nav = (props) => {
   return (
     <nav className="relative z-50 bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">
       {/* Desktop Navigation */}
-      
-      <div className="md:flex hidden gap-3 md:gap-5 md:w-4/5  m-auto justify-between   py-4 ">
-        <div className="flex gap-3 lg:gap-5 items-center">
-          <Link href="/" className="outline_btn transition">
-            Home
+
+      <div className="md:flex hidden lg:gap-5 gap-3 items-center w-4/5 m-auto py-4">
+        <Link href="/" className="nav_btn text-base">
+          Home
+        </Link>
+        <div className="w-[1px] h-[20px] rounded-full bg-white"></div>
+        <Link href="/schedule" className="nav_btn text-base">
+          Schedule
+        </Link>
+        <div className="w-[1px] h-[20px] rounded-full bg-white"></div>
+        <Link href="/faqs" className="nav_btn text-base">
+          FAQs
+        </Link>
+        <div className="w-[1px] h-[20px] rounded-full bg-white"></div>
+        {user.role == "ADMIN" && (
+          <Link href="/admin" className="nav_btn text-base">
+            Backoffice
           </Link>
-
-          <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
-
-          <Link href="/schedule" className="outline_btn">
-            Schedule
-          </Link>
-          <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
-          <Link href="/faqs" className="outline_btn">
-            FAQs
-          </Link>
-
-
-          {user.role == "ADMIN" && (
-            <>
-              <Divider orientation="vertical" className="bg-white/30 h-[60%]" />
-              <Link href="/admin" className="outline_btn">
-                Backoffice
-              </Link>
-            </>
-
-          )}
-        </div>
+        )}
 
         {user.name ? (
-          <div className="flex gap-3 md:gap-5">
+          <div className="flex w-full justify-end items-center lg:gap-3 gap-2">
+            <Link href="/profile" className="nav_btn text-base">
+              Logged as <strong className="font-bold text-lg ml-2">{user.name}</strong>
+            </Link>
+
             <Button
-              color="danger"
-              variant="shadow"
-              className="font-comfortaa font-bold text-white"
-              onClick={signOut}
-            >
+              className="font-poppins font-normal text-base text-white bg-blue-950"
+              onClick={signOut}>
               Sign Out
             </Button>
-
-            <Link
-              href={`/profile/${user.id}`}
-              className="flex justify-center items-center gap-4"
-            >
-              <Avatar src="/user.svg" alt="profile" />
-              <span className="text-white font-comfortaa text-sm">
-                Logged as <strong className="font-bold">{user.name}</strong>
-              </span>
-            </Link>
           </div>
         ) : status == "loading" && !user.name ? (
-          <div className="flex items-center gap-3 md:gap-5">
+          <div className="flex items-center lg:gap-5 gap-3 ">
             <Spinner color="white" size="sm" />
             <span className="text-white font-poppins text-sm">Loading</span>
           </div>
         ) : (
           <Button
-            color="success"
-            variant="shadow"
+            color="white"
+            variant="ghost"
             className="font-comfortaa font-bold text-white"
             onClick={() => router.push("/auth/signin")}
           >
@@ -103,27 +83,26 @@ const Nav = (props) => {
 
       {/* Mobile  */}
 
-
-      <div className="md:hidden flex h-[72px]">
+      <div className="md:hidden flex">
         <div className={`absolute w-full h-screen flex flex-col justify-center items-center backdrop-blur-sm bg-neutral-500/50 duration-1000 ${toggleDropdown ? "transform-none" : "-translate-x-full"}`}>
           <div className="flex flex-col gap-4 w-full">
             <Link
               href="/"
-              className="dropdown_link "
+              className="nav_btn text-2xl "
               onClick={() => setToggleDropdown(false)}>
               Home
             </Link>
 
             <Link
               href="/schedule"
-              className="dropdown_link"
+              className="nav_btn text-2xl"
               onClick={() => setToggleDropdown(false)}>
               Schedule
             </Link>
 
             <Link
               href="/faqs"
-              className="dropdown_link"
+              className="nav_btn text-2xl"
               onClick={() => setToggleDropdown(false)}>
               FAQs
             </Link>
@@ -131,34 +110,36 @@ const Nav = (props) => {
             {user.name ? (
               <>
                 <Link
-                  href={`/profile/${user.id}`}
-                  className="dropdown_link"
+                  href="/profile"
+                  className="nav_btn text-2xl "
                   onClick={() => setToggleDropdown(false)}>
                   Profile
                 </Link>
 
-                <button
-                  type="button"
-                  onClick={() => { signOut(); setToggleDropdown(false) }}
-                  className="black_btn w-11/12 m-auto mt-20 ">
+                <Button
+                  onClick={() => {
+                    setToggleDropdown(false);
+                    signOut();
+                  }}
+                  className="blue_btn">
                   Sign Out
-                  <span className="ml-[24px]">
-                    <PiSignOutDuotone
-                      size={22}
-                      color="white hover:black"
-                    />
-                  </span>
-                </button>
+                </Button>
               </>
             ) : (
-              <button type="button" className="black_btn w-full mt-5" onClick={() => {router.push("/auth/signin"); setToggleDropdown(false) } }>
+              <Button
+                className="blue_btn"
+                onClick={() => {
+                  router.push("/auth/signin")
+                  setToggleDropdown(false);
+                }
+                }
+              >
                 Sign in
-              </button>
+              </Button>
             )}
           </div>
         </div>
-
-        <div onClick={() => setToggleDropdown(!toggleDropdown)} className="flex-col flex gap-1 items-end  w-11/12 m-auto cursor-pointer">
+        <div onClick={() => setToggleDropdown(!toggleDropdown)} className="flex-col flex gap-1 items-end   w-11/12  m-auto py-4 cursor-pointer">
 
           <div className={`h-[4px] w-[24px] rounded-3xl bg-white  transition-all ${toggleDropdown && "rotate-45 translate-y-2"}`}>
           </div>
