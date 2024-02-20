@@ -1,16 +1,38 @@
 "use client";
 
-import Nav from "@components/Nav";
 import React, { useEffect, useState } from "react";
 import { Chip, Spinner } from "@nextui-org/react";
-import { getActivitiesGroupedByDay } from "@app/actions";
 import Activity from "./Activity";
 import ActivityDayFilter from "@components/ActivityDayFilter";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 export default function Schedule() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const { data: session, status } = useSession({
+    required: false,
+  });
+
+  const getActivitiesGroupedByDay = async () => {
+    const { data } = await axios.get(`/api/activities`);
+
+    const activities = data.activities;
+
+    return groupAndSortActivitiesByDay(
+      activities.map((activity) => {
+        return {
+          ...activity,
+          enrollable: activity.capacity > activity.enrollments.length,
+          alreadyEnrolled: activity.enrollments.some(
+            (enrollment) => enrollment.userId === session?.user.id
+          ),
+        };
+      })
+    );
+  };
 
   const getDays = (activities) => {
     return activities.map(([day, _]) => day);
@@ -52,6 +74,28 @@ export default function Schedule() {
 
     fetchActivities();
   }, []);
+
+  // TODO: Move this to a helper function
+  const groupAndSortActivitiesByDay = (activities) => {
+    // Group activities by date
+    const groups = activities.reduce((groups, activity) => {
+      const date = new Date(activity.date);
+      const day = date.getUTCDate();
+      const month = date.getUTCMonth() + 1; // Months are 0-based
+      const year = date.getUTCFullYear();
+      const dateString = `${day}`;
+
+      const group = groups[dateString] || [];
+      group.push(activity);
+      groups[dateString] = group;
+      return groups;
+    }, {});
+
+    // Convert groups to an array and sort by date
+    return Object.entries(groups).sort(
+      ([dateA], [dateB]) => new Date(dateA) - new Date(dateB)
+    );
+  };
 
   return (
     <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black bg-[url('/rectangle_light.png')] dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">

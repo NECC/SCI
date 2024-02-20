@@ -9,7 +9,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Line } from "@components/Line";
 import ActivityDayFilter from "@components/ActivityDayFilter";
-import { getUserEnrolledActivitiesGroupedByDay } from "@app/actions";
 
 export default function Profile({ params: { id } }) {
   const [user, setUser] = useState({});
@@ -50,8 +49,8 @@ export default function Profile({ params: { id } }) {
         {status != "loading" ? (
           <div className="bg-transparent w-full h-full">
             {activeScreen == 0 ? (
-              <ActivitiesSubscribed />
-            ) :  activeScreen == 2 ? (
+              <ActivitiesSubscribed id={id} />
+            ) : activeScreen == 2 ? (
               <Code user={user} />
             ) : (
               <></>
@@ -80,9 +79,7 @@ const ProfileNav = ({ activeScreen, setActiveScreen }) => {
           }
         >
           {activeScreen == 0 && <Line className="-ml-10" />}
-          <p className="text-2xl leading-5">
-            ENROLLED ACTIVITIES
-          </p>
+          <p className="text-2xl leading-5">ENROLLED ACTIVITIES</p>
         </Button>
       </div>
       <div className="flex flex-row items-center">
@@ -97,20 +94,54 @@ const ProfileNav = ({ activeScreen, setActiveScreen }) => {
           }
         >
           {activeScreen == 2 && <Line className="-ml-10" />}
-          <p className="text-2xl leading-5">
-            QRCODE
-          </p>
+          <p className="text-2xl leading-5">QRCODE</p>
         </Button>
       </div>
     </>
   );
 };
 
-const ActivitiesSubscribed = ({}) => {
+const ActivitiesSubscribed = ({ id }) => {
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([]);
   const [type, setType] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // TODO: Move this to a helper function
+  const groupAndSortActivitiesByDay = (activities) => {
+    // Group activities by date
+    const groups = activities.reduce((groups, activity) => {
+      const date = new Date(activity.date);
+      const day = date.getUTCDate();
+      const month = date.getUTCMonth() + 1; // Months are 0-based
+      const year = date.getUTCFullYear();
+      const dateString = `${day}`;
+
+      const group = groups[dateString] || [];
+      group.push(activity);
+      groups[dateString] = group;
+      return groups;
+    }, {});
+
+    // Convert groups to an array and sort by date
+    return Object.entries(groups).sort(
+      ([dateA], [dateB]) => new Date(dateA) - new Date(dateB)
+    );
+  };
+
+  const getUserEnrolledActivitiesGroupedByDay = async () => {
+    const enrollments = await axios.get(`/api/enrollments/getById/${id}`);
+    const activities = enrollments.data.enrollment;
+
+    return groupAndSortActivitiesByDay(
+      activities.map((enrollment) => {
+        return {
+          ...enrollment.activity,
+          attended: enrollment.attended,
+        };
+      })
+    );
+  };
 
   const getDays = (activities) => {
     return activities.map(([day, _]) => day);
@@ -228,10 +259,13 @@ const Code = ({ user }) => {
   return (
     <div className="dark:bg-black/40 h-full">
       <div className="px-5 md:px-1 gap-3 flex flex-col h-full">
-        <h2 className="text-white font-normal text-2xl md:text-lg leading-5"> Points: {user.points} </h2>
+        <h2 className="text-white font-normal text-2xl md:text-lg leading-5">
+          {" "}
+          Points: {user.points}{" "}
+        </h2>
         <div className="flex flex-wrap content-center justify-center h-full">
-            <div className="-mt-56 md:-mt-28" ref={qrcode}></div>
-        </div>    
+          <div className="-mt-56 md:-mt-28" ref={qrcode}></div>
+        </div>
       </div>
     </div>
   );

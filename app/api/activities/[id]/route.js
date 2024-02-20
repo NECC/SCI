@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+const prisma = new PrismaClient();
 
 /**
  * Get specific Activity from the database
@@ -7,7 +8,6 @@ import { NextResponse } from "next/server";
  * @returns [{ id, title, description, speakers, location, capacity, date, type, enrollments }]
  */
 export async function GET(req, {params: { id }}) {
-  const prisma = new PrismaClient();
   try {
     const activity = await prisma.activity.findMany({
       where: {
