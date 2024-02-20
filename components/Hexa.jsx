@@ -1,8 +1,13 @@
-import { motion, useScroll } from "framer-motion";
-
+import { motion, useScroll, useSpring } from "framer-motion"
 const Hexa = () => {
-  const { scrollYProgress } = useScroll();
 
+
+  const { scrollYProgress } = useScroll();
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
 
   return (
@@ -23,8 +28,10 @@ const Hexa = () => {
       <div className="p-1 w-[280px] bg-white rounded-lg absolute rotate-[30deg] translate-y-[170px] translate-x-[110px] "></div>
       <motion.div
         className="p-1 h-full opacity-25 bg-white rounded-lg absolute  left-[49.4%]  origin-top"
-        style={{ scaleY: scrollYProgress }}
+        style={{ scaleY }}
       />
+      <div className="p-1 h-[320PX] opacity-25 bg-white rounded-lg absolute  left-[49.4%] "></div>
+
       <div className="p-4 bg-yellow-300 w-2 rounded-full absolute left-1/2 -translate-x-1/2 translate-y-[160px] z-50"></div>
     </div>
   )
