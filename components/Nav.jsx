@@ -30,7 +30,7 @@ const Nav = (props) => {
   }, [toggleDropdown]);
 
   return (
-    <nav className="relative z-50 bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">
+    <nav className="relative z-50 bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 h-[72px] flex items-center">
       {/* Desktop Navigation */}
 
       <div className="md:flex hidden lg:gap-5 gap-3 items-center w-4/5 m-auto py-4">
