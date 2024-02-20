@@ -1,3 +1,4 @@
+"use client"
 import Nav from "@components/Nav";
 import axios from "axios";
 import {
@@ -11,11 +12,20 @@ import {
   Chip,
 } from "@nextui-org/react";
 import { IoIosArrowBack } from "react-icons/io";
+import { useEffect, useState } from "react";
 
-import { getActivity } from '@app/actions'
-
-export default async function Activity({ params }) {
-  const activity = await getActivity(parseInt(params.id));
+// TODO: Do loading state
+export default function Activity({ params }) {
+  const [activity, setActivity] = useState({});
+  
+  useEffect(() => {
+    const fetchActivity = async () => {
+      const { data } = await axios.get(`/api/activities/${params.id}`);
+      setActivity(data.activity[0]);
+    };
+    fetchActivity();
+  }
+  , []);
 
   const getActivityDay = () => {
       const date = new Date(activity.date);
@@ -25,7 +35,6 @@ export default async function Activity({ params }) {
 
   return (
     <div className="bg-white dark:bg-black bg-[url('/rectangle_light.png')] dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">
-      <Nav />
       <div className="p-2 pb-10 md:p-7 md:px-8 pt-[70px] md:pt-[100px] h-full">
         <Card isBlurred className="w-full h-full dark:bg-black/40">
           <CardHeader className="dark:bg-black/40 border-b-1 dark:border-default-600 dark:border-default-100">
