@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { ActivitySchema } from "/prisma/zod";
+const prisma = new PrismaClient();
 
 /**
  * Get all Activities from the database
@@ -8,7 +9,6 @@ import { ActivitySchema } from "/prisma/zod";
  * @returns [{ id, title, description, speakers, location, capacity, date, type, enrollments }]
  */
 export async function GET() {
-  const prisma = new PrismaClient();
   try {
     const activities = await prisma.activity.findMany({
       select: {
@@ -46,7 +46,6 @@ export async function GET() {
  *
  */
 export async function POST(request) {
-  const prisma = new PrismaClient();
   const data = await request.json();
   const response = ActivitySchema.safeParse(data);
   if (!response.success) {

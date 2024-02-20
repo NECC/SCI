@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth"
 import bcrypt from "bcrypt";
 import { authOptions } from "../auth/[...nextauth]/route";
+const prisma = new PrismaClient();
 
 /**
  * Get all Users from the database
@@ -10,7 +11,6 @@ import { authOptions } from "../auth/[...nextauth]/route";
  * @returns [{ id, name, email, role, points }]
  */
 export async function GET() {
-  const prisma = new PrismaClient();
   const users = await prisma.user.findMany({
     select: {
       id: true,
@@ -61,7 +61,6 @@ export async function POST(req) {
   }
 
   try {
-    const prisma = new PrismaClient();
     const userData = await req.json();
     
     if (!userData.name || !userData.email || !userData.password || !userData.role) {
@@ -129,7 +128,6 @@ export async function POST(req) {
  * @example body: { "uuid": "6143a3cb-2f08-43ae-9932-18a3c951d591", "params": { "name": "Pedro Camargo", "email": "pedrao@gmail.com", "role": "ADMIN", "points": 0 } }
  */
 export async function PUT(req) {
-  const prisma = new PrismaClient();
   const data = await req.json();
   const uuid = data.uuid;
 
