@@ -47,7 +47,7 @@ function ActivityDayFilter({ selectedDay, setSelectedDay, days, children }) {
           </div>
         ))}
       </div>
-      <div class="mb-28 md:mb-0">{children}</div>
+      <div className="mb-28 md:mb-0">{children}</div>
       {days.length > 0 && (
         <div className="fixed left-0 bottom-0 z-20 w-full h-24 flex gap-6 md:hidden bg-blue-400 items-center justify-center">
           {days.map((day) => (

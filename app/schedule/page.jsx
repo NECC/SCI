@@ -38,7 +38,7 @@ export default function Schedule() {
   const getActivitiesOfDay = (selectedDay) => {
     const activitiesOfDay = activities.find(([date]) => date === selectedDay);
     return groupActivitiesByStartTime(
-      activitiesOfDay ? activitiesOfDay[1] : []
+      activitiesOfDay && activitiesOfDay[1] ? activitiesOfDay[1] : []
     );
   };
 
