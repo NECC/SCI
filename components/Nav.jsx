@@ -30,6 +30,7 @@ const Nav = (props) => {
   }, [toggleDropdown]);
 
   return (
+    // do not delete h[72px] and flex items-center
     <nav className="relative z-50 bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 h-[72px] flex items-center">
       {/* Desktop Navigation */}
 
@@ -93,7 +94,7 @@ const Nav = (props) => {
 
       <div className="md:hidden flex">
         <div
-          className={`absolute w-full h-screen flex flex-col justify-center items-center backdrop-blur-sm bg-neutral-500/50 duration-1000 ${
+          className={`absolute w-full h-screen flex flex-col justify-center items-center backdrop-blur-sm bg-neutral-500/50 duration-1000 -mt-[10px] ${
             toggleDropdown ? "transform-none" : "-translate-x-full"
           }`}
         >
@@ -157,7 +158,7 @@ const Nav = (props) => {
         </div>
         <div
           onClick={() => setToggleDropdown(!toggleDropdown)}
-          className="flex-col flex gap-1 items-end   w-11/12  m-auto py-4 cursor-pointer"
+          className="flex-col flex gap-1 items-end w-11/12 ml-4 m-auto py-4 cursor-pointer"
         >
           <div
             className={`h-[4px] w-[24px] rounded-3xl bg-white  transition-all ${
