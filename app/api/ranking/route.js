@@ -17,6 +17,7 @@ export async function POST(request) {
 
 
   if (session?.user.role != "ADMIN") {
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({
         response: "error",
@@ -36,16 +37,15 @@ export async function POST(request) {
             }
         }
     })
-
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "success", increment: { user: increment.id, points: increment.points }})
     );
     
   } catch (error) {
-
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })
     );
-
   }
 }

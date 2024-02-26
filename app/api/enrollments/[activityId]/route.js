@@ -34,11 +34,12 @@ export async function GET(request, context) {
         });
         
         // console.log(enrollments);
-        
+        prisma.$disconnect();
         return new NextResponse(
             JSON.stringify({ response: "success", enrollment: enrollments })
         );
     } catch(err) {
+        prisma.$disconnect();
         return new NextResponse(
             JSON.stringify({ response: "error", message: "Error fetching enrollments" }),
             { status: 500 }

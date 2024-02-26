@@ -17,6 +17,7 @@ export async function POST(req) {
       const userData = await req.json();
       
       if (!userData.name || !userData.email || !userData.password) {
+        prisma.$disconnect();
         return new NextResponse(
           JSON.stringify({
             response: "error",
@@ -33,6 +34,7 @@ export async function POST(req) {
       });
   
       if (emailExists) {
+        prisma.$disconnect();
         return new NextResponse(
           JSON.stringify({
             response: "error",
@@ -68,12 +70,13 @@ export async function POST(req) {
         password: userData.password,
         callbackUrl: "/",
       });
-  
+      prisma.$disconnect();
       return new NextResponse(
         JSON.stringify({ response: "User created Successfully.", user: user })
       );
     } catch (error) {
       console.log(error);
+      prisma.$disconnect();
       return new NextResponse(
         JSON.stringify({ response: "error", error: error })
       );

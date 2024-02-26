@@ -135,6 +135,7 @@ export async function PUT(req) {
   // console.log("SESSION FROM POST: ",session);
 
   if (session?.user.role != "ADMIN") {
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({
         response: "error",
@@ -157,11 +158,13 @@ export async function PUT(req) {
       },
     });
 
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "success", userUpdated: user })
     );
   } catch (error) {
     console.log(error);
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })
     );
