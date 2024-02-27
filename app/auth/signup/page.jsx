@@ -9,9 +9,12 @@ import Link from "next/link";
 import axios from "axios";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({});
+  const [error, setError] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e) => {
     // console.log(formData);
@@ -23,13 +26,22 @@ export default function SignUpPage() {
   const handleSubmit = async (e) => {
     try {
       const res = await axios.post("/api/users/register", formData);
+
       if (res.status == 200) {
         signIn("credentials", {
           email: formData.email,
           password: formData.password,
           callbackUrl: "/",
-        });
+        }).then((res) => {
+          if (res.ok) {
+            router.push("/");
+            setError(false);
+          } else {
+            setError(true);
+          }
+        })
       }
+
     } catch (error) {
       // TODO: Error handling
       console.log(error);
@@ -37,35 +49,6 @@ export default function SignUpPage() {
   };
 
   return (
-    //     <div className="flex">
-    //       <div className="hidden dark:bg-[url('/rectangle.png')] dark:bg-no-repeat dark:bg-bottom dark:bg-cover bg-gradient-to-br to-80% from-custom-blue-1  to-blue-700 h-screen dark:w-full flex-1 lg:flex dark:justify-start justify-center items-center gap-3 shadow-[15px_0px_30px_rgba(0,0,0,0.3)] border-black">
-    //         <div className="h-[300px] w-[300px] bg-[url('/sci-logo.png')] dark:ml-[100px] dark:xl:ml-[250px] bg-no-repeat bg-contain bg-center"></div>
-    //       </div>
-    //       <div className="h-screen flex flex-1 justify-center items-center flex-col dark:lg:bg-none dark:bg-[url('/rectangle.png')] dark:bg-no-repeat dark:bg-bottom dark:bg-cover bg-gradient-to-br to-80% from-custom-blue-1 to-blue-700 lg:bg-none light:bg-white dark:lg:absolute dark:right-[200px] dark:xl:right-[300px]">
-    //       <h1 className=" font-bold text-4xl dark:lg:text-white lg:text-custom-blue-1 text-white">
-    //           Register
-    //         </h1>
-    //         <h2 className="font-comfortaa text-md lg:font-bold mt-2 -mb-2 dark:lg:text-white lg:text-black text-white">
-    //           Let&apos;s discover a new world together!
-    //         </h2>
-    //         <Link href='/auth/signin' className="font-comfortaa text-sm mt-3 dark:lg:text-white lg:text-black text-white cursor-pointer  font-bold underline"
-    // >
-    //           Already have an account?
-    //         </Link>
-
-    //         <Button
-    //           className="mt-3 w-[300px] lg:font-normal  text-lg dark:lg:bg-white dark:lg:text-black bg-white text-black lg:bg-blue-600 lg:text-white font-comfortaa"
-    //           size="large"
-    //           auto
-    //           color="primary"
-    //           variant="shadow"
-    //           onPress={handleSubmit}
-    //         >
-    //           Submit
-    //         </Button>
-    //       </div>
-    //     </div>
-
     <div className="h-screen bg-gradient-to-b to-20% from-custom-blue-1 to-custom-blue-3 flex justify-around items-center">
 
       <Image width={500} height={500} src="/sci-logo.png" alt="Logo" className="lg:block hidden"></Image>
@@ -210,7 +193,7 @@ export default function SignUpPage() {
             Sign In!
           </span>
         </Link>
-
+        {error && <div className="bg-red-500 p-2 text-white mt-3 rounded">An error happened</div>}
         <Button
           className="mt-3 w-[300px] lg:font-normal text-lg text-black bg-white font-bold "
           size="large"
