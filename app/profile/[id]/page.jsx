@@ -181,6 +181,7 @@ const ActivitiesSubscribed = ({ id }) => {
   const [activities, setActivities] = useState([]);
   const [type, setType] = useState(null);
   const [loading, setLoading] = useState(true);
+  // console.log(id);
 
   // TODO: Move this to a helper function
   const groupAndSortActivitiesByDay = (activities) => {
@@ -291,11 +292,14 @@ const ActivitiesSubscribed = ({ id }) => {
                   </p>
                 ) : (
                   getActivitiesOfDayAndType(selectedDay, type).map(
-                    (item, index) => (
-                      <div key={index}>
-                        <Activity item={item} attended={item.attended} />
-                      </div>
-                    )
+                    (item, index) => {
+                      console.log(item)
+                      return (
+                        <div key={index}>
+                          <Activity item={item} userId={id} />
+                        </div>
+                      );
+                    }
                   )
                 )}
               </div>
@@ -315,6 +319,8 @@ const Code = ({ user, id }) => {
     process.env.NEXT_PUBLIC_MODE == "development"
       ? process.env.NEXT_PUBLIC_BACKOFFICE_URL_DEVELOPMENT
       : process.env.NEXT_PUBLIC_BACKOFFICE_URL_PRODUCTION;
+
+  // console.log(currentUrl);
 
   useEffect(() => {
     var options = {

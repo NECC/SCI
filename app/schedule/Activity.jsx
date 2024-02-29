@@ -33,7 +33,7 @@ export default function Activity({ item, userId }) {
   // console.log(attended);
   // console.log(userId);
   // console.log(item.enrollments.length, item.capacity, item.enrollments.length == item.capacity)
-  // console.log(item);
+  console.log(item);
 
   // TODO: Handle the userId properly (it's undefined for now)
   const createEnrollment = async (activityId, userId) => {
@@ -62,7 +62,7 @@ export default function Activity({ item, userId }) {
       const { data } = await axios.get(
         `/api/enrollments/attend/${item.id}/${userId}`
       );
-      console.log(data.attended);
+      // console.log(data.attended);
       setAttended(data.attended);
       setLoading(false);
     };
@@ -97,6 +97,12 @@ export default function Activity({ item, userId }) {
                   Enrolled
                 </Chip>
               )}
+
+              {item.capacity == item.enrollments?.length && (
+                <Chip color="danger" size="sm" className="ml-2 text-white">
+                  Full
+                </Chip>
+              )}
             </div>
           )}
           <h4 className="dark:text-white/90 font-bold text-xl">{item.title}</h4>
@@ -119,7 +125,7 @@ export default function Activity({ item, userId }) {
               </p>
             </div>
           )}
-          {item.type == "WORKSHOP" && item.enrollments?.length != 0 && (
+          {item.type == "WORKSHOP" && item.enrollments?.length != 0 && (item.enrollments?.length) && (
             <div className="flex flex-row mr-auto items-center">
               <MdOutlineEventSeat className="inline mr-2" />
               <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
