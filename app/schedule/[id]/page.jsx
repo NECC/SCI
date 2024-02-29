@@ -37,7 +37,7 @@ export default function Activity({ params }) {
     <div className="bg-white dark:bg-black bg-[url('/rectangle_light.png')] dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">
       <div className="p-2 pb-10 md:p-7 md:px-8 pt-[70px] md:pt-[100px] h-full">
         <Card isBlurred className="w-full h-full dark:bg-black/40">
-          <CardHeader className="dark:bg-black/40 border-b-1 dark:border-default-600 dark:border-default-100">
+          <CardHeader className="dark:bg-black/40 border-b-1 dark:border-default-600">
             <div className="flex gap-2 items-center p-2">
               <div className="flex flex-row dark:text-white/90 items-center gap-5">
                 <Button>
