@@ -46,12 +46,9 @@ export type RoleType = `${z.infer<typeof RoleSchema>}`
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-  role: RoleSchema,
-  id: z.string().uuid(),
-  email: z.string(),
-  password: z.string(),
-  name: z.string(),
-  points: z.number().int(),
+  email: z.string().email().nonempty(),
+  password: z.string().nonempty(),
+  name: z.string().nonempty(),
 })
 
 export type User = z.infer<typeof UserSchema>
