@@ -36,10 +36,6 @@ export default function SignUpPage() {
             email: formData.email,
             password: formData.password,
             callbackUrl: "/",
-          }).then((res) => {
-            if (res.ok) {
-              router.push("/");
-            }
           });
         }
       }
