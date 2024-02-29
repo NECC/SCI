@@ -23,6 +23,8 @@ import { MdEventSeat } from "react-icons/md";
 import { set } from "zod";
 import QRCode from "easyqrcodejs";
 
+// TODO: Loading state for the button
+
 export default function Activity({ item, userId }) {
   const [loading, setLoading] = useState(false);
   const [enrolled, setEnrolled] = useState(false);
