@@ -89,7 +89,7 @@ export default function Home() {
 
 
           <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">WHAT IS IT?</h1>
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">WHAT IS IT?</h1>
             <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
 
@@ -123,7 +123,7 @@ export default function Home() {
 
 
           <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto mt-[70px] ">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">SPONSORS</h1>
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">SPONSORS</h1>
             <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
 
@@ -167,7 +167,7 @@ export default function Home() {
 
 
           <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto mt-[70px] ">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">ORGANIZATION</h1>
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">ORGANIZATION</h1>
             <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute lg:block hidden">
@@ -211,7 +211,7 @@ export default function Home() {
 
 
           <div className="sm:w-[80%] w-[90%] lg:w-full relative m-auto mt-[70px]">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">FIND US</h1>
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">FIND US</h1>
             <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
 

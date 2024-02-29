@@ -92,7 +92,7 @@ const Nav = (props) => {
 
       {/* Mobile  */}
 
-      <div className="md:hidden flex">
+      <div className="md:hidden flex w-full">
         <div
           className={`absolute w-full h-screen flex flex-col justify-center items-center backdrop-blur-sm bg-neutral-500/50 duration-1000 -mt-[10px] ${
             toggleDropdown ? "transform-none" : "-translate-x-full"
