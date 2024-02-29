@@ -61,11 +61,6 @@ export async function POST(request) {
       points: true,
     },
   });
-  signIn("credentials", {
-    email: userData.email,
-    password: userData.password,
-    callbackUrl: "/",
-  });
   prisma.$disconnect();
   return new NextResponse(
     JSON.stringify({ response: "User created Successfully.", user: user })
