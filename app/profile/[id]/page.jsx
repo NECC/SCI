@@ -254,7 +254,7 @@ const Code = ({ user, id }) => {
     };
 
     const code = new QRCode(qrcode.current, options);
-    code.makeCode(`${currentUrl}/ranking/${id}`);
+    code.makeCode(`${currentUrl}/admin/ranking/${id}`);
     return () => code.clear();
   }, [qrcode, currentUrl, id]);
 
