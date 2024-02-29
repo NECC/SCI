@@ -32,7 +32,7 @@ async function main() {
       { "title": "Stream the Apple 🍎", "description": "Room-filling sound, Intelligent assistant. Smart home control. Works seamlessly with iPhone. Check it out", "date": "2024-01-23T00:00:00.000Z", "startTime": "9:30", "endTime": "10:00", "location": "", "capacity": 0, "speakers": "Pedro Augennes", "type": "WORKSHOP" },
       { "title": "Teste1", "description": "teste", "date": "2024-01-25T00:00:00.000Z", "startTime": "05:12", "endTime": "06:12", "location": "teste", "capacity": 1, "speakers": "teste", "type": "WORKSHOP" },
       { "title": "Teste2", "description": "Teste2", "date": "2024-01-25T00:00:00.000Z", "startTime": "11:12", "endTime": "12:30", "location": "Edificio 1 - 0.24", "capacity": 10, "speakers": "Paulo", "type": "WORKSHOP" },
-      { "title": "☕ Coffee Break", "description": "", "date": "2024-01-23T00:00:00.000Z", "startTime": "11:00", "endTime": "12:00", "location": "", "capacity": 0, "speakers": "", "type": "WORKSHOP" }
+      { "title": "☕ Coffee Break", "description": "", "date": "2024-01-23T00:00:00.000Z", "startTime": "11:00", "endTime": "12:00", "location": "", "capacity": 0, "speakers": "", "type": "OTHER" }
     ]
   });
 }

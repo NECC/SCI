@@ -6,11 +6,13 @@ import Activity from "./Activity";
 import ActivityDayFilter from "@components/ActivityDayFilter";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { set } from "zod";
 
 export default function Schedule() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
 
   const { data: session, status } = useSession({
     required: false,
@@ -59,6 +61,9 @@ export default function Schedule() {
 
   const getActivitiesOfDay = (selectedDay) => {
     const activitiesOfDay = activities.find(([date]) => date === selectedDay);
+    // console.log( groupActivitiesByStartTime(
+    //   activitiesOfDay && activitiesOfDay[1] ? activitiesOfDay[1] : []
+    // ))
     return groupActivitiesByStartTime(
       activitiesOfDay && activitiesOfDay[1] ? activitiesOfDay[1] : []
     );
@@ -70,10 +75,11 @@ export default function Schedule() {
       setActivities(data);
       setSelectedDay(getDays(data)[0]);
       setLoading(false);
+      setUserId(session?.user.id);
+      console.log("Data: ", data)
     };
-
     fetchActivities();
-  }, []);
+  }, [status]);
 
   // TODO: Move this to a helper function
   const groupAndSortActivitiesByDay = (activities) => {
@@ -98,7 +104,7 @@ export default function Schedule() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black bg-[url('/rectangle_light.png')] dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">
+    <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">
       <div className="p-2 pb-10 md:p-7 md:px-8 h-full">
         <div className="w-full h-full">
           <ActivityDayFilter
@@ -120,7 +126,7 @@ export default function Schedule() {
                           <div className="flex flex-row md:flex-col p-5 overflow-scroll hide-scroll gap-3 -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
                             {activities.map((item, index) => (
                               <div key={index}>
-                                <Activity item={item} attended={false} />
+                                <Activity item={item} userId={userId} />
                               </div>
                             ))}
                           </div>
