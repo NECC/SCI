@@ -11,31 +11,40 @@ const prisma = new PrismaClient();
  * @returns [{ enrollments }]
  */
 export async function GET(request, context) {
-    const id = context.params.userId;
+  const id = context.params.userId;
 
-    try {
+  try {
+    const enrollments = await prisma.enrollments.findMany({
+      where: {
+        userId: id,
+      },
+      select: {
+        id: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        activity: true,
+        attended: true,
+      },
+    });
 
-        const enrollments = await prisma.enrollments.findMany({
-            where: {
-                userId: id,
-            },
-            include: {
-                activity: true,
-            }
-        });
-
-        console.log(enrollments);
-        prisma.$disconnect();
-        return new NextResponse(
-            JSON.stringify({ response: "success", enrollment: enrollments })
-        );
-    } catch(err) {
-        prisma.$disconnect();
-        return new NextResponse(
-            JSON.stringify({ response: "error", message: "Error fetching enrollments" }),
-            { status: 500 }
-        );
-    }
+    console.log(enrollments);
+    prisma.$disconnect();
+    return new NextResponse(
+      JSON.stringify({ response: "success", enrollment: enrollments })
+    );
+  } catch (err) {
+    prisma.$disconnect();
+    return new NextResponse(
+      JSON.stringify({
+        response: "error",
+        message: "Error fetching enrollments",
+      }),
+      { status: 500 }
+    );
+  }
 }
-
-
