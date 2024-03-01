@@ -2,27 +2,27 @@
     "logo": [
         {
             "path": "/nucleos/necc.svg",
-            "link" : "https://www.necc.com"
+            "link" : "https://necc.di.uminho.pt/"
         },
         {
-            "path": "/nucleos/cesium.svg",
-            "link" : "https://www.necc.com"
-        },
-        {
-            "path": "/nucleos/nefum.svg",
-            "link" : "https://www.necc.com"
-        },
-        {
-            "path": "/nucleos/necc.svg",
-            "link" : "https://www.necc.com"
-        },
-        {
-            "path": "/nucleos/cesium.svg",
-            "link" : "https://www.necc.com"
+            "path": "/nucleos/nebqum.svg",
+            "link" : "https://nebquminho.wixsite.com/nebqum"
         },
         {
             "path": "/nucleos/nefum.svg",
-            "link" : "https://www.necc.com"
+            "link" : "https://nefum.di.uminho.pt/"
+        },
+        {
+            "path": "/nucleos/nebaum.svg",
+            "link" : "https://nebaum.wixsite.com/uminho"
+        },
+        {
+            "path": "/nucleos/negum.svg",
+            "link" : "https://www.uminho.pt/PT"
+        },
+        {
+            "path": "/nucleos/necaum.svg",
+            "link" : "https://necaum.weebly.com/"
         }
        
     ]
