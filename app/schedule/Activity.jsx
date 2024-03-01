@@ -22,6 +22,7 @@ import { TbFileDownload } from "react-icons/tb";
 import { MdEventSeat } from "react-icons/md";
 import { set } from "zod";
 import QRCode from "easyqrcodejs";
+import jsPDF from "jspdf";
 
 // TODO: Loading state for the button
 
@@ -35,6 +36,26 @@ export default function Activity({ item, userId }) {
   // console.log(userId);
   // console.log(item.enrollments.length, item.capacity, item.enrollments.length == item.capacity)
   console.log(item);
+
+  const sendPdf = async () => {        
+    const doc = new jsPDF({
+      orientation: "landscape",
+      unit: "px",
+      format: [500, 300],
+    });
+    doc.html(`<html><body><h1>Atividade: ${item.title}</h1></body></html>`, {
+      callback: function (doc) {
+        doc.save("certificate.pdf");
+      },
+    })
+
+    // TODO: Send the PDF to the backend to send the user email
+    // TODO: For this, we should do an email confirmation when creating an account
+    // const res = await axios.post("/api/email", { id, pdf: doc.output("datauristring") });
+    // console.log(res)
+
+
+}
 
   // TODO: Handle the userId properly (it's undefined for now)
   const createEnrollment = async (activityId, userId) => {
@@ -176,6 +197,7 @@ export default function Activity({ item, userId }) {
                   className="text-tiny text-white"
                   onClick={(e) => {
                     e.preventDefault();
+                    sendPdf();
                     e.stopPropagation();
                   }}
                 >
