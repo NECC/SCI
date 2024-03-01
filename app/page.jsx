@@ -152,6 +152,32 @@ export default function Home() {
             <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
               <div className="lg:w-4/5 w-full mt-9 flex flex-wrap justify-between gap-12 ">
 
+
+
+                {/* Estes sponsors estao fora do compoenete pq são "gold" */}
+                <div className='py-8 w-[40%] flex justify-start items-center' >
+                  <a href="https://jordao.com/en" target="blank">
+                    <Image
+                      src="/sponsor/jordao.svg"
+                      alt="Jordão"
+                      width={270}
+                      height={270}
+                      className='hover:scale-105'
+                    />
+                  </a>
+                </div>
+                <div className='py-8 w-[40%] flex justify-start items-center' >
+                  <a href="https://jordao.com/en" target="blank">
+                    <Image
+                      src="/sponsor/dst.svg"
+                      alt="Jordão"
+                      width={270}
+                      height={270}
+                      className='hover:scale-105'
+                    />
+                  </a>
+                </div>
+
                 {
                   sponsor.map((singleSponsor, index) => (
                     <Sponsor {...singleSponsor} key={index}
@@ -163,7 +189,6 @@ export default function Home() {
               </div>
             </div>
           </motion.div>
-
 
 
           <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto mt-[70px] ">
@@ -195,6 +220,7 @@ export default function Home() {
 
             <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
               <div className="lg:w-4/5 w-full mt-9 flex flex-wrap gap-9 ">
+
 
                 {
                   nucleos.map((logos, index) => (

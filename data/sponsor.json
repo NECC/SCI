@@ -1,36 +1,15 @@
 {
     "Patrocinadores": [
         {
-            "name": "Bosh",
-            "path": "/sponsor/bosch.svg",
-            "link": "http://www.bosch.com.br/"
+            "name": "Leica",
+            "path": "/sponsor/leica.png",
+            "link": "https://www.leica.pt/"
         },
         
         {
-            "name": "Xpandit",
-            "path": "/sponsor/xpandit.svg",
-            "link": "https://www.google.com/"
-        },
-        {
-            "name": "Checkmarx",
-            "path": "/sponsor/checkmarx.svg",
-            "link": "https://www.apple.com/"
-        },
-       
-        {
-            "name": "Deloitte",
-            "path": "/sponsor/deloitte.svg",
-            "link": "https://www.microsoft.com/"
-        },
-        {
-            "name": "Accenture", 
-            "path": "/sponsor/accenture.svg",
-            "link": "https://www.facebook.com/"
-        },
-        {
-            "name": "Itsector",
-            "path": "/sponsor/itsector.svg",
-            "link": "https://www.instagram.com/"
+            "name": "Promptly",
+            "path": "/sponsor/promptly.svg",
+            "link": "https://promptlyhealth.com/en"
         }
     ]
 }
