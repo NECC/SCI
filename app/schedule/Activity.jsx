@@ -43,8 +43,9 @@ export default function Activity({ item, userId }) {
       unit: "px",
       format: [500, 300],
     });
-    doc.html(`<html><body><h1>Atividade: ${item.title}</h1></body></html>`, {
+    doc.html(`<div style="width: 500px; height: 299.5px; background-color: blue;"><h1>Atividade: ${item.title}</h1></div>`, {
       callback: function (doc) {
+        doc.putTotalPages(1)
         doc.save("certificate.pdf");
       },
     })
