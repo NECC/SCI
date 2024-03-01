@@ -167,10 +167,10 @@ export default function Home() {
                   </a>
                 </div>
                 <div className='py-8 w-[40%] flex justify-start items-center' >
-                  <a href="https://jordao.com/en" target="blank">
+                  <a href="https://www.dstsgps.com/intro-pt-pt/#/#intro" target="blank">
                     <Image
                       src="/sponsor/dst.svg"
-                      alt="Jordão"
+                      alt="DST"
                       width={270}
                       height={270}
                       className='hover:scale-105'
