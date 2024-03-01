@@ -219,7 +219,7 @@ export default function Home() {
 
 
             <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
-              <div className="lg:w-4/5 w-full mt-9 flex flex-wrap gap-9 ">
+              <div className="lg:w-4/5 w-full mt-9 flex flex-wrap gap-12 justify-between sm:justify-start ">
 
 
                 {
