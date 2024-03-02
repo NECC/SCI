@@ -9,7 +9,7 @@ const Sponsor = (data) => {
                     alt={data.name}
                     width={150}
                     height={150}
-                    className='hover:scale-110'
+                    className='hover:scale-105'
                 />  
             </a>
         </div>

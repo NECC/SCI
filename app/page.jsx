@@ -61,7 +61,7 @@ export default function Home() {
   });
 
   const [ref_3, inView_3] = useInView({
-    triggerOnce: true, 
+    triggerOnce: true,
   });
 
   const [ref_4, inView_4] = useInView({
@@ -89,7 +89,7 @@ export default function Home() {
 
 
           <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">WHAT IS IT?</h1>
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">WHAT IS IT?</h1>
             <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
 
@@ -123,7 +123,7 @@ export default function Home() {
 
 
           <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto mt-[70px] ">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">SPONSORS</h1>
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">SPONSORS</h1>
             <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
 
@@ -152,6 +152,32 @@ export default function Home() {
             <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
               <div className="lg:w-4/5 w-full mt-9 flex flex-wrap justify-between gap-12 ">
 
+
+
+                {/* Estes sponsors estao fora do compoenete pq são "gold" */}
+                <div className='py-8 w-[40%] flex justify-start items-center' >
+                  <a href="https://jordao.com/en" target="blank">
+                    <Image
+                      src="/sponsor/jordao.svg"
+                      alt="Jordão"
+                      width={270}
+                      height={270}
+                      className='hover:scale-105'
+                    />
+                  </a>
+                </div>
+                <div className='py-8 w-[40%] flex justify-start items-center' >
+                  <a href="https://www.dstsgps.com/intro-pt-pt/#/#intro" target="blank">
+                    <Image
+                      src="/sponsor/dst.svg"
+                      alt="DST"
+                      width={270}
+                      height={270}
+                      className='hover:scale-105'
+                    />
+                  </a>
+                </div>
+
                 {
                   sponsor.map((singleSponsor, index) => (
                     <Sponsor {...singleSponsor} key={index}
@@ -165,9 +191,8 @@ export default function Home() {
           </motion.div>
 
 
-
           <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto mt-[70px] ">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">ORGANIZATION</h1>
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">ORGANIZATION</h1>
             <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute lg:block hidden">
@@ -194,7 +219,8 @@ export default function Home() {
 
 
             <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
-              <div className="lg:w-4/5 w-full mt-9 flex flex-wrap gap-9 ">
+              <div className="lg:w-4/5 w-full mt-9 flex flex-wrap gap-12 justify-between sm:justify-start ">
+
 
                 {
                   nucleos.map((logos, index) => (
@@ -211,7 +237,7 @@ export default function Home() {
 
 
           <div className="sm:w-[80%] w-[90%] lg:w-full relative m-auto mt-[70px]">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">FIND US</h1>
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">FIND US</h1>
             <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
 
@@ -253,7 +279,7 @@ export default function Home() {
             </div>
 
           </motion.div>
-          
+
           <div className="h-[100px] sm:w-[80%] w-[90%] lg:w-full relative m-auto mt-[70px]">
             <div className="bottom-0 right-[160px] absolute lg:block hidden">
 
