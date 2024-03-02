@@ -18,6 +18,7 @@ export async function GET() {
       email: true,
       role: true,
       points: true,
+      accredited: true,
       enrollments: {
         select: {
           id: true,

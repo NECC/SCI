@@ -5,7 +5,7 @@ import { CgSearch } from "react-icons/cg";
 const choices = [
   { active: "users", select: ["EMAIL", "NAME", "ID"] },
   { active: "activities", select: ["TITLE", "ID"] },
-  { active: "enrollments", select: ["ID", "USERID", "ACTIVITYID"] },
+  { active: "enrollments", select: ["ENROLLMENTID", "USERID", "ACTIVITYID"] },
 ];
 
 export default function TableFilter(props) {
@@ -15,6 +15,7 @@ export default function TableFilter(props) {
 
   const handleChange = (e) => {
     console.log(data);
+    console.log(e.target.value);
     setFilter(e.target.value);
   };
 
@@ -45,6 +46,54 @@ export default function TableFilter(props) {
           return row.title.toLowerCase().includes(search.toLowerCase());
         });
         setData(filteredData);
+      } else if (filter == "ACTIVITYID") {
+        const filteredData = data.filter((row) => {
+          return row.activity.id.toString().includes(search);
+        });
+
+        const filteredData2 = filteredData.map((enrollment) => {
+          return {
+            activityId: enrollment.activity.id,
+            activityName: enrollment.activity.title,
+            userId: enrollment.user.id,
+            userName: enrollment.user.name,
+            id: enrollment.id,
+          };
+        });
+
+        setData(filteredData2);
+      } else if (filter == "USERID") {
+        const filteredData = data.filter((row) => {
+          return row.user.id.toString().includes(search);
+        });
+
+        const filteredData2 = filteredData.map((enrollment) => {
+          return {
+            activityId: enrollment.activity.id,
+            activityName: enrollment.activity.title,
+            userId: enrollment.user.id,
+            userName: enrollment.user.name,
+            id: enrollment.id,
+          };
+        });
+
+        setData(filteredData2);
+      } else if (filter == "ENROLLMENTID") {
+        const filteredData = data.filter((row) => {
+          return row.id.toString().includes(search);
+        });
+
+        const filteredData2 = filteredData.map((enrollment) => {
+          return {
+            activityId: enrollment.activity.id,
+            activityName: enrollment.activity.title,
+            userId: enrollment.user.id,
+            userName: enrollment.user.name,
+            id: enrollment.id,
+          };
+        });
+
+        setData(filteredData2);
       }
     };
     filterData(data, filter);

@@ -48,6 +48,12 @@ export default function Admin() {
     getUsers();
   };
 
+  const deleteEnrollments = async (id) => {
+    console.log(id);
+    const { data } = await axios.delete(`/api/enrollments/delete/${id}`);
+    getEnrollments();
+  };
+
   const getActivities = async () => {
     const { data } = await axios.get("/api/activities");
     console.log(data.activities);
@@ -131,7 +137,7 @@ export default function Admin() {
         <TableFilter active={active} data={backupData} setData={setRows}/>
 
       </div>
-      <GetDataTable data={rows} active={active} deleteUsers={deleteUsers} deleteActivities={deleteActivities}/>
+      <GetDataTable data={rows} active={active} deleteUsers={deleteUsers} deleteActivities={deleteActivities} deleteEnrollments={deleteEnrollments}/>
     </div>
   );
 }
