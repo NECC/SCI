@@ -17,12 +17,14 @@ async function main() {
         name: 'carlos',
         password:  passwordCarlos,
         role: 'ADMIN',
+        accredited: true,
       },
       {
         email: 'pedroaugennes@gmail.com',
         name: 'Maromba',
         password: passwordPedro,
         role: 'ADMIN',
+        accredited: true,
       },
     ],
   });

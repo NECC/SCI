@@ -1,8 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
+}
+
+generator zod {
+  provider = "zod-prisma-types"
 }
 
 datasource db {
@@ -11,40 +12,39 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  email    String @unique
-  password String
-  name     String
-  role     Role   @default(USER)
-  points   Int    @default(0)
-
+  id          String        @id @default(uuid())
+  email       String        @unique
+  password    String
+  name        String
+  role        Role          @default(USER)
+  points      Int           @default(0)
+  accredited  Boolean       @default(false)
   accounts    Account[]
-  sessions    Session[]
   enrollments Enrollments[]
+  sessions    Session[]
 }
 
 model Activity {
-  id          Int      @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   title       String
   description String
   date        DateTime
-  startTime   String
-  endTime     String
   location    String
   capacity    Int
   speakers    String
   type        Type
-
+  endTime     String
+  startTime   String
   enrollments Enrollments[]
 }
 
 model Enrollments {
   id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
   userId     String
-  activity   Activity @relation(fields: [activityId], references: [id])
   activityId Int
   attended   Boolean
+  activity   Activity @relation(fields: [activityId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, activityId])
 }
@@ -55,15 +55,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -86,8 +85,4 @@ enum Role {
   USER
   ADMIN
   STAFF
-}
-
-generator zod {
-  provider       = "zod-prisma-types"
 }
