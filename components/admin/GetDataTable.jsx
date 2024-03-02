@@ -8,11 +8,14 @@ import {
   getKeyValue,
   Tooltip,
   User,
+  Checkbox,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { MdModeEditOutline } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
+import axios from "axios";
+import { set } from "zod";
 
 const columnsUsers = [
   {
@@ -30,6 +33,10 @@ const columnsUsers = [
   {
     key: "points",
     label: "POINTS",
+  },
+  {
+    key: "accredited",
+    label: "ACCREDITED",
   },
   {
     key: "actions",
@@ -69,7 +76,7 @@ const columnsActivities = [
   {
     key: "deleteActivities",
     label: "DELETE",
-  }
+  },
 ];
 
 const columnsEnrollments = [
@@ -88,17 +95,35 @@ const columnsEnrollments = [
   {
     key: "activityName",
     label: "ACTIVITY NAME",
-  }
+  },
+  {
+    key: "deleteEnrollments",
+    label: "DELETE",
+  },
 ];
 
 export default function GetDataTable(props) {
-  const { data, active, deleteUsers, deleteActivities } = props;
+  const { data, active, deleteUsers, deleteActivities, deleteEnrollments } = props;
   const [columns, setColumns] = useState([...columnsActivities]);
-
-
+  const [loading, setLoading] = useState(false);
+  const [checkChanged, setCheckChanged] = useState(false);
 
   const renderCell = (item, columnKey) => {
     const uid = item.id;
+    // console.log(item)
+
+    // TODO: Error handling
+    const updateAccreditation = async () => {
+      setLoading(true);
+      const { data } = await axios.post(`/api/users/accreditation/${uid}`);
+      // console.log(data);
+      if (data.response == "error") {
+        console.log(data.error);
+      }
+      setCheckChanged(!checkChanged);
+      setLoading(false);
+    };
+
     // console.log(item);
 
     switch (columnKey) {
@@ -108,23 +133,27 @@ export default function GetDataTable(props) {
             name={uid}
             description={item.email}
             avatarProps={{ src: "/user.svg", isBordered: true, size: "sm" }}
+          />
+        );
+      case "accredited":
+        return (
+          <div className="ml-6">
+            <Checkbox
+              isDisabled={loading}
+              defaultSelected={item.accredited}
+              color="success"
+              onValueChange={updateAccreditation}
             />
+          </div>
         );
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Details">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <FaEye className="text-black" />
-              </span>
-            </Tooltip>
-            <Tooltip content="Edit user">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <MdModeEditOutline className="text-black" />
-              </span>
-            </Tooltip>
             <Tooltip color="danger" content="Delete user">
-              <span onClick={() => deleteUsers(uid)} className="text-lg text-danger cursor-pointer active:opacity-50">
+              <span
+                onClick={() => deleteUsers(uid)}
+                className="text-lg text-danger cursor-pointer active:opacity-50"
+              >
                 <IoMdTrash />
               </span>
             </Tooltip>
@@ -134,7 +163,23 @@ export default function GetDataTable(props) {
         return (
           <div className="relative flex justify-center items-center gap-2">
             <Tooltip color="danger" content="Delete Activity">
-              <span onClick={() => deleteActivities(uid)} className="text-lg text-danger cursor-pointer active:opacity-50">
+              <span
+                onClick={() => deleteActivities(uid)}
+                className="text-lg text-danger cursor-pointer active:opacity-50"
+              >
+                <IoMdTrash />
+              </span>
+            </Tooltip>
+          </div>
+        );
+      case "deleteEnrollments":
+        return (
+          <div className="relative flex justify-center items-center gap-2">
+            <Tooltip color="danger" content="Delete Enrollment">
+              <span
+                onClick={() => deleteEnrollments(uid)}
+                className="text-lg text-danger cursor-pointer active:opacity-50"
+              >
                 <IoMdTrash />
               </span>
             </Tooltip>
