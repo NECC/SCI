@@ -4,48 +4,30 @@ import Activity from "@app/schedule/Activity";
 import QRCode from "easyqrcodejs";
 import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import {
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    Button,
-    Spinner,
-    ButtonGroup,
-  } from "@nextui-org/react";
+import { Button, Spinner, ButtonGroup } from "@nextui-org/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import {
     SlArrowLeft,
     SlArrowRight
 } from "react-icons/sl";
+import { IconContext } from "react-icons";
 import { FaRegCalendarAlt } from "react-icons/fa";
-import Link from 'next/link'
-import { Line } from "@components/Line";
-import { ArrowRight } from "@components/ArrowRight";
+import Link from "next/link";
 
-export default function Profile ({ params: { id }} ) {
-    const [user, setUser] = useState({});
-    const [userEnrollment, setUserEnrollment] = useState([]);
-    const [activities, setActivities] = useState ([]);
-    const [place,setPlace] = useState(0);
-    const [firstPlace,setFirstPlace] = useState(0);
-    const [type,setType] = useState(null);
-    const [workshops,setWorkshops] = useState(0);
-    const [talks,setTalks] = useState(0);
-    const [others,setOthers] = useState(0);
-    const [activeScreen,setActiveScreen] = useState(0);
-    const [activeDay,setActiveDay] = useState(18);
-    let count = 1;
-    let maxCount = 0;
-    const router = useRouter();
+export default function Profile({ params: { id } }) {
+  const [user, setUser] = useState({});
+  const [activeScreen, setActiveScreen] = useState(0);
+  let count = 1;
+  let maxCount = 0;
+  const router = useRouter();
 
-    const { status} = useSession({
-        required: true,
-        onUnauthenticated() {
-            router.push("/api/auth/signin");
-        },
-    });
+  const { status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/api/auth/signin");
+    },
+  });
 
     // get profile user
     useEffect(() => {
@@ -68,11 +50,9 @@ export default function Profile ({ params: { id }} ) {
     const getUserEnrollments = async () => {
         // gets enrollments and filters them by the current user
         const { data } = await axios.get("/api/enrollments");
-        if (data.enrollments != null) {
-            const fdata = data.enrollments.filter(filterByUser);
-            setUserEnrollment(fdata);
-            setType("WORKSHOP");
-        }
+        const fdata = data.enrollments.filter(filterByUser);
+        setUserEnrollment(fdata);
+        setType("WORKSHOP");
     }
 
     function filterByType(e) {
@@ -89,7 +69,7 @@ export default function Profile ({ params: { id }} ) {
 
     function getNumberOfActivity(a,t) {
         let count = 0;
-        a.forEach((v) => (v.activity.type == t && ++count));
+        a.forEach((v) => (v.activity.type == t && count++));
         return count;
     }
 
@@ -130,35 +110,22 @@ export default function Profile ({ params: { id }} ) {
         if (activeDay < 21) setActiveDay(activeDay + 1);
         else setActiveDay(21);
     }
-    console.log(activities)
 
     return (
-        <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
+        <div className=" dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
             <div className="gap-2 px-8 pt-20">
                 {status != "loading" ? (
                     <Card isBlurred className="w-full h-[625px]">
 
-                    <div className="bg-transparent w-full h-[625px]">
-                        <Card className="bg-transparent shadow-none">
                         <CardHeader className="dark:bg-black/40 border-b-1 border-default-600 dark:border-default-100 flex-row">
                             <div className="flex flex-grow gap-2 items-center p-2 justify-between">
-                                <div className="flex flex-col text-neutral-700 text-white uppercase font-black text-2xl">
+                                <div className="flex flex-col text-neutral-700 dark:text-white/90 uppercase font-black text-2xl">
                                     Perfil de {user.name}
                                 </div>
-                                <ButtonGroup className="px-2" disableRipple={true}>
-                                    {(activeScreen == 0) && <Line/>}
-                                    <Button radius={"none"} onClick={() => setActiveScreen(0)} className={(activeScreen != 0) ? "flex flex-col text-white bg-transparent" : "-ml-1.5 overflow-visible flex flex-row bg-custombutton text-white"}>
-
-                                        <p className="text-2xl font-roboto font-extrabold leading-5 mt-1.5 mb-1 ml-[17px] mr-1.5"> ENROLLED ACTIVITIES </p>
-                                    </Button>
-                                    {(activeScreen == 1) && <Line/>}
-                                    <Button radius={"none"} onClick={() => setActiveScreen(1)} className={(activeScreen != 1) ? "flex flex-col text-white bg-transparent" : "-ml-1.5 overflow-visible flex flex-row bg-custombutton text-white"}>
-                                        <p className="text-2xl font-roboto font-extrabold leading-5 mt-1.5 mb-1 ml-[17px] mr-1.5"> RANKING </p>
-                                    </Button>
-                                    {(activeScreen == 2) && <Line/>}
-                                    <Button radius={"none"} onClick={() => setActiveScreen(2)} className={(activeScreen != 2) ? "flex flex-col text-white bg-transparent" : "-ml-1.5 overflow-visible flex flex-row bg-custombutton text-white"}>
-                                        <p className="text-2xl font-roboto font-extrabold leading-5 mt-1.5 mb-1 ml-[17px] mr-1.5"> QRCODE </p>
-                                    </Button>
+                                <ButtonGroup>
+                                    <Button onClick={() => setActiveScreen(0)} className={(activeScreen != 0) ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"}> Atividades Inscritas </Button>
+                                    <Button onClick={() => setActiveScreen(1)} className={(activeScreen != 1) ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"}> Ranking </Button>
+                                    <Button onClick={() => setActiveScreen(2)} className={(activeScreen != 2) ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"}> QRCode </Button>
                                 </ButtonGroup>
                             </div>
                         </CardHeader>
@@ -177,7 +144,6 @@ export default function Profile ({ params: { id }} ) {
 
                         ) : (<></>)}
                     </Card>
-                    </div>
                 ) : (
                     <Spinner color="white" size="lg"/>
                 )}
@@ -190,25 +156,22 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
     return (
         <CardBody className="dark:bg-black/40 flex flex-col">
             <div className="flex flex-col gap-y-1">
-                <div className="bg-selectday w-100 flex flex-row justify-center items-center">
-                    <p className="pt-2 mr-[20px] text-2xl font-poppins font-bold leading-5 text-center text-custom-grey tracking-[2.4px]">
-                        {activeDay-1}
-                    </p>
-                    <p onClick={() => previousDay()}> <ArrowRight className={"rotate-180"}/> </p>
-                    <p className="pt-2 px-4 text-2xl font-poppins font-bold leading-5 text-center text-white tracking-[2.4px]">
-                        {activeDay} <br/> <span className="text-xl tracking-[2px] font-light"> MARCH </span>
-                    </p>
-                    <p onClick={() => nextDay()}> <ArrowRight/> </p>
-                    <p className="pt-2 ml-[18px] text-2xl font-poppins font-bold leading-5 text-center text-custom-grey tracking-[2.4px]">
-                        {activeDay+1}
-                    </p>
+                <h1 className="mx-1 text-[#494748] dark:text-white font-semibold text-2xl"> Atividades Inscritas </h1>
+                <div className="mx-5 flex flex-row items-center">
+                    <h2 className="font-bold text-lg"> Dia {activeDay} </h2>
+                    <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => previousDay()}> <SlArrowLeft size={'1em'}/> </Button>
+                    <FaRegCalendarAlt size={'1em'} />
+                    <Button className="bg-transparent flex min-w-3" size='sm' onClick={() => nextDay()}> <SlArrowRight size={'1em'}/> </Button>
                 </div>
                 <div className="mx-6 mt-1 -mb-3 flex flex-row h-8">
                     <ButtonGroup>
-                        <Button className={(type != "WORKSHOP") ? "text-white bg-neutral-500" : "bg-white text-black"} onClick={() => setType("WORKSHOP")}>
+                        <Button className={(type != "WORKSHOP") ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"} onClick={() => setType("WORKSHOP")}>
                             Workshops : {workshops}
                         </Button>
-                        <Button className={(type != "OTHER") ? "text-white bg-neutral-500" : "bg-white text-black"} onClick={() => setType("OTHER")}>
+                        <Button className={(type != "TALK") ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"} onClick={() => setType("TALK")}>
+                            Talks : {talks}
+                        </Button>
+                        <Button className={(type != "OTHER") ? "text-white bg-neutral-500 dark:bg-transparent dark:border-gray-50 border-1" : "bg-[#023f65] text-white dark:bg-slate-300 dark:text-black border-1"} onClick={() => setType("OTHER")}>
                             Others : {others}
                         </Button>
                     </ButtonGroup>
@@ -216,8 +179,8 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                 <div className="no-scrollbar mx-6 flex flex-wrap gap-4 flex-col md:flex-row w-[300px] md:w-auto mt-8">
                     { (activities.length > 0) ? (
                         activities.map((enrollments, index) => (
-                            <div className="flex" key={index}>
-                                    <Card className="w-[300px] text-black/60">
+                            <Link href={`/profile/activity/${enrollments.activity.id}`} className="flex" key={index}>
+                                    <Card className="w-[300px] border-1 border-[#222327]">
                                         <CardBody>
                                             <h4 className="dark:text-white/90 font-bold text-xl">
                                                 {enrollments.activity.title}
@@ -231,7 +194,6 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                                             <p className="text-tiny dark:text-white/60 font-medium">
                                                 {enrollments.activity.speakers}
                                             </p>
-                                            <div className="flex flex-row"> <p className="text-tiny"> Certificate </p> <TbFileDownload /> </div>
                                             <div className="flex flex-row ml-auto pl-5 items-center gap-3">
                                                 <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
                                                     {enrollments.activity.startTime}h - {enrollments.activity.endTime}h
@@ -244,9 +206,9 @@ const ActivitiesSubscribed = ({ activeDay, type, setType, workshops, talks, othe
                                             </div>
                                         </CardFooter>
                                     </Card>
-                            </div>
+                            </Link>
                         ))
-                    ) : <p className="text-white h-[117px]"> Não estás inscrito em nenhuma atividade deste tipo </p>
+                    ) : <p className="h-[117px]"> Não estás inscrito em nenhuma atividade deste tipo </p>
                     }
                 </div>
             </div>
@@ -285,10 +247,10 @@ const Code = ({ userId }) => {
 
         }
 
-        const code = new QRCode(qrcode.current, options);
-        code.makeCode(`${currentUrl}/ranking/${userId}`);
-        return () => code.clear()
-    }, [qrcode])
+    const code = new QRCode(qrcode.current, options);
+    code.makeCode(`${currentUrl}/admin/ranking/${id}`);
+    return () => code.clear();
+  }, [qrcode, currentUrl, id]);
 
     return (
         <CardBody className="dark:bg-black/40 flex flex-col ">

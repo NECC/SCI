@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { ActivitySchema } from "/prisma/zod";
+const prisma = new PrismaClient();
 
 /**
  * Get all Activities from the database
@@ -8,7 +9,6 @@ import { ActivitySchema } from "/prisma/zod";
  * @returns [{ id, title, description, speakers, location, capacity, date, type, enrollments }]
  */
 export async function GET() {
-  const prisma = new PrismaClient();
   try {
     const activities = await prisma.activity.findMany({
       select: {
@@ -27,10 +27,12 @@ export async function GET() {
     });
     console.log(activities);
 
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "success", activities: activities })
     );
   } catch (error) {
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })
     );
@@ -46,11 +48,11 @@ export async function GET() {
  *
  */
 export async function POST(request) {
-  const prisma = new PrismaClient();
   const data = await request.json();
   const response = ActivitySchema.safeParse(data);
   if (!response.success) {
     console.error(response.error);
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: "ja fostes" })
     );
@@ -69,7 +71,7 @@ export async function POST(request) {
       type: data.type,
     },
   });
-
+  prisma.$disconnect();
   return new NextResponse(
     JSON.stringify({ response: "success", activity: activity })
   );

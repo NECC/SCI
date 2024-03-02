@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]/route";
+const prisma = new PrismaClient();
 
 /**
  * Get all Enrollments from the database
@@ -10,7 +11,6 @@ import { authOptions } from "../auth/[...nextauth]/route";
 **/
 export async function GET() {
   try {
-    const prisma = new PrismaClient();
     const enrollments = await prisma.enrollments.findMany({
       select: {
         id: true,
@@ -26,11 +26,12 @@ export async function GET() {
       },
     });
     // console.log(enrollments);
-
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "success", enrollments: enrollments })
     );
   } catch (error) {
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })
     );
@@ -45,7 +46,6 @@ export async function GET() {
   * @returns {response: "success", enrollment: enrollment || {response: "error", error: error}}
  */
 export async function POST(request) {
-  const prisma = new PrismaClient();
   const data = await request.json();
   const session = await getServerSession(authOptions);
 
@@ -71,7 +71,7 @@ export async function POST(request) {
     });
 
     // If it's full, return an error
-    if (activityEnrollments.enrollments.length >= activityEnrollments.capacity) {
+    if (activityEnrollments.enrollments && activityEnrollments.enrollments.length >= activityEnrollments.capacity) {
       return new NextResponse(
         JSON.stringify({
           response: "error",

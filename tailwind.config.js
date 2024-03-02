@@ -20,9 +20,12 @@ module.exports = {
 
 
         }, // cor do logo das jornadas poderá ser utilizado
-        'custom-grey': 'rgba(255, 255, 255, 0.60)'
+        'custom-grey': 'rgba(255, 255, 255, 0.60)',
 
 
+        'custom-yellow': {
+          1: '#F6DA7D'
+        }
       },
       transitionProperty: {
         width: 'width',

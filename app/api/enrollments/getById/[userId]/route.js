@@ -11,29 +11,20 @@ const prisma = new PrismaClient();
  * @returns [{ enrollments }]
  */
 export async function GET(request, context) {
-    const id = context.params.activityId;
+    const id = context.params.userId;
 
     try {
 
-        const enrollments = await prisma.activity.findMany({
+        const enrollments = await prisma.enrollments.findMany({
             where: {
-                id: parseInt(id),
+                userId: id,
             },
-            select: {
-                enrollments: {
-                    select: {
-                        user: {
-                            select: {
-                                name: true,
-                            },
-                        },
-                    }
-                    
-                },
-            },
+            include: {
+                activity: true,
+            }
         });
-        
-        // console.log(enrollments);
+
+        console.log(enrollments);
         prisma.$disconnect();
         return new NextResponse(
             JSON.stringify({ response: "success", enrollment: enrollments })

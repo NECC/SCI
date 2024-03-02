@@ -7,9 +7,13 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { set } from "zod";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({});
+  const [error, setError] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e) => {
     // console.log(formData);
@@ -22,14 +26,27 @@ export default function SignInPage() {
     signIn("credentials", {
       email: formData.email,
       password: formData.password,
+      redirect: false,
       callbackUrl: "/",
+    }).then((res) => {
+      if (res.ok) {
+        router.push("/");
+        setError(false);
+      } else {
+        setError(true);
+      }
     });
   };
 
   return (
-    <div className="h-screen w-screen bg-gradient-to-b to-20% from-custom-blue-1  to-custom-blue-3 flex justify-around items-center ">
-
-      <Image width={500} height={500} src="/sci-logo.png" alt="Logo" className="lg:block hidden"></Image>
+    <div className="h-screen w-screen bg-gradient-to-b to-20% from-custom-blue-1  to-custom-blue-3 flex justify-around items-center">
+      <Image
+        width={500}
+        height={500}
+        src="/sci-logo.png"
+        alt="Logo"
+        className="lg:block hidden"
+      ></Image>
 
       <div className="flex justify-center items-center flex-col">
         <h1 className="font-bold text-4xl text-white cursor-default">Login</h1>
@@ -123,10 +140,9 @@ export default function SignInPage() {
           className=" text-sm mt-3 text-white cursor-pointer font-normal hover:text-white/80"
         >
           Don&apos;t have an account? &nbsp;
-          <span className="font-bold">
-            Sign Up!
-          </span>
+          <span className="font-bold">Sign Up!</span>
         </Link>
+        {error && <div className="bg-red-500 p-2 text-white mt-3 rounded">Invalid credentials</div>}
         <Button
           className="mt-3 w-[300px] font-normal text-lg text-black bg-white"
           size="large"

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
+// TODO: Try catch() block
 /**
  * Get an User by ID
  * @method GET
@@ -36,7 +37,7 @@ export async function GET(request, context) {
         },
     });
     console.log(user);
-    
+    prisma.$disconnect();
     return new NextResponse(
         JSON.stringify({ response: "success", user: user })
     );
