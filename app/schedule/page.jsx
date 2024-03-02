@@ -104,7 +104,7 @@ export default function Schedule() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black dark:bg-[url('/rectangle.png')] min-h-screen bg-no-repeat bg-top bg-cover">
+    <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 dark:bg-black dark:bg-[url('/rectangle.png')] min-h-screen bg-no-repeat bg-top bg-cover">
       <div className="pb-10 h-full">
         <div className="p-5 md:p-7 w-full h-full">
           <ActivityDayFilter
