@@ -111,7 +111,7 @@ export default function Activity({ item, userId }) {
               {item.startTime}h - {item.endTime}h
             </p>
           </div>
-          {item.type == "WORKSHOP" && (item.enrollments?.length) && (
+          {item.type == "WORKSHOP" && (item.enrollments?.length != 0) && (
             <div className="flex flex-row mr-auto items-center">
               <MdEventSeat className="inline mr-2" />
               <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">

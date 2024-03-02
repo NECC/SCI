@@ -43,7 +43,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-b to-20% from-custom-blue-1 to-custom-blue-3 flex justify-around items-center">
+    <div className="h-screen bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 flex justify-around items-center">
       <Image
         width={500}
         height={500}
