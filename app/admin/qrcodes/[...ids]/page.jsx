@@ -29,7 +29,7 @@ export default function QRCodesAdmin({ params: { ids } }) {
 
   const updateUserAttendance = async () => {
     setLoading(true);
-    const res = await axios.post(`/api/enrollments/attend`, {
+    const res = await axios.post(`/api/enrollments/attend/qrcode`, {
       userId: ids[1],
       activityId: parseInt(ids[0]),
     });

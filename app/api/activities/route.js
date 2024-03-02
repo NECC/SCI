@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { ActivitySchema } from "/prisma/zod";
+import { authOptions } from "../auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 const prisma = new PrismaClient();
 
 /**
@@ -50,6 +52,19 @@ export async function GET() {
 export async function POST(request) {
   const data = await request.json();
   const response = ActivitySchema.safeParse(data);
+
+  const session = await getServerSession(authOptions);
+
+  if (session?.user.role != "ADMIN") {
+    prisma.$disconnect();
+    return new NextResponse(
+      JSON.stringify({
+        response: "error",
+        error: "You don't have permission to create an activity",
+      })
+    );
+  }
+
   if (!response.success) {
     console.error(response.error);
     prisma.$disconnect();

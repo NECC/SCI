@@ -10,6 +10,18 @@ const prisma = new PrismaClient();
  * @returns [{ enrollments }]
 **/
 export async function GET() {
+  const session = await getServerSession(authOptions);
+
+  if (session?.user.role != "ADMIN") {
+    prisma.$disconnect();
+    return new NextResponse(
+      JSON.stringify({
+        response: "error",
+        error: "You don't have permission to see all enrollments!",
+      })
+    );
+  }
+
   try {
     const enrollments = await prisma.enrollments.findMany({
       select: {

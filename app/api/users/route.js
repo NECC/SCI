@@ -11,6 +11,18 @@ const prisma = new PrismaClient();
  * @returns [{ id, name, email, role, points }]
  */
 export async function GET() {
+  const session = await getServerSession(authOptions);
+  
+  if (session?.user.role != "ADMIN") {
+    prisma.$disconnect();
+    return new NextResponse(
+      JSON.stringify({
+        response: "error",
+        error: "You don't have permission to get all users",
+      })
+    );
+  }
+
   const users = await prisma.user.findMany({
     select: {
       id: true,
