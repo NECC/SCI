@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function ActivityPage({ params }) {
-    console.log(params)
+    // console.log(params)
     const [activity, setActivity] = useState({});
 
     const getActivity = async () => {
@@ -19,8 +19,8 @@ export default function ActivityPage({ params }) {
         getActivity()
     },[])
     
-    console.log(activity)
-    console.log(activity.title)
+    // console.log(activity)
+    // console.log(activity.title)
 
     return (activity) ? (
         <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-[url('/rectangle.png')] bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">

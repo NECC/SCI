@@ -76,7 +76,7 @@ export default function Schedule() {
       setSelectedDay(getDays(data)[0]);
       setLoading(false);
       setUserId(session?.user.id);
-      console.log("Data: ", data)
+      // console.log("Data: ", data)
     };
     fetchActivities();
   }, [status]);
