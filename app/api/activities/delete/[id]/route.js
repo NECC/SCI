@@ -1,4 +1,6 @@
+import { authOptions } from "@app/api/auth/[...nextauth]/route";
 import { PrismaClient } from "@prisma/client";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
@@ -10,6 +12,19 @@ const prisma = new PrismaClient();
  * @returns {response: "success", activityDeleted: { id, title, description, speakers, location, capacity, date, type, enrollments } | {response: "error", error: error}}
 **/
 export async function DELETE(req, { params: { id } }) {
+  const session = await getServerSession(authOptions);
+
+  if (session?.user.role != "ADMIN") {
+    prisma.$disconnect();
+    return new NextResponse(
+      JSON.stringify({
+        response: "error",
+        error: "You don't have permission to delete an activity!",
+      })
+    );
+  }
+
+
   try {
     
     // first we must delete the enrollments that have the activity

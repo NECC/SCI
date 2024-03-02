@@ -21,7 +21,7 @@ export async function POST(request) {
     return new NextResponse(
       JSON.stringify({
         response: "error",
-        error: "You don't have permission to delete an user",
+        error: "You don't have permission to give points to an user!",
       })
     );
   }
