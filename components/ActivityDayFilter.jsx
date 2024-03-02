@@ -1,5 +1,6 @@
 import React from "react";
 import { ArrowRight } from "./ArrowRight";
+import { LineDots } from "./LineDots";
 
 function ActivityDayFilter({ selectedDay, setSelectedDay, days, children }) {
   const setSelectedDayPrev = () => {
@@ -16,7 +17,7 @@ function ActivityDayFilter({ selectedDay, setSelectedDay, days, children }) {
 
   return (
     <>
-      <div className="hidden md:flex flex-row items-center w-full justify-center text-white gap-10 bg-gradient-to-r from-transparent from-20% via-custom-blue-1/60 to-transparent to-80%">
+      <div className="hidden md:flex flex-row items-center w-full justify-center text-white gap-10 bg-selectday">
         {days.map((day) => (
           <div key={day} className="flex flex-row items-center cursor-pointer">
             {selectedDay === day && (
@@ -47,7 +48,21 @@ function ActivityDayFilter({ selectedDay, setSelectedDay, days, children }) {
           </div>
         ))}
       </div>
-      <div className="mb-28 md:mb-0">{children}</div>
+      {selectedDay && (
+        <div className="md:hidden">
+          <div className="p-2 px-5 w-full h-fit justify-start overflow-visible flex flex-row bg-custombutton text-white relative border-l-2">
+            <LineDots />
+            <div className="flex flex-1 flex-col items-start whitespace-break-spaces text-left">
+              <p className="text-xl uppercase">
+                <span className="font-extrabold">{selectedDay}</span> March
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="mb-28 md:mb-0 overflow-scroll no-scrollbar">
+        {children}
+      </div>
       {days.length > 0 && (
         <div className="fixed left-0 bottom-0 z-20 w-full h-24 flex gap-6 md:hidden bg-blue-400 items-center justify-center">
           {days.map((day) => (
