@@ -41,7 +41,7 @@ export default function Profile({ params: { id } }) {
   useEffect(() => {
     const getUser = async () => {
       const { data } = await axios.get(`/api/users/${id}`);
-      console.log(data);
+      // console.log(data);
       setUser(data.user);
     };
     getUser();
@@ -293,7 +293,7 @@ const ActivitiesSubscribed = ({ id }) => {
                 ) : (
                   getActivitiesOfDayAndType(selectedDay, type).map(
                     (item, index) => {
-                      console.log(item)
+                      // console.log(item)
                       return (
                         <div key={index}>
                           <Activity item={item} userId={id} />

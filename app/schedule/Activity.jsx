@@ -33,7 +33,7 @@ export default function Activity({ item, userId }) {
   // console.log(attended);
   // console.log(userId);
   // console.log(item.enrollments.length, item.capacity, item.enrollments.length == item.capacity)
-  console.log(item);
+  // console.log(item);
 
   // TODO: Handle the userId properly (it's undefined for now)
   const createEnrollment = async (activityId, userId) => {

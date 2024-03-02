@@ -47,7 +47,7 @@ export default function Home() {
   useEffect(() => {
     if (session) {
       setUser(session.user);
-      console.log(session)
+      // console.log(session)
     }
   }, [session]);
 
