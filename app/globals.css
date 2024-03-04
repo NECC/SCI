@@ -29,6 +29,23 @@
   @apply font-poppins text-white font-normal text-center hover:text-white/80;
 }
 
+::-webkit-scrollbar {
+width: 8px; 
+height: 10px;  
+background-color: #2281c4;
+}
+
+.prof-sched-scrollbar::-webkit-scrollbar {
+width: 5px; 
+height: 10px;  
+background-image: linear-gradient(to bottom,rgb(56 189 248), rgb(125 211 252));
+}  
+  
+::-webkit-scrollbar-thumb {  
+background-color: #056387;  
+border-radius: 10px;
+}
+
 
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari, and Opera */
