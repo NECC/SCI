@@ -250,7 +250,7 @@ const ActivitiesSubscribed = ({ id }) => {
     };
 
     fetchActivities();
-  });
+  }, []);
 
   return (
     <div className="dark:bg-black/40 flex flex-col">
