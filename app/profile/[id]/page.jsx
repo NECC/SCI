@@ -56,6 +56,7 @@ export default function Profile({ params: { id } }) {
               user={user}
               activeScreen={activeScreen}
               setActiveScreen={setActiveScreen}
+              user={user}
             />
           </div>
         </div>
@@ -170,6 +171,11 @@ const ProfileNav = ({ user, activeScreen, setActiveScreen }) => {
             {activeScreen == "qrcode" && <LineDots />}
             <p className="text-2xl leading-5">QRCODE</p>
           </Button>
+        </div>
+      </div>
+      <div className="flex flex-row items-center">
+        <div className="flex flex-col text-white bg-transparent py-7 pl-3">
+          <p className="text-2xl leading-5"> PONTOS: {user.points} </p>
         </div>
       </div>
     </>
@@ -345,7 +351,7 @@ const Code = ({ user, id }) => {
           Points: {user.points}{" "}
         </h2>
         <div className="flex flex-wrap content-center justify-center h-full">
-          <div className="-mt-56 md:-mt-28" ref={qrcode}></div>
+          <div className="-mt-56 md:-mt-28 border-[12px] rounded-md border-white" ref={qrcode}></div>
         </div>
       </div>
     </div>
