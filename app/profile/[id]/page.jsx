@@ -52,7 +52,7 @@ export default function Profile({ params: { id } }) {
             {activeScreen == 0 ? (
               <ActivitiesSubscribed id={id} />
             ) : activeScreen == 2 ? (
-              <Code user={user} />
+              <Code user={user} id={id} />
             ) : (
               <></>
             )}
@@ -240,13 +240,15 @@ const ActivitiesSubscribed = ({ id }) => {
   );
 };
 
-const Code = ({ user }) => {
+const Code = ({ user, id }) => {
   const qrcode = useRef(null);
   const currentUrl =
     process.env.NEXT_PUBLIC_MODE == "development"
       ? process.env.NEXT_PUBLIC_BACKOFFICE_URL_DEVELOPMENT
       : process.env.NEXT_PUBLIC_BACKOFFICE_URL_PRODUCTION;
-  console.log(currentUrl);
+
+  // console.log(currentUrl);
+  
   useEffect(() => {
     var options = {
       text: "Bem-vindo ao evento",
@@ -258,9 +260,9 @@ const Code = ({ user }) => {
     };
 
     const code = new QRCode(qrcode.current, options);
-    code.makeCode(`${currentUrl}/ranking/${user.userId}`);
+    code.makeCode(`${currentUrl}/admin/ranking/${id}`);
     return () => code.clear();
-  }, [qrcode, currentUrl, user.userId]);
+  }, [qrcode, currentUrl, id]);
 
   return (
     <div className="dark:bg-black/40 h-full">

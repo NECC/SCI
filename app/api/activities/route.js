@@ -27,10 +27,12 @@ export async function GET() {
     });
     console.log(activities);
 
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "success", activities: activities })
     );
   } catch (error) {
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })
     );
@@ -50,6 +52,7 @@ export async function POST(request) {
   const response = ActivitySchema.safeParse(data);
   if (!response.success) {
     console.error(response.error);
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: "ja fostes" })
     );
@@ -68,7 +71,7 @@ export async function POST(request) {
       type: data.type,
     },
   });
-
+  prisma.$disconnect();
   return new NextResponse(
     JSON.stringify({ response: "success", activity: activity })
   );

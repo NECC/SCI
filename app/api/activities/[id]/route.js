@@ -29,10 +29,12 @@ export async function GET(req, {params: { id }}) {
     });
     console.log(activity);
 
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "success", activity: activity })
     );
   } catch (error) {
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })
     );

@@ -1,49 +1,51 @@
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@app/api/auth/[...nextauth]/route";
 
 const prisma = new PrismaClient();
 
-
 /**
- * Increments the points of an User by 1
- * @method POST
+ * Turn an enrollment attended
+ * @method PUT
+ * @param {Request}  { userId: string, activityId: int }
  * @returns [{ user, points }]
-**/
+ **/
 export async function POST(request) {
   const data = await request.json();
   const session = await getServerSession(authOptions);
-
 
   if (session?.user.role != "ADMIN") {
     prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({
         response: "error",
-        error: "You don't have permission to delete an user",
+        error: "You don't have permission to do this action, get out of here!",
       })
     );
   }
 
   try {
-    const increment = await prisma.user.update({
-        where: {
-            id: data.id
-        },
-        data: {
-            points: {
-                increment: 1
-            }
-        }
-    })
+    const updateEnrollment = await prisma.enrollments.updateMany({
+      where: {
+        activityId: parseInt(data.activityId),
+        userId: data.userId,
+      },
+      data: {
+        attended: true,
+      },
+    });
+
     prisma.$disconnect();
     return new NextResponse(
-      JSON.stringify({ response: "success", increment: { user: increment.id, points: increment.points }})
+      JSON.stringify({
+        response: "success",
+        updateEnrollment,
+      })
     );
-    
   } catch (error) {
     prisma.$disconnect();
+    console.log(error)
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })
     );

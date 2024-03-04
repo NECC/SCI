@@ -16,6 +16,7 @@ export async function DELETE(req, { params: { uuid }}) {
   // console.log("SESSION FROM POST: ",session);
 
   if (session?.user.role != "ADMIN") {
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({
         response: "error",
@@ -39,9 +40,10 @@ export async function DELETE(req, { params: { uuid }}) {
       }
     });
 
+    prisma.$disconnect();
     return Response.json({ response: "success", userDeleted: user })
   } catch (error) {
-
+    prisma.$disconnect();
     console.log(error);
     return Response.json({ response: "error", error: error })
 

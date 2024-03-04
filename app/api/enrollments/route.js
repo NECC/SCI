@@ -26,11 +26,12 @@ export async function GET() {
       },
     });
     // console.log(enrollments);
-
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "success", enrollments: enrollments })
     );
   } catch (error) {
+    prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })
     );
