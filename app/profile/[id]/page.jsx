@@ -48,7 +48,7 @@ export default function Profile({ params: { id } }) {
   }, [id]);
 
   return (
-    <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
+    <div className="bg-gradient-to-r from-custom-blue-1 to-custom-blue-3 dark:bg-black h-screen bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
       <div className="p-5 md:p-7 flex flex-col md:flex-row h-full">
         <div className="flex flex-col flex-grow gap-2 justify-between">
           <div className="flex flex-col items-left">
