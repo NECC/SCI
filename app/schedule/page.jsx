@@ -104,9 +104,9 @@ export default function Schedule() {
   };
 
   return (
-    <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 dark:bg-black dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">
-      <div className="p-2 pb-10 md:p-7 md:px-8 h-full">
-        <div className="w-full h-full">
+    <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 dark:bg-black dark:bg-[url('/rectangle.png')] min-h-screen bg-no-repeat bg-top bg-cover">
+      <div className="pb-10 h-full">
+        <div className="p-5 md:p-7 w-full h-full">
           <ActivityDayFilter
             selectedDay={selectedDay}
             setSelectedDay={setSelectedDay}
@@ -123,7 +123,7 @@ export default function Schedule() {
                         </Chip>
                         <div className="flex flex-row md:flex-col">
                           <div className="bg-white p-[1px] mx-3 md:h-[2px] md:my-3 md:mx-0 md:w-auto"></div>
-                          <div className="flex flex-row md:flex-col p-5 overflow-scroll hide-scroll gap-3 -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
+                          <div className="flex flex-row md:flex-col p-2 overflow-scroll hide-scroll gap-3 -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
                             {activities.map((item, index) => (
                               <div key={index}>
                                 <Activity item={item} userId={userId} />

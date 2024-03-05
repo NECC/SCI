@@ -32,7 +32,7 @@ export default function Activity({ item, userId }) {
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
 
   // console.log(attended);
-  // console.log(userId);
+  // // console.log(userId);
   // console.log(item.enrollments.length, item.capacity, item.enrollments.length == item.capacity)
   // console.log(item);
 
@@ -84,7 +84,7 @@ export default function Activity({ item, userId }) {
                 </Chip>
               )}
 
-              {item.capacity == item.enrollments?.length && (
+              {item.enrollments && item.capacity == item.enrollments.length && (
                 <Chip color="danger" size="sm" className="ml-2 text-white">
                   Full
                 </Chip>
@@ -115,7 +115,7 @@ export default function Activity({ item, userId }) {
             <div className="flex flex-row mr-auto items-center">
               <MdEventSeat className="inline mr-2" />
               <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
-                {item.enrollments?.length}/{item.capacity}
+                {item.enrollments !== undefined ? item.enrollments.length : 0}/{item.capacity}
               </p>
             </div>
           )}
