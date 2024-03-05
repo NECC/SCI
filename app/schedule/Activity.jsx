@@ -19,8 +19,7 @@ import { FaCheck, FaLongArrowAltRight } from "react-icons/fa";
 import { CiMapPin, CiClock2 } from "react-icons/ci";
 import { BsQrCode } from "react-icons/bs";
 import { TbFileDownload } from "react-icons/tb";
-import { MdEventSeat } from "react-icons/md";
-import { set } from "zod";
+import { MdOutlineEventSeat } from "react-icons/md";
 import QRCode from "easyqrcodejs";
 
 export default function Activity({ item, userId }) {
@@ -72,19 +71,28 @@ export default function Activity({ item, userId }) {
     <>
       <Card className="min-w-[18rem] max-w-[300px]" shadow="sm">
         <CardBody className="gap-2 p-5 rounded-2xl">
-          {item.speakers && (
+          {item.speakers && item.type !== "OTHER" && (
             <div className="text-tiny text-black/60 dark:text-white/60 uppercase font-bold mb-1">
               {item.type}
 
-              {enrolled && (
-                <Chip color="success" size="sm" className="ml-2 text-white">
-                  Enrolled
+              {item.enrollments && item.capacity == item.enrollments.length && (
+                <Chip
+                  color="danger"
+                  variant="bordered"
+                  size="sm"
+                  className="ml-2"
+                >
+                  Full
                 </Chip>
               )}
-
-              {item.enrollments && item.capacity == item.enrollments.length && (
-                <Chip color="danger" size="sm" className="ml-2 text-white">
-                  Full
+              {enrolled && (
+                <Chip
+                  color="success"
+                  variant="bordered"
+                  size="sm"
+                  className="ml-2"
+                >
+                  Enrolled
                 </Chip>
               )}
             </div>
@@ -95,6 +103,12 @@ export default function Activity({ item, userId }) {
               {item.description}
             </p>
           )}
+          <div className="flex flex-row mr-auto items-center">
+            <CiClock2 className="inline mr-2" />
+            <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
+              {item.startTime}h - {item.endTime}h
+            </p>
+          </div>
           {item.location && (
             <div className="flex flex-row mr-auto items-center">
               <CiMapPin className="inline mr-2" />
@@ -103,22 +117,17 @@ export default function Activity({ item, userId }) {
               </p>
             </div>
           )}
-          <div className="flex flex-row mr-auto items-center">
-            <CiClock2 className="inline mr-2" />
-            <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
-              {item.startTime}h - {item.endTime}h
-            </p>
-          </div>
-          {item.type == "WORKSHOP" && (
+          {item.type == "WORKSHOP" && item.enrollments?.length != 0 && (
             <div className="flex flex-row mr-auto items-center">
-              <MdEventSeat className="inline mr-2" />
+              <MdOutlineEventSeat className="inline mr-2" />
               <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
-                {item.enrollments !== undefined ? item.enrollments.length : 0}/{item.capacity}
+                {item.enrollments !== undefined ? item.enrollments.length : 0}/
+                {item.capacity}
               </p>
             </div>
           )}
         </CardBody>
-        {(item.location || item.speakers) && (
+        {item.speakers && item.type !== "OTHER" && (
           <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
             <Image
               src="https://avatars.githubusercontent.com/u/44109954?v=4"
@@ -153,8 +162,9 @@ export default function Activity({ item, userId }) {
                 <Button
                   size="sm"
                   radius="full"
+                  variant="faded"
                   color="primary"
-                  className="text-tiny text-white"
+                  className="text-tiny"
                   onClick={(e) => {
                     e.preventDefault();
                     onOpen();
