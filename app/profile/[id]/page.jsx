@@ -2,17 +2,30 @@
 
 import Activity from "@app/schedule/Activity";
 import QRCode from "easyqrcodejs";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import { Button, Spinner, ButtonGroup } from "@nextui-org/react";
+import {
+  Button,
+  Spinner,
+  ButtonGroup,
+  Avatar,
+  Image,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
+} from "@nextui-org/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Line } from "@components/Line";
+import { LineDots } from "@components/LineDots";
 import ActivityDayFilter from "@components/ActivityDayFilter";
+import { ArrowRight } from "@components/ArrowRight";
+import MinimalArrowDown from "@components/MinimalArrowDown";
 
 export default function Profile({ params: { id } }) {
   const [user, setUser] = useState({});
-  const [activeScreen, setActiveScreen] = useState(0);
+  const [activeScreen, setActiveScreen] = useState("enrolled");
   let count = 1;
   let maxCount = 0;
   const router = useRouter();
@@ -35,11 +48,12 @@ export default function Profile({ params: { id } }) {
   }, [id]);
 
   return (
-    <div className="bg-gradient-to-b from-sky-400 to-sky-300 dark:bg-black h-screen bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
-      <div className="gap-2 p-2 md:p-7 flex flex-col md:flex-row h-full">
-        <div className="flex flex-col flex-grow gap-2 p-2 justify-between">
-          <div className="px-2 flex flex-col items-left">
+    <div className="bg-gradient-to-r from-custom-blue-1 to-custom-blue-3 h-screen bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
+      <div className="p-5 md:p-7 flex flex-col md:flex-row h-full">
+        <div className="flex flex-col flex-grow gap-2 justify-between">
+          <div className="flex flex-col items-left">
             <ProfileNav
+              user={user}
               activeScreen={activeScreen}
               setActiveScreen={setActiveScreen}
             />
@@ -48,9 +62,9 @@ export default function Profile({ params: { id } }) {
 
         {status != "loading" ? (
           <div className="bg-transparent w-full h-full">
-            {activeScreen == 0 ? (
+            {activeScreen == "enrolled" ? (
               <ActivitiesSubscribed id={id} />
-            ) : activeScreen == 2 ? (
+            ) : activeScreen == "qrcode" ? (
               <Code user={user} id={id} />
             ) : (
               <></>
@@ -64,38 +78,105 @@ export default function Profile({ params: { id } }) {
   );
 }
 
-const ProfileNav = ({ activeScreen, setActiveScreen }) => {
+const ProfileNav = ({ user, activeScreen, setActiveScreen }) => {
+  const [selectedKeys, setSelectedKeys] = React.useState(
+    new Set([activeScreen])
+  );
+
+  useEffect(() => {
+    setActiveScreen(Array.from(selectedKeys).join(""));
+  }, [selectedKeys, setActiveScreen]);
+
+  const items = [
+    {
+      key: "enrolled",
+      label: "Enrolled Activities",
+    },
+    {
+      key: "qrcode",
+      label: "QR Code",
+    },
+  ];
+
   return (
     <>
       <div className="flex flex-row items-center">
-        <Button
-          disableRipple={true}
-          radius={"none"}
-          onClick={() => setActiveScreen(0)}
-          className={
-            activeScreen != 0
-              ? "flex flex-col text-white bg-transparent py-7"
-              : "pl-8 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold"
-          }
-        >
-          {activeScreen == 0 && <Line className="-ml-10" />}
-          <p className="text-2xl leading-5">ENROLLED ACTIVITIES</p>
-        </Button>
+        <Dropdown>
+          <DropdownTrigger>
+            <Button
+              disableRipple={true}
+              radius={"none"}
+              className="py-2 w-full h-fit justify-start overflow-visible flex flex-row bg-custombutton text-white relative border-l-2"
+            >
+              <div className="bg-yellow-300 h-4 w-4 rounded-full -translate-y-1/2 -translate-x-1/2 absolute top-0 left-0 "></div>
+              <div className="bg-yellow-300 h-4 w-4 rounded-full translate-y-1/2 -translate-x-1/2 absolute bottom-0 left-0 "></div>
+              <div className="flex gap-3 justify-start items-center w-full">
+                <Avatar
+                  src="/user.svg"
+                  size="md"
+                  className="bg-custom-blue-3 p-1 border-1 border-white/50"
+                />
+                <div className="flex flex-1 flex-col items-start whitespace-break-spaces text-left">
+                  <p className="text-xl uppercase font-extrabold">
+                    {items.find((v) => v.key == activeScreen).label}
+                  </p>
+                  <p className="">{user.name}</p>
+                </div>
+                <MinimalArrowDown className="rotate-90" />
+                {/* <Image width={50} alt="" src={"/arrow-down.svg"} /> */}
+              </div>
+            </Button>
+          </DropdownTrigger>
+
+          <DropdownMenu
+            aria-label="Dynamic Actions"
+            items={items}
+            variant="flat"
+            disallowEmptySelection
+            selectionMode="single"
+            selectedKeys={selectedKeys}
+            onSelectionChange={setSelectedKeys}
+          >
+            {(item) => <DropdownItem key={item.key}>{item.label}</DropdownItem>}
+          </DropdownMenu>
+        </Dropdown>
+      </div>
+      <div className="hidden md:block">
+        <div className="flex flex-row items-center">
+          <Button
+            disableRipple={true}
+            radius={"none"}
+            onClick={() => setSelectedKeys(new Set(["enrolled"]))}
+            className={
+              activeScreen != "enrolled"
+                ? "pl-3 flex flex-col text-white bg-transparent py-7"
+                : "pl-3 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold border-l-2"
+            }
+          >
+            {activeScreen == "enrolled" && <LineDots />}
+            <p className="text-2xl leading-5">ENROLLED ACTIVITIES</p>
+          </Button>
+        </div>
+        <div className="flex flex-row items-center">
+          <Button
+            disableRipple={true}
+            radius={"none"}
+            onClick={() => setSelectedKeys(new Set(["qrcode"]))}
+            className={
+              activeScreen != "qrcode"
+                ? "pl-3 flex flex-col text-white bg-transparent py-7"
+                : "pl-3 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold border-l-2"
+            }
+          >
+            {activeScreen == "qrcode" && <LineDots />}
+            <p className="text-2xl leading-5">QRCODE</p>
+          </Button>
+        </div>
       </div>
       <div className="flex flex-row items-center">
-        <Button
-          disableRipple={true}
-          radius={"none"}
-          onClick={() => setActiveScreen(2)}
-          className={
-            activeScreen != 2
-              ? "flex flex-col text-white bg-transparent py-7"
-              : "pl-8 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold"
-          }
-        >
-          {activeScreen == 2 && <Line className="-ml-10" />}
-          <p className="text-2xl leading-5">QRCODE</p>
-        </Button>
+        <div className="flex flex-col text-white bg-transparent py-7 pl-3">
+          <p className="text-2xl leading-5"> PONTOS: {user.points} </p>
+        </div>
       </div>
     </>
   );
@@ -180,14 +261,14 @@ const ActivitiesSubscribed = ({ id }) => {
 
   return (
     <div className="dark:bg-black/40 flex flex-col">
-      <div className="flex flex-col gap-y-1 px-5 ">
+      <div className="flex flex-col gap-y-1">
         <ActivityDayFilter
           selectedDay={selectedDay}
           setSelectedDay={setSelectedDay}
           days={getDays(activities)}
         >
           {!loading ? (
-            <>
+            <div className="md:ml-8 mt-8">
               <div className="mt-1 -mb-3 flex flex-row h-8">
                 <ButtonGroup>
                   <Button
@@ -200,13 +281,13 @@ const ActivitiesSubscribed = ({ id }) => {
                     className={type == "WORKSHOP" && "bg-white text-black"}
                     onClick={() => setType("WORKSHOP")}
                   >
-                    Workshops : {getWorkshopCount()}
+                    Workshops: {getWorkshopCount()}
                   </Button>
                   <Button
                     className={type == "OTHER" && "bg-white text-black"}
                     onClick={() => setType("OTHER")}
                   >
-                    Others : {getOtherCount()}
+                    Others: {getOtherCount()}
                   </Button>
                 </ButtonGroup>
               </div>
@@ -228,7 +309,7 @@ const ActivitiesSubscribed = ({ id }) => {
                   )
                 )}
               </div>
-            </>
+            </div>
           ) : (
             <Spinner className="w-full" color="white" size="lg" />
           )}
@@ -244,8 +325,6 @@ const Code = ({ user, id }) => {
     process.env.NEXT_PUBLIC_MODE == "development"
       ? process.env.NEXT_PUBLIC_BACKOFFICE_URL_DEVELOPMENT
       : process.env.NEXT_PUBLIC_BACKOFFICE_URL_PRODUCTION;
-
-  // console.log(currentUrl);
 
   useEffect(() => {
     var options = {
@@ -263,14 +342,14 @@ const Code = ({ user, id }) => {
   }, [qrcode, currentUrl, id]);
 
   return (
-    <div className="dark:bg-black/40 h-full">
+    <div className="dark:bg-black/40 h-full md:ml-8 mt-8">
       <div className="px-5 md:px-1 gap-3 flex flex-col h-full">
         <h2 className="text-white font-normal text-2xl md:text-lg leading-5">
           {" "}
           Points: {user.points}{" "}
         </h2>
         <div className="flex flex-wrap content-center justify-center h-full">
-          <div className="-mt-56 md:-mt-28" ref={qrcode}></div>
+          <div className="-mt-56 md:-mt-28 border-[12px] rounded-md border-white" ref={qrcode}></div>
         </div>
       </div>
     </div>

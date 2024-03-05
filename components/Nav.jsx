@@ -7,6 +7,7 @@ import { signOut } from "next-auth/react";
 import { PiSignOutDuotone } from "react-icons/pi";
 import { Button, Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const Nav = (props) => {
   const [user, setUser] = useState({});
@@ -46,6 +47,30 @@ const Nav = (props) => {
         <Link href="/faqs" className="nav_btn text-base">
           FAQs
         </Link>
+        { status == "loading" && (
+          <div className="flex items-center lg:gap-5 gap-3 ">
+            <Spinner color="white" size="sm" />
+            <span className="text-white font-poppins text-sm">Loading</span>
+          </div>
+        )}
+        
+        {
+          (status != "loading" && !user.name) && (
+            <>
+              <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
+
+              <Button
+                color="white"
+                variant="ghost"
+                className="font-comfortaa font-bold text-white"
+                onClick={() => router.push("/auth/signin")}
+              >
+                Sign In
+              </Button>
+            </>
+          )
+        }
+
         {user.role == "ADMIN" && (
           <>
             <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
@@ -54,40 +79,28 @@ const Nav = (props) => {
             </Link>
           </>
         )}
-
-        {user.name ? (
-          <div className="flex w-full justify-end items-center lg:gap-3 gap-2">
-            <Link href={`/profile/${user.id}`} className="nav_btn text-base">
-              Logged as{" "}
-              <strong className="font-bold text-lg ml-2">{user.name}</strong>
-            </Link>
-
-            <Button
-              className="font-poppins font-normal text-base text-white bg-blue-950"
-              onClick={signOut}
-            >
-              Sign Out
-            </Button>
-          </div>
-        ) : status == "loading" && !user.name ? (
-          <div className="flex items-center lg:gap-5 gap-3 ">
-            <Spinner color="white" size="sm" />
-            <span className="text-white font-poppins text-sm">Loading</span>
-          </div>
-        ) : (
+        {user.name && (
           <>
             <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
-
-            <Button
-              color="white"
-              variant="ghost"
-              className="font-comfortaa font-bold text-white"
-              onClick={() => router.push("/auth/signin")}
-            >
-              Sign In
-            </Button>
+            <Link href={`/profile/${user.id}`} className="nav_btn text-base">
+              Profile
+            </Link>
+            <div className="flex justify-end items-center lg:gap-3 gap-2">
+              <Button
+                className="font-poppins font-normal text-sm text-white"
+                variant="bordered"
+                size="md"
+                onClick={signOut}
+              >
+                Sign Out
+              </Button>
+            </div>
           </>
         )}
+
+          <div className="flex w-full justify-end items-center">
+            <Image src="/sci-logo.png" alt="Banner" width={75} height={75} />
+          </div>
       </div>
 
       {/* Mobile  */}
