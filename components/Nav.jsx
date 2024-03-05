@@ -47,6 +47,30 @@ const Nav = (props) => {
         <Link href="/faqs" className="nav_btn text-base">
           FAQs
         </Link>
+        { status == "loading" && (
+          <div className="flex items-center lg:gap-5 gap-3 ">
+            <Spinner color="white" size="sm" />
+            <span className="text-white font-poppins text-sm">Loading</span>
+          </div>
+        )}
+        
+        {
+          (status != "loading" && !user.name) && (
+            <>
+              <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
+
+              <Button
+                color="white"
+                variant="ghost"
+                className="font-comfortaa font-bold text-white"
+                onClick={() => router.push("/auth/signin")}
+              >
+                Sign In
+              </Button>
+            </>
+          )
+        }
+
         {user.role == "ADMIN" && (
           <>
             <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
@@ -74,29 +98,9 @@ const Nav = (props) => {
           </>
         )}
 
-        {user.name ? (
           <div className="flex w-full justify-end items-center">
             <Image src="/sci-logo.png" alt="Banner" width={75} height={75} />
           </div>
-        ) : status == "loading" && !user.name ? (
-          <div className="flex items-center lg:gap-5 gap-3 ">
-            <Spinner color="white" size="sm" />
-            <span className="text-white font-poppins text-sm">Loading</span>
-          </div>
-        ) : (
-          <>
-            <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
-
-            <Button
-              color="white"
-              variant="ghost"
-              className="font-comfortaa font-bold text-white"
-              onClick={() => router.push("/auth/signin")}
-            >
-              Sign In
-            </Button>
-          </>
-        )}
       </div>
 
       {/* Mobile  */}
