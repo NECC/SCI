@@ -113,8 +113,9 @@ const ProfileNav = ({ user, activeScreen, setActiveScreen }) => {
               <div className="bg-yellow-300 h-4 w-4 rounded-full translate-y-1/2 -translate-x-1/2 absolute bottom-0 left-0 "></div>
               <div className="flex gap-3 justify-start items-center w-full">
                 <Avatar
-                  src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                  src="/user.svg"
                   size="md"
+                  className="bg-custom-blue-3 p-1 border-1 border-white/50"
                 />
                 <div className="flex flex-1 flex-col items-start whitespace-break-spaces text-left">
                   <p className="text-xl uppercase font-extrabold">
