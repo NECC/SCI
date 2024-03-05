@@ -7,8 +7,8 @@ import Accordion from "@components/Accordion";
 export default function Faqs() {
 
     return (
-        <div className='h-screen bg-custom-blue-3'>
-            <div className='h-auto bg-custom-blue-3'>
+        <div className='h-screen bg-gradient-to-l from-custom-blue-3 to-custom-blue-1'>
+            <div className='h-auto bg-gradient-to-l from-custom-blue-3 to-custom-blue-1'>
                 <div className='md:pt-20 pt-10 flex lg:w-8/12 w-11/12 justify-center items-center m-auto'>
                     <div className='flex flex-col lg:w-1/2 gap-6'>
                         <p className='text-white md:text-5xl text-4xl font-extrabold'>FIND THE <span className='underline decoration-4'>ANSWER</span> TO YOUR QUESTIONS</p>

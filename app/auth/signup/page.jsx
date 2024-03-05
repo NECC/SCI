@@ -66,7 +66,7 @@ export default function SignUpPage() {
         >
           <Input
             type="text"
-            placeholder="Username"
+            placeholder="First and Last Name"
             labelPlacement="outside"
             className="w-[300px] mt-5 text-white"
             classNames={{
