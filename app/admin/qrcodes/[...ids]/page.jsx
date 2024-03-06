@@ -34,7 +34,9 @@ export default function QRCodesAdmin({ params: { ids } }) {
       activityId: parseInt(ids[0]),
     });
 
-    if (res.data.response === "error") setError(res.data.error);
+    const res2 = await axios.post("/api/ranking", { id: ids[1] });
+
+    if (res.data.response === "error" || res.data.response === "error") setError(res.data.error) || setError(res2.data.error);
     else setSuccess(true);
 
     setLoading(false);
