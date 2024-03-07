@@ -34,7 +34,7 @@ export async function DELETE(req, { params: { id }}) {
     return Response.json({ response: "success", enrollmentDeleted: enrollment.count })
   } catch (error) {
     prisma.$disconnect();
-    console.log(error);
+    // console.log(error);
     return Response.json({ response: "error", error: error })
 
   }

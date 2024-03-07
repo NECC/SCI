@@ -130,7 +130,7 @@ export async function POST(request) {
       JSON.stringify({ response: "success", enrollment: enrollment })
     );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })
     );

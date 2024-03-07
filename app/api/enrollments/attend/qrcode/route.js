@@ -45,7 +45,7 @@ export async function POST(request) {
     );
   } catch (error) {
     prisma.$disconnect();
-    console.log(error)
+    // console.log(error)
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })
     );

@@ -70,7 +70,7 @@ async function main() {
 
       
       // TODO: Foto do Júlio Santos ou Catia Santos
-      { "picUrl": defaultUrl, "title": "Tertúlia - Exploração de Recursos em Portugal", "description": "", "date": day18, "startTime": "17:00", "endTime": "18:30", "location": "", "capacity": 100, "speakers": "Moderadora: Cátia Pinto | Convidados: Júlio Santos, Ana Hilário, Rui Moura", "type": "TALK" },
+      { "picUrl": defaultUrl, "title": "Tertúlia - Exploração de Recursos em Portugal", "description": "", "date": day18, "startTime": "17:00", "endTime": "18:30", "location": "", "capacity": 100, "speakers": "Júlio Santos, Ana Hilário, Rui Moura", "type": "TALK" },
 
       { "picUrl": "", "title": "🤔 Quizz - DR. WHY", "description": "", "date": day18, "startTime": "18:30", "endTime": "20:30", "location": "", "capacity": 100, "speakers": "unknown", "type": "OTHER" },
 

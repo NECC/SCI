@@ -28,7 +28,7 @@ export async function GET() {
         picUrl: true,
       },
     });
-    console.log(activities);
+    // console.log(activities);
 
     prisma.$disconnect();
     return new NextResponse(

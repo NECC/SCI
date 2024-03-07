@@ -18,18 +18,18 @@ import { Types, ActivitySchema } from "/prisma/zod";
 export default function CreateActivity() {
   const router = useRouter();
   const onSubmit = (formData) => {
-    console.log(formData)
+    // console.log(formData)
     axios
       .post("/api/activities", formData)
       .then((res) => {
         if (res.status == 200) {
           router.push("/admin");
         } else {
-          console.log(res.data.message);
+          // console.log(res.data.message);
         }
       })
       .catch((err) => {
-        console.log(err.message)
+        // console.log(err.message)
       });
   }
 
