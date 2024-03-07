@@ -3,10 +3,12 @@ import AuthProvider from "@components/providers/AuthProviders";
 import NextUI from "@components/providers/NextUIProvider";
 import Nav from "@components/Nav";
 
-
 export const metadata = {
-  title: "SCI",
-  description: "jornadas da ciencia",
+  title: {
+    template: '%s | Sci',
+    default: 'Home | Sci'
+  },
+  description: "Jornadas da Ciência",
 };
 
 export default async function RootLayout({ children }) {
