@@ -120,7 +120,7 @@ async function main() {
 
       // ------------------------------------------- Dia 21 -------------------------------------------
       { "picUrl": defaultUrl, "title": "LinkedIn e CV", "description": "", "date": day21, "startTime": "10:00", "endTime": "12:00", "location": "", "capacity": 50, "speakers": "Vinicius Silva (NEBAUM)", "type": "WORKSHOP" },
-      { "picUrl": defaultUrl, "title": "Astrobiologia", "description": "", "date": day21, "startTime": "10:00", "endTime": "12:00", "location": "", "capacity": 50, "speakers": "", "type": "WORKSHOP" },
+      { "picUrl": defaultUrl, "title": "Astrobiologia", "description": "", "date": day21, "startTime": "10:00", "endTime": "12:00", "location": "", "capacity": 50, "speakers": "unknown", "type": "WORKSHOP" },
       { "picUrl": defaultUrl, "title": "Geofísica", "description": "", "date": day21, "startTime": "10:00", "endTime": "12:00", "location": "", "capacity": 50, "speakers": "Luís Gonçalves (NEGUM)", "type": "WORKSHOP" },
       { "picUrl": "/dia21/mathgurl.jpg", "title": "Uma palestra sobre Ciência, Matemática e Frustração", "description": "", "date": day21, "startTime": "14:00", "endTime": "15:00", "location": "Campus Gualtar, CP2 - Auditório B1", "capacity": 100, "speakers": "Inês Guimarães", "type": "TALK" },
       coffeeBreak({date: day21, startTime: "15:00", endTime: "15:30"}),
