@@ -31,39 +31,39 @@ export default function Admin() {
 
   const getUsers = async () => {
     const { data } = await axios.get("/api/users");
-    console.log(data.users);
+    // console.log(data.users);
     setRows(data.users);
     setBackupData(data.users);
   };
 
   const deleteActivities = async (id) => {
-    console.log(id);
+    // console.log(id);
     const { data } = await axios.delete(`/api/activities/delete/${id}`);
     getActivities();
   }
 
   const deleteUsers = async (id) => {
-    console.log(id);
+    // console.log(id);
     const { data } = await axios.delete(`/api/users/delete/${id}`);
     getUsers();
   };
 
   const deleteEnrollments = async (id) => {
-    console.log(id);
+    // console.log(id);
     const { data } = await axios.delete(`/api/enrollments/delete/${id}`);
     getEnrollments();
   };
 
   const getActivities = async () => {
     const { data } = await axios.get("/api/activities");
-    console.log(data.activities);
+    // console.log(data.activities);
     setRows(data.activities);
     setBackupData(data.activities);
   }
 
   const getEnrollments = async () => {
     const { data } = await axios.get("/api/enrollments");
-    console.log(data.enrollments);
+    // console.log(data.enrollments);
     setRows(data.enrollments.map((enrollment) => {
       return {
         activityId: enrollment.activity.id,
@@ -96,7 +96,7 @@ export default function Admin() {
 
   const handleActive = (e) => {
     const active = e.target.innerText?.toLowerCase();
-    console.log(active);
+    // console.log(active);
     setActive(active);
   };
 

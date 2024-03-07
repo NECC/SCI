@@ -27,7 +27,7 @@ export async function GET(req, {params: { id }}) {
         endTime: true,
       },
     });
-    console.log(activity);
+    // console.log(activity);
 
     prisma.$disconnect();
     return new NextResponse(

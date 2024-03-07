@@ -30,7 +30,7 @@ export const authOptions = {
           });
 
           if (findUser) {
-            console.log("User Exists!");
+            // console.log("User Exists!");
 
             const match = await bcrypt.compare(
               credentials.password,
@@ -38,13 +38,13 @@ export const authOptions = {
             );
 
             if (match) {
-              console.log("Passwords Match!");
+              // console.log("Passwords Match!");
               delete findUser.password;
               return findUser;
             }
           }
         } catch (error) {
-          console.log(error);
+          // console.log(error);
           return null;
         }
       },

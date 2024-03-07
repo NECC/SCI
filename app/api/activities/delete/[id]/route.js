@@ -58,7 +58,7 @@ export async function DELETE(req, { params: { id } }) {
       JSON.stringify({ response: "success", activityDeleted: activity })
     );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })

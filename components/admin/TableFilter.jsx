@@ -14,8 +14,8 @@ export default function TableFilter(props) {
   const [search, setSearch] = useState("");
 
   const handleChange = (e) => {
-    console.log(data);
-    console.log(e.target.value);
+    // console.log(data);
+    // console.log(e.target.value);
     setFilter(e.target.value);
   };
 

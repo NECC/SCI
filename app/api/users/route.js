@@ -45,7 +45,7 @@ export async function GET() {
       },
     },
   });
-  console.log(users);
+  // // console.log(users);
 
   return new NextResponse(
     JSON.stringify({ response: "success", users: users })
@@ -62,7 +62,7 @@ export async function GET() {
  */
 export async function POST(req) {
   const session = await getServerSession(authOptions);
-  console.log("SESSION FROM POST: ",session);
+  // console.log("SESSION FROM POST: ",session);
 
   if (session?.user.role != "ADMIN") {
     return new NextResponse(
@@ -120,13 +120,13 @@ export async function POST(req) {
       },
     });
 
-    console.log("User Created Successfully: ", user);
+    // console.log("User Created Successfully: ", user);
 
     return new NextResponse(
       JSON.stringify({ response: "User created Successfully.", user: user })
     );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })
     );
@@ -145,7 +145,7 @@ export async function PUT(req) {
   const uuid = data.uuid;
 
   const session = await getServerSession(authOptions);
-  // console.log("SESSION FROM POST: ",session);
+  // // console.log("SESSION FROM POST: ",session);
 
   if (session?.user.role != "ADMIN") {
     prisma.$disconnect();
@@ -176,7 +176,7 @@ export async function PUT(req) {
       JSON.stringify({ response: "success", userUpdated: user })
     );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: error })

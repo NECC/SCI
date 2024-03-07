@@ -24,7 +24,7 @@ export async function POST(request, context) {
   }
   
   const id = context.params.id;
-  console.log(id);
+  // console.log(id);
 
   try {
     const user = await prisma.user.findUnique({
@@ -52,7 +52,7 @@ export async function POST(request, context) {
       },
     });
 
-    console.log(update);
+    // console.log(update);
     
     prisma.$disconnect();
     return new NextResponse(
@@ -61,7 +61,7 @@ export async function POST(request, context) {
 
   } catch (error) {
 
-    console.log(error);
+    // console.log(error);
 
     prisma.$disconnect();
     return new NextResponse(

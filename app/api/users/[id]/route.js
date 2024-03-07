@@ -36,7 +36,7 @@ export async function GET(request, context) {
             },
         },
     });
-    console.log(user);
+    // console.log(user);
     prisma.$disconnect();
     return new NextResponse(
         JSON.stringify({ response: "success", user: user })
