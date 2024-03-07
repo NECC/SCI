@@ -24,6 +24,7 @@ import { set } from "zod";
 import QRCode from "easyqrcodejs";
 import jsPDF from "jspdf";
 import Pdf from "@components/Pdf";
+import PdfParticipacao from "@components/PdfParticipacao";  
 import { PDFDownloadLink } from "@react-pdf/renderer";
 
 // TODO: Loading state for the button

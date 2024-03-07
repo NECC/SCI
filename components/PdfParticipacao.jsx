@@ -52,6 +52,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Helvetica',
     },
+    Semana: {
+        marginTop: 15,
+        fontSize: 25,
+        color: 'white',
+        textAlign: 'center',
+        fontFamily: 'Helvetica-Bold',
+    },
     assinatura: {
         marginTop: 46,
         display: 'flex',
@@ -67,20 +74,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         marginTop: -25,
     },
-    atividade:{
-        color: 'white',
-        fontSize: 25,
-        textAlign: 'center',
-        marginTop: 5,
-        fontFamily: 'Helvetica-Oblique',
-
-    }
 });
 
 const Pdf = (props) => {
-    const { data, user } = props;
-const nome = user.name;
-const Nome = nome.charAt(0).toUpperCase() + nome.slice(1);
+    const { user } = props;
+    const nome = user.name;
+    const Nome = nome.charAt(0).toUpperCase() + nome.slice(1);
     return (
 
         <Document>
@@ -97,8 +96,8 @@ const Nome = nome.charAt(0).toUpperCase() + nome.slice(1);
                 <Text style={styles.title}>Certificado de Participação</ Text>
                 <Text style={styles.certificado}>Este certificado é concebido a </ Text>
                 <Text style={styles.name}> {Nome}</ Text>
-                <Text style={styles.presença}>Pela sua participação na atividade </ Text>
-                <Text style={styles.atividade}>{data.title}</Text>
+                <Text style={styles.presença}>Pela sua participação na</ Text>
+                <Text style={styles.Semana}>Semana da Ciência e Inovação 2024</ Text>
 
 
                 <View style={styles.assinatura}>
