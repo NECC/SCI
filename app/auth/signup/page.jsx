@@ -80,6 +80,7 @@ export default function SignUpPage() {
                 "font-normal",
                 "text-md",
                 "placeholder:text-white/60",
+                "bg-none"
               ],
               innerWrapper: ["bg-transparent"],
               inputWrapper: [
@@ -122,6 +123,7 @@ export default function SignUpPage() {
                 "font-normal",
                 "text-xl",
                 "placeholder:text-white/60",
+                "bg-none"
               ],
               innerWrapper: ["bg-transparent"],
               inputWrapper: [
@@ -165,6 +167,7 @@ export default function SignUpPage() {
                 "font-normal",
                 "text-md",
                 "placeholder:text-white/60",
+                "bg-none"
               ],
               innerWrapper: ["bg-transparent"],
               inputWrapper: [

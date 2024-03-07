@@ -175,7 +175,7 @@ const ProfileNav = ({ user, activeScreen, setActiveScreen }) => {
       </div>
       <div className="flex flex-row items-center">
         <div className="flex flex-col text-white bg-transparent py-7 pl-3">
-          <p className="text-2xl leading-5"> PONTOS: {user.points} </p>
+          <p className="text-2xl leading-5"> POINTS: {user.points} </p>
         </div>
       </div>
     </>
@@ -325,6 +325,8 @@ const Code = ({ user, id }) => {
     process.env.NEXT_PUBLIC_MODE == "development"
       ? process.env.NEXT_PUBLIC_BACKOFFICE_URL_DEVELOPMENT
       : process.env.NEXT_PUBLIC_BACKOFFICE_URL_PRODUCTION;
+
+  // console.log(currentUrl);
 
   useEffect(() => {
     var options = {

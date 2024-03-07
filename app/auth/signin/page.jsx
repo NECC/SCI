@@ -72,6 +72,7 @@ export default function SignInPage() {
               "font-bold",
               "text-md",
               "placeholder:text-white/60",
+              "bg-none"
             ],
             innerWrapper: ["bg-transparent"],
             inputWrapper: [
@@ -114,6 +115,7 @@ export default function SignInPage() {
               "font-bold",
               "text-xl",
               "placeholder:text-white/60",
+              "bg-none"
             ],
             innerWrapper: ["bg-transparent"],
             inputWrapper: [
