@@ -21,6 +21,7 @@ import { BsQrCode } from "react-icons/bs";
 import { TbFileDownload } from "react-icons/tb";
 import { MdOutlineEventSeat } from "react-icons/md";
 import QRCode from "easyqrcodejs";
+import { useRouter } from "next/navigation";
 
 // TODO: Loading state for the button
 
@@ -29,6 +30,7 @@ export default function Activity({ item, userId }) {
   const [enrolled, setEnrolled] = useState(false);
   const [attended, setAttended] = useState(false);
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
+  const router = useRouter();
 
   // console.log(attended);
   // // console.log(userId);
@@ -158,6 +160,10 @@ export default function Activity({ item, userId }) {
                   variant="solid"
                   endContent={!enrolled ? <FaLongArrowAltRight /> : <FaCheck />}
                   onClick={(e) => {
+                    if (userId == undefined) {
+                      router.push("/auth/signup");
+                      return;
+                    }
                     createEnrollment(item.id);
                   }}
                 >

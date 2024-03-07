@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input } from "@nextui-org/react";
+import { Button, Input, Spinner } from "@nextui-org/react";
 import { CiMail } from "react-icons/ci";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
@@ -16,17 +16,19 @@ import { UserSchema } from "/prisma/zod";
 
 export default function SignUpPage() {
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isLoading, isSubmitting },
   } = useForm({
     resolver: zodResolver(UserSchema),
   });
 
   const onSubmit = (formData) => {
+    setLoading(true);
     axios.post("/api/users/register", formData).then((res) => {
       if (res.status == 200) {
         if (res.data.response == "error") {
@@ -40,6 +42,7 @@ export default function SignUpPage() {
         }
       }
     });
+    setLoading(false);
   };
 
   return (
@@ -213,7 +216,9 @@ export default function SignUpPage() {
             color="primary"
             variant="shadow"
           >
-            Submit
+            {
+              (isLoading || loading || isSubmitting) ? <Spinner color="primary" size="md" /> : "Sign Up"
+            }
           </Button>
         </form>
       </div>

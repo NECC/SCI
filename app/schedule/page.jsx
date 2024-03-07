@@ -27,7 +27,7 @@ export default function Schedule() {
       activities.map((activity) => {
         return {
           ...activity,
-          enrollable: activity.capacity > activity.enrollments.length,
+          enrollable: activity.capacity > activity.enrollments.length && activity.type === "WORKSHOP",
           alreadyEnrolled: activity.enrollments.some(
             (enrollment) => enrollment.userId === session?.user.id
           ),
