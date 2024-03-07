@@ -326,6 +326,8 @@ const Code = ({ user, id }) => {
       ? process.env.NEXT_PUBLIC_BACKOFFICE_URL_DEVELOPMENT
       : process.env.NEXT_PUBLIC_BACKOFFICE_URL_PRODUCTION;
 
+  // console.log(currentUrl);
+
   useEffect(() => {
     var options = {
       text: "Bem-vindo ao evento",

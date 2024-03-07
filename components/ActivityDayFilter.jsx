@@ -17,7 +17,7 @@ function ActivityDayFilter({ selectedDay, setSelectedDay, days, children }) {
 
   return (
     <>
-      <div className="hidden md:flex flex-row items-center w-full justify-center text-white gap-10 bg-selectday">
+      <div className="hidden md:flex flex-row items-center w-full justify-center text-white gap-10 bg-gradient-to-r from-transparent from-20% via-custom-blue-2/80 to-transparent to-80%">
         {days.map((day) => (
           <div key={day} className="flex flex-row items-center cursor-pointer">
             {selectedDay === day && (
