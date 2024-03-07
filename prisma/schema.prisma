@@ -35,6 +35,7 @@ model Activity {
   type        Type
   endTime     String
   startTime   String
+  picUrl      String
   enrollments Enrollments[]
 }
 

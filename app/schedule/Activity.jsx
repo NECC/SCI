@@ -35,7 +35,7 @@ export default function Activity({ item, userId }) {
   // console.log(attended);
   // // console.log(userId);
   // console.log(item.enrollments.length, item.capacity, item.enrollments.length == item.capacity)
-  // console.log(item);
+  console.log(item);
 
   // TODO: Handle the userId properly (it's undefined for now)
   const createEnrollment = async (activityId, userId) => {
@@ -140,7 +140,7 @@ export default function Activity({ item, userId }) {
         {item.speakers && item.type !== "OTHER" && (
           <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
             <Image
-              src="https://avatars.githubusercontent.com/u/44109954?v=4"
+              src={item.picUrl}
               alt="logo"
               width={30}
               height={30}

@@ -25,6 +25,7 @@ export async function GET() {
         enrollments: true,
         startTime: true,
         endTime: true,
+        picUrl: true,
       },
     });
     console.log(activities);
