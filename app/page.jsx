@@ -19,20 +19,6 @@ import { Button } from "@nextui-org/react";
 const nucleos = Nucleos_logo.logo;
 const sponsor = sponsorData.Patrocinadores;
 
-/**
- * @session {
- *  email:"pedroaugennes@gmail.com",
- *  exp: 1703690045,
- *  iat: 1701098045,
- *  id: "de48905f-44e5-482c-80e4-533de1f160f8",
- *  jti: "56ea8bf1-74b9-4da1-8dbc-a3080ab849dc",
- *  name:"pedro",
- *  points:0,
- *  role:"USER",
- *  sub:"de48905f-44e5-482c-80e4-533de1f160f8"
- * }
- */
-
 export default function Home() {
   const [user, setUser] = useState({});
 
@@ -73,13 +59,13 @@ export default function Home() {
               SEMANA DA CIÊNCIA E INOVAÇÃO
             </p>
             <div className="flex justify-start items-center gap-4 mb-[70px]">
-              <Link href="/auth/signup">
+              <Link href="/schedule">
                 <Button
                   color="warning"
                   variant="shadow"
                   className=" rounded-lg text-white font-bold"
                 >
-                  Register here
+                  Explore
                 </Button>
               </Link>
 
@@ -165,9 +151,9 @@ export default function Home() {
                     <Image
                       src="/sponsor/jordao.svg"
                       alt="Jordão"
-                      width={270}
+                      width={400}
                       height={270}
-                      className="hover:scale-105"
+                      className="hover:scale-105 md:-mt-10"
                     />
                   </a>
                 </div>
@@ -179,7 +165,7 @@ export default function Home() {
                     <Image
                       src="/sponsor/dst.svg"
                       alt="DST"
-                      width={270}
+                      width={400}
                       height={270}
                       className="hover:scale-105"
                     />

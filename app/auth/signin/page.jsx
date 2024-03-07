@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input } from "@nextui-org/react";
+import { Button, Input, Spinner } from "@nextui-org/react";
 import { CiMail } from "react-icons/ci";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { signIn } from "next-auth/react";
@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 export default function SignInPage() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -23,11 +24,11 @@ export default function SignInPage() {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     signIn("credentials", {
       email: formData.email,
       password: formData.password,
       redirect: false,
-      callbackUrl: "/",
     }).then((res) => {
       if (res.ok) {
         router.push("/");
@@ -36,6 +37,7 @@ export default function SignInPage() {
         setError(true);
       }
     });
+    setLoading(false);
   };
 
   return (
@@ -151,9 +153,14 @@ export default function SignInPage() {
           auto
           color="primary"
           variant="shadow"
-          onPress={handleSubmit}
+          onPress={() => {
+            setLoading(true);
+            handleSubmit();
+          }}
         >
-          Submit
+          {
+            loading ? <Spinner color="primary" size="md" /> : "Sign In"
+          }
         </Button>
       </div>
     </div>

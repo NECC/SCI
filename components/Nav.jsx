@@ -47,29 +47,27 @@ const Nav = (props) => {
         <Link href="/faqs" className="nav_btn text-base">
           FAQs
         </Link>
-        { status == "loading" && (
+        {status == "loading" && (
           <div className="flex items-center lg:gap-5 gap-3 ">
             <Spinner color="white" size="sm" />
             <span className="text-white font-poppins text-sm">Loading</span>
           </div>
         )}
-        
-        {
-          (status != "loading" && !user.name) && (
-            <>
-              <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
 
-              <Button
-                color="white"
-                variant="ghost"
-                className="font-comfortaa font-bold text-white"
-                onClick={() => router.push("/auth/signin")}
-              >
-                Sign In
-              </Button>
-            </>
-          )
-        }
+        {status != "loading" && !user.name && (
+          <>
+            <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
+
+            <Button
+              color="white"
+              variant="ghost"
+              className="font-comfortaa font-bold text-white"
+              onClick={() => router.push("/auth/signin")}
+            >
+              Sign In
+            </Button>
+          </>
+        )}
 
         {user.role == "ADMIN" && (
           <>
@@ -97,10 +95,11 @@ const Nav = (props) => {
             </div>
           </>
         )}
-
-          <div className="flex w-full justify-end items-center">
+        <div className="w-full flex justify-end items-center">
+          <Link href="/" className="w-[70px] flex justify-end items-center hover:w-[75px] transition-all">
             <Image src="/sci-logo.png" alt="Banner" width={75} height={75} />
-          </div>
+          </Link>
+        </div>
       </div>
 
       {/* Mobile  */}
