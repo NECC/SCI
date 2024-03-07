@@ -56,7 +56,6 @@ export default function Profile({ params: { id } }) {
               user={user}
               activeScreen={activeScreen}
               setActiveScreen={setActiveScreen}
-              user={user}
             />
           </div>
         </div>
