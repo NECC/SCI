@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
 import axios from "axios";
 import {
   Card,
@@ -23,6 +23,8 @@ import { MdEventSeat } from "react-icons/md";
 import { set } from "zod";
 import QRCode from "easyqrcodejs";
 import jsPDF from "jspdf";
+import Pdf from "@components/Pdf";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 // TODO: Loading state for the button
 
@@ -31,32 +33,33 @@ export default function Activity({ item, userId }) {
   const [enrolled, setEnrolled] = useState(false);
   const [attended, setAttended] = useState(false);
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
+  const [dados, setDados] = useState({});
 
   // console.log(attended);
   // console.log(userId);
   // console.log(item.enrollments.length, item.capacity, item.enrollments.length == item.capacity)
-  console.log(item);
-
-  const sendPdf = async () => {        
-    const doc = new jsPDF({
-      orientation: "landscape",
-      unit: "px",
-      format: [500, 300],
-    });
-    doc.html(`<div style="width: 500px; height: 299.5px; background-color: blue;"><h1>Atividade: ${item.title}</h1></div>`, {
-      callback: function (doc) {
-        doc.putTotalPages(1)
-        doc.save("certificate.pdf");
-      },
-    })
-
-    // TODO: Send the PDF to the backend to send the user email
-    // TODO: For this, we should do an email confirmation when creating an account
-    // const res = await axios.post("/api/email", { id, pdf: doc.output("datauristring") });
-    // console.log(res)
+  /*   console.log(item);
+   */
+  useEffect(() => {
+    const downloadCertificate = async () => {
+      const { data } = await axios.get(
+        `/api/users/${userId}`
+      );
+      setDados(data.user);
+    }
+    downloadCertificate();
+  }, [userId])
 
 
-}
+  console.log(dados)
+
+  // TODO: Send the PDF to the backend to send the user email
+  // TODO: For this, we should do an email confirmation when creating an account
+  // const res = await axios.post("/api/email", { id, pdf: doc.output("datauristring") });
+  // console.log(res)
+
+
+
 
   // TODO: Handle the userId properly (it's undefined for now)
   const createEnrollment = async (activityId, userId) => {
@@ -191,19 +194,16 @@ export default function Activity({ item, userId }) {
             )}
             {attended && (
               <div className="flex flex-row ml-auto">
-                <Button
-                  size="sm"
-                  radius="full"
-                  color="success"
-                  className="text-tiny text-white"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    sendPdf();
-                    e.stopPropagation();
-                  }}
-                >
-                  Certificate <TbFileDownload />
-                </Button>
+                <PDFDownloadLink document={<Pdf data={item} user={dados}  />} fileName="certificate.pdf">
+                  <Button
+                    size="sm"
+                    radius="full"
+                    color="success"
+                    className="text-tiny text-white">
+                    Certificate <TbFileDownload />
+                  </Button>
+                </PDFDownloadLink>
+
               </div>
             )}
           </CardFooter>
