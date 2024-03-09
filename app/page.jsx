@@ -106,11 +106,7 @@ export default function Home() {
           >
             <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
               <p className="text-white font-poppins font-light leading-8 lg:w-[70%] ">
-                {" "}
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad
-                repellat soluta aspernatur natus nobis quos porro velit, illum
-                nihil magni cupiditate! Sunt pariatur ratione, maiores velit
-                officiis quod eum quisquam!
+              Prepare to embark on a journey of exploration and discovery as we delve into the realms of science and innovation over the course of four exhilarating days. Our event is designed to ignite curiosity, foster collaboration, and inspire the next generation of innovators. Throughout the week, we will host a diverse array of workshops, thought-provoking talks, and engaging pitches from pioneering companies. Whether you&apos;re passionate about cutting-edge research, eager to learn new skills, or seeking inspiration for your own entrepreneurial endeavors, there&apos;s something here for everyone.
               </p>
             </div>
           </motion.div>
@@ -250,14 +246,7 @@ export default function Home() {
                 </div>
                 <div className="md:w-5/12 md:mt-0 mt-9 text-white font-poppins font-light leading-8">
                   <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Quam ea ipsa consequatur culpa assumenda atque eius suscipit
-                    veritatis neque dolore sed explicabo perferendis quae
-                    mollitia provident, optio facere voluptatum. Dolores? Lorem
-                    ipsum dolor sit amet consectetur adipisicing elit. Dolorum,
-                    ut facere eos, voluptate repellendus iusto praesentium totam
-                    quas natus quo, libero veritatis! Magni, voluptatum laborum
-                    beatae dolorum saepe recusandae numquam?
+                  We&apos;re excited to have you join us at Universidade do Minho. You can find us at both CP1 and CP2. Whether you&apos;re looking to explore the latest innovations or delve into scientific discoveries, our event has something for everyone. Join us and be part of this celebration of knowledge and creativity.
                   </p>
                 </div>
               </div>

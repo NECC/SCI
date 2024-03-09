@@ -7,9 +7,9 @@ const Sponsor = (data) => {
                 <Image
                     src={data.path}
                     alt={data.name}
-                    width={150}
+                    width={data.size}
                     height={150}
-                    className='hover:scale-105 lg:ml-[100px]'
+                    className={`hover:scale-105 lg:ml-[40px]`}
                 />  
             </a>
         </div>
