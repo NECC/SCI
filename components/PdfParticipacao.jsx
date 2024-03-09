@@ -81,7 +81,7 @@ const Pdf = (props) => {
     return (
 
         <Document>
-            <Page size="LETTER" orientation="landscape" style={styles.page}>
+            <Page size="SRA4" orientation="landscape" style={styles.page}>
                 <View style={styles.content}>
                     <Image src="./bg-pdf.png" alt="abj" style={{ width: '100%', height: '100%' }} />
                 </View>
