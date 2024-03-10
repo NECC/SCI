@@ -22,8 +22,9 @@ import { TbFileDownload } from "react-icons/tb";
 import { MdOutlineEventSeat } from "react-icons/md";
 import QRCode from "easyqrcodejs";
 import { useRouter } from "next/navigation";
-import Pdf from "@components/Pdf";
+import Pdf from "@/components/Pdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { Spinner } from "@nextui-org/react";
 // TODO: Loading state for the button
 
 export default function Activity({ item, userId }) {
@@ -202,13 +203,14 @@ export default function Activity({ item, userId }) {
             {attended && (
               <div className="flex flex-row ml-auto">
                 <PDFDownloadLink document={<Pdf data={item} user={dados} />} fileName="certificate.pdf">
-                  <Button
-                    size="sm"
-                    radius="full"
-                    color="success"
-                    className="text-tiny text-white">
-                    Certificate <TbFileDownload />
-                  </Button>
+                  {({ loading }) => (loading ? <Spinner color="custom-blue-3" size="sm" /> :
+                    <Button
+                      size="sm"
+                      radius="full"
+                      color="success"
+                      className="text-tiny text-white">
+                      Certificate <TbFileDownload />
+                    </Button>)}
                 </PDFDownloadLink>
               </div>
             )}

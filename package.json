@@ -25,6 +25,7 @@
     "next": "14.0.3",
     "next-auth": "^4.24.5",
     "next-themes": "^0.2.1",
+    "pdfjs-dist": "^3.4.120",
     "react": "^18",
     "react-awesome-reveal": "^4.2.8",
     "react-dom": "^18",
