@@ -72,7 +72,7 @@ async function main() {
       // TODO: Foto do Júlio Santos ou Catia Santos
       { "picUrl": defaultUrl, "title": "Tertúlia - Exploração de Recursos em Portugal", "description": "", "date": day18, "startTime": "17:00", "endTime": "18:30", "location": "", "capacity": 100, "speakers": "Júlio Santos, Ana Hilário, Rui Moura", "type": "TALK" },
 
-      { "picUrl": "", "title": "🤔 Quizz - DR. WHY", "description": "", "date": day18, "startTime": "18:30", "endTime": "20:30", "location": "", "capacity": 100, "speakers": "unknown", "type": "OTHER" },
+      { "picUrl": "", "title": "🤔 Quizz - DR. WHY", "description": "", "date": day18, "startTime": "21:00", "endTime": "23:30", "location": "", "capacity": 100, "speakers": "unknown", "type": "OTHER" },
 
 
       // ------------------------------ Dia 19 ------------------------------
@@ -91,7 +91,7 @@ async function main() {
       { "picUrl": defaultUrl, "title": "Trabalhos Mestrados", "description": "Genética, Biologia Molecular, Bioinformática", "date": day19, "startTime": "12:00", "endTime": "12:30", "location": "", "capacity": 100, "speakers": "unknown", "type": "TALK" },
 
 
-      { "picUrl": "/dia19/Susana_Costa.JPG", "title": "Aditivos alimentares: Como identificá-los?", "description": "", "date": day19, "startTime": "14:00", "endTime": "15:30", "location": "", "capacity": 50, "speakers": "Susana Costa", "type": "WORKSHOP" },
+      { "picUrl": "/dia19/Susana_Costa.jpg", "title": "Aditivos alimentares: Como identificá-los?", "description": "", "date": day19, "startTime": "14:00", "endTime": "15:30", "location": "", "capacity": 50, "speakers": "Susana Costa", "type": "WORKSHOP" },
       { "picUrl": "/dia19/Paula_Sampaio.png", "title": "The One Health Concept", "description": "", "date": day19, "startTime": "14:00", "endTime": "15:00", "location": "Campus Gualtar, CP2 - Auditório B1", "capacity": 100, "speakers": "Paula Sampaio", "type": "TALK" },
       coffeeBreak({date: day19, startTime: "15:00", endTime: "15:30"}),
       { "picUrl": "/dia19/Fernanda_Proença.jpg", "title": "Alguns desafios da Química: Dos fármacos aos nanomateriais", "description": "", "date": day19, "startTime": "15:30", "endTime": "16:30", "location": "Campus Gualtar, CP2 - Auditório B1", "capacity": 100, "speakers": "Fernanda Proença", "type": "TALK" },
@@ -114,8 +114,8 @@ async function main() {
       { "picUrl": "/dia20/ana_neri.jpg", "title": "Quantum error correction / mitigation", "description": "", "date": day20, "startTime": "15:30", "endTime": "16:00", "location": "", "capacity": 100, "speakers": "Ana Neri (INESC TEC)", "type": "TALK" },
       { "picUrl": "/dia20/jaime_santos.png", "title": "Quantum walks on directed and oriented graphs", "description": "", "date": day20, "startTime": "16:00", "endTime": "16:30", "location": "", "capacity": 100, "speakers": "Jaime Santos (INESC TEC)", "type": "TALK" },
 
-      { "picUrl": "/dia18/Bruno_Jardim.jpeg", "title": "Impacto da Computação Quântica", "description": "", "date": day20, "startTime": "16:30", "endTime": "18:00", "location": "", "capacity": 100, "speakers": "Luís Barbosa, Ernesto Galvão (INL), Luís Santos", "type": "TALK" },
-      { "picUrl": defaultUrl, "title": "🍻 RALLY", "description": "", "date": day20, "startTime": "21:00", "endTime": "22:00", "location": "", "capacity": 100, "speakers": "unknown", "type": "OTHER" },
+      { "picUrl": "/dia20/ernesto_galvao.jpg", "title": "Impacto da Computação Quântica", "description": "", "date": day20, "startTime": "16:30", "endTime": "18:00", "location": "", "capacity": 100, "speakers": "Luís Barbosa, Ernesto Galvão (INL), Luís Santos", "type": "TALK" },
+      { "picUrl": defaultUrl, "title": "🍻 RALLY", "description": "", "date": day20, "startTime": "21:00", "endTime": "22:00", "location": "", "capacity": 100, "speakers": "", "type": "OTHER" },
 
 
       // ------------------------------------------- Dia 21 -------------------------------------------

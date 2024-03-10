@@ -32,12 +32,13 @@ export default function SignInPage() {
     }).then((res) => {
       if (res.ok) {
         router.push("/");
+        setLoading(false);
         setError(false);
       } else {
+        setLoading(false);
         setError(true);
       }
     });
-    setLoading(false);
   };
 
   return (

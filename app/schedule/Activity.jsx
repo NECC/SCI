@@ -28,7 +28,7 @@ import { Spinner } from "@nextui-org/react";
 // TODO: Loading state for the button
 
 export default function Activity({ item, userId }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [enrolled, setEnrolled] = useState(false);
   const [attended, setAttended] = useState(false);
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
@@ -59,6 +59,7 @@ export default function Activity({ item, userId }) {
   }, [item.alreadyEnrolled]);
 
   useEffect(() => {
+    setLoading(true);
     const getAttended = async () => {
       if (userId == undefined) return;
 
@@ -68,19 +69,23 @@ export default function Activity({ item, userId }) {
       );
       // console.log(data.attended);
       setAttended(data.attended);
-      setLoading(false);
-    };
-
-    const downloadCertificate = async () => {
-      const { data } = await axios.get(
-        `/api/users/${userId}`
-      );
-      setDados(data.user);
     };
 
     getAttended();
-    downloadCertificate();
+    setLoading(false);
   }, [userId, item.id]);
+
+
+  useEffect(() => {
+    setLoading(true);
+    const downloadCertificate = async () => {
+      const { data } = await axios.get(`/api/users/${userId}`);
+      setDados(data.user);
+    };
+
+    downloadCertificate();
+    setLoading(false);
+  }, [userId]);
 
   return (
     <>
@@ -138,24 +143,21 @@ export default function Activity({ item, userId }) {
               </p>
             </div>
           )}
-          {item.type == "WORKSHOP" && item.enrollments?.length != 0 && (item.enrollments?.length) && (
-            <div className="flex flex-row mr-auto items-center">
-              <MdOutlineEventSeat className="inline mr-2" />
-              <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
-                {item.enrollments !== undefined ? item.enrollments.length : 0}/
-                {item.capacity}
-              </p>
-            </div>
-          )}
+          {item.type == "WORKSHOP" &&
+            item.enrollments?.length != 0 &&
+            item.enrollments?.length && (
+              <div className="flex flex-row mr-auto items-center">
+                <MdOutlineEventSeat className="inline mr-2" />
+                <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
+                  {item.enrollments !== undefined ? item.enrollments.length : 0}
+                  /{item.capacity}
+                </p>
+              </div>
+            )}
         </CardBody>
         {item.speakers && item.type !== "OTHER" && (
           <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
-            <Image
-              src={item.picUrl}
-              alt="logo"
-              width={30}
-              height={30}
-            />
+            <Image src={item.picUrl} alt="logo" width={30} height={30} />
             <p className="text-tiny dark:text-white/60 font-medium">
               {item.speakers}
             </p>
@@ -182,35 +184,47 @@ export default function Activity({ item, userId }) {
                 </Button>
               </div>
             )}
+            
             {item.alreadyEnrolled && userId && !attended && (
               <div className="ml-auto">
-                <Button
-                  size="sm"
-                  radius="full"
-                  variant="faded"
-                  color="primary"
-                  className="text-tiny"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onOpen();
-                    e.stopPropagation();
-                  }}
-                >
-                  <BsQrCode className="text-medium" />
-                </Button>
+                { !loading && (
+                  <Button
+                    size="sm"
+                    radius="full"
+                    variant="faded"
+                    color="primary"
+                    className="text-tiny"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onOpen();
+                      e.stopPropagation();
+                    }}
+                  >
+                    <BsQrCode className="text-medium" />
+                  </Button>
+                )}
               </div>
             )}
             {attended && (
               <div className="flex flex-row ml-auto">
-                <PDFDownloadLink document={<Pdf data={item} user={dados} />} fileName="certificate.pdf">
-                  {({ loading }) => (loading ? <Spinner color="custom-blue-3" size="sm" /> :
-                    <Button
-                      size="sm"
-                      radius="full"
-                      color="success"
-                      className="text-tiny text-white">
-                      Certificate <TbFileDownload />
-                    </Button>)}
+                <PDFDownloadLink
+                  document={<Pdf data={item} user={dados} />}
+                  fileName="certificate.pdf"
+                >
+                  {({ loading }) =>
+                    loading ? (
+                      <Spinner color="custom-blue-3" size="sm" />
+                    ) : (
+                      <Button
+                        size="sm"
+                        radius="full"
+                        color="success"
+                        className="text-tiny text-white"
+                      >
+                        Certificate <TbFileDownload />
+                      </Button>
+                    )
+                  }
                 </PDFDownloadLink>
               </div>
             )}
