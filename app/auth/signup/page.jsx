@@ -33,16 +33,17 @@ export default function SignUpPage() {
       if (res.status == 200) {
         if (res.data.response == "error") {
           setError(res.data.error);
+          setLoading(false);
         } else {
           signIn("credentials", {
             email: formData.email,
             password: formData.password,
             callbackUrl: "/",
           });
+          setLoading(false);
         }
       }
     });
-    setLoading(false);
   };
 
   return (
