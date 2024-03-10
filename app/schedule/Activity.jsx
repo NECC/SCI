@@ -205,7 +205,7 @@ export default function Activity({ item, userId }) {
                 )}
               </div>
             )}
-            {attended && (
+            {attended && dados.name && (
               <div className="flex flex-row ml-auto">
                 <PDFDownloadLink
                   document={<Pdf data={item} user={dados} />}
