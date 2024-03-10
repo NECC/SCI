@@ -85,10 +85,7 @@ export default function Home() {
 
             <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute lg:block hidden">
               <div className="w-full h-full relative">
-                <div className="bg-yellow-300 h-5 w-5 rounded-full -translate-y-2/4 translate-x-2/4 absolute top-0 right-0 "></div>
-                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 translate-x-2/4 absolute bottom-0 right-0 "></div>
-                <div className="bg-blue-950 h-5 w-5 rounded-full -translate-y-2/4 -translate-x-2/4 absolute top-0 left-0 "></div>
-                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 -translate-x-2/4 absolute bottom-0 left-0 "></div>
+                <Bolas />
               </div>
             </div>
           </div>
@@ -106,11 +103,7 @@ export default function Home() {
           >
             <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
               <p className="text-white font-poppins font-light leading-8 lg:w-[70%] ">
-                {" "}
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ad
-                repellat soluta aspernatur natus nobis quos porro velit, illum
-                nihil magni cupiditate! Sunt pariatur ratione, maiores velit
-                officiis quod eum quisquam!
+                Prepare to embark on a journey of exploration and discovery as we delve into the realms of science and innovation over the course of four exhilarating days. Our event is designed to ignite curiosity, foster collaboration, and inspire the next generation of innovators. Throughout the week, we will host a diverse array of workshops, thought-provoking talks, and engaging pitches from pioneering companies. Whether you&apos;re passionate about cutting-edge research, eager to learn new skills, or seeking inspiration for your own entrepreneurial endeavors, there&apos;s something here for everyone.
               </p>
             </div>
           </motion.div>
@@ -124,10 +117,7 @@ export default function Home() {
 
             <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute  lg:block hidden">
               <div className="w-full h-full relative">
-                <div className="bg-yellow-300 h-5 w-5 rounded-full -translate-y-2/4 translate-x-2/4 absolute top-0 right-0 "></div>
-                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 translate-x-2/4 absolute bottom-0 right-0 "></div>
-                <div className="bg-blue-950 h-5 w-5 rounded-full -translate-y-2/4 -translate-x-2/4 absolute top-0 left-0 "></div>
-                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 -translate-x-2/4 absolute bottom-0 left-0 "></div>
+              <Bolas />
               </div>
             </div>
           </div>
@@ -187,10 +177,7 @@ export default function Home() {
             <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute lg:block hidden">
               <div className="w-full h-full relative">
-                <div className="bg-yellow-300 h-5 w-5 rounded-full -translate-y-2/4 translate-x-2/4 absolute top-0 right-0 "></div>
-                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 translate-x-2/4 absolute bottom-0 right-0 "></div>
-                <div className="bg-blue-950 h-5 w-5 rounded-full -translate-y-2/4 -translate-x-2/4 absolute top-0 left-0 "></div>
-                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 -translate-x-2/4 absolute bottom-0 left-0 "></div>
+               <Bolas />
               </div>
             </div>
           </div>
@@ -224,10 +211,7 @@ export default function Home() {
 
             <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute lg:block hidden">
               <div className="w-full h-full relative">
-                <div className="bg-yellow-300 h-5 w-5 rounded-full -translate-y-2/4 translate-x-2/4 absolute top-0 right-0 "></div>
-                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 translate-x-2/4 absolute bottom-0 right-0 "></div>
-                <div className="bg-blue-950 h-5 w-5 rounded-full -translate-y-2/4 -translate-x-2/4 absolute top-0 left-0 "></div>
-                <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 -translate-x-2/4 absolute bottom-0 left-0 "></div>
+                <Bolas />
               </div>
             </div>
           </div>
@@ -250,14 +234,7 @@ export default function Home() {
                 </div>
                 <div className="md:w-5/12 md:mt-0 mt-9 text-white font-poppins font-light leading-8">
                   <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Quam ea ipsa consequatur culpa assumenda atque eius suscipit
-                    veritatis neque dolore sed explicabo perferendis quae
-                    mollitia provident, optio facere voluptatum. Dolores? Lorem
-                    ipsum dolor sit amet consectetur adipisicing elit. Dolorum,
-                    ut facere eos, voluptate repellendus iusto praesentium totam
-                    quas natus quo, libero veritatis! Magni, voluptatum laborum
-                    beatae dolorum saepe recusandae numquam?
+                    We&apos;re excited to have you join us at Universidade do Minho. You can find us at both CP1 and CP2. Whether you&apos;re looking to explore the latest innovations or delve into scientific discoveries, our event has something for everyone. Join us and be part of this celebration of knowledge and creativity.
                   </p>
                 </div>
               </div>
@@ -273,5 +250,15 @@ export default function Home() {
       </div>
       <Footer />
     </div>
+  );
+}
+const Bolas = () => {
+  return (
+    <>
+      <div className="bg-yellow-300 h-5 w-5 rounded-full -translate-y-2/4 translate-x-2/4 absolute top-0 right-0 "></div>
+      <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 translate-x-2/4 absolute bottom-0 right-0 "></div>
+      <div className="bg-blue-950 h-5 w-5 rounded-full -translate-y-2/4 -translate-x-2/4 absolute top-0 left-0 "></div>
+      <div className="bg-yellow-300 h-5 w-5 rounded-full translate-y-2/4 -translate-x-2/4 absolute bottom-0 left-0 "></div>
+    </>
   );
 }

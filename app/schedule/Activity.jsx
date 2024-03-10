@@ -22,7 +22,9 @@ import { TbFileDownload } from "react-icons/tb";
 import { MdOutlineEventSeat } from "react-icons/md";
 import QRCode from "easyqrcodejs";
 import { useRouter } from "next/navigation";
-
+import Pdf from "@/components/Pdf";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { Spinner } from "@nextui-org/react";
 // TODO: Loading state for the button
 
 export default function Activity({ item, userId }) {
@@ -31,7 +33,7 @@ export default function Activity({ item, userId }) {
   const [attended, setAttended] = useState(false);
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
   const router = useRouter();
-
+  const [dados, setDados] = useState({});
   // console.log(attended);
   // // console.log(userId);
   // console.log(item.enrollments.length, item.capacity, item.enrollments.length == item.capacity)
@@ -68,7 +70,16 @@ export default function Activity({ item, userId }) {
       setAttended(data.attended);
       setLoading(false);
     };
+
+    const downloadCertificate = async () => {
+      const { data } = await axios.get(
+        `/api/users/${userId}`
+      );
+      setDados(data.user);
+    };
+
     getAttended();
+    downloadCertificate();
   }, [userId, item.id]);
 
   return (
@@ -191,18 +202,16 @@ export default function Activity({ item, userId }) {
             )}
             {attended && (
               <div className="flex flex-row ml-auto">
-                <Button
-                  size="sm"
-                  radius="full"
-                  color="success"
-                  className="text-tiny text-white"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                >
-                  Certificate <TbFileDownload />
-                </Button>
+                <PDFDownloadLink document={<Pdf data={item} user={dados} />} fileName="certificate.pdf">
+                  {({ loading }) => (loading ? <Spinner color="custom-blue-3" size="sm" /> :
+                    <Button
+                      size="sm"
+                      radius="full"
+                      color="success"
+                      className="text-tiny text-white">
+                      Certificate <TbFileDownload />
+                    </Button>)}
+                </PDFDownloadLink>
               </div>
             )}
           </CardFooter>

@@ -3,13 +3,15 @@
         {
             "name": "Leica",
             "path": "/sponsor/leica.png",
-            "link": "https://www.leica.pt/"
+            "link": "https://www.leica.pt/",
+            "size": 100
         },
         
         {
             "name": "Promptly",
             "path": "/sponsor/promptly.svg",
-            "link": "https://promptlyhealth.com/en"
+            "link": "https://promptlyhealth.com/en",
+            "size": 200
         }
     ]
 }
