@@ -13,25 +13,10 @@ export default function Schedule() {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(null);
-  const [dados, setDados] = useState({});
 
   const { data: session, status } = useSession({
     required: false,
   });
-
-  useEffect(() => {
-    const downloadCertificate = async () => {
-      setLoading(true);
-      const { data } = await axios.get(`/api/users/${session?.user.id}`);
-      setDados(data.user);
-      setUserId(data.user?.id);
-      setLoading(false);
-    };
-
-    downloadCertificate();
-  }, [session, status]);
-
-  console.log(dados);
 
   const getActivitiesGroupedByDay = async () => {
     const { data } = await axios.get(`/api/activities`);
@@ -90,10 +75,13 @@ export default function Schedule() {
       setActivities(data);
       setSelectedDay(getDays(data)[0]);
       setLoading(false);
+      if (session?.user.id) {
+        setUserId(session.user.id);
+      }
       // console.log("Data: ", data)
     };
     fetchActivities();
-  }, []);
+  }, [status]);
 
   // TODO: Move this to a helper function
   const groupAndSortActivitiesByDay = (activities) => {
@@ -140,7 +128,7 @@ export default function Schedule() {
                           <div className="flex flex-row md:flex-col p-2 overflow-scroll hide-scroll gap-3 -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
                             {activities.map((item, index) => (
                               <div key={index}>
-                                <Activity item={item} userId={userId} dados={dados}/>
+                                <Activity item={item} userId={userId} />
                               </div>
                             ))}
                           </div>
