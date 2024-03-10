@@ -172,7 +172,7 @@ export default function Activity({ item, userId, dados }) {
               </div>
             )}
             
-            {item.alreadyEnrolled && userId && !attended && (
+            {item.alreadyEnrolled && !attended && (
               <div className="ml-auto">
                 { !loading && (
                   <Button
