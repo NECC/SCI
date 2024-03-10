@@ -29,7 +29,7 @@ export default function Schedule() {
     };
 
     downloadCertificate();
-  }, [session]);
+  }, [session, status]);
 
   console.log(dados);
 
