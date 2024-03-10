@@ -63,7 +63,7 @@ export default function Profile({ params: { id } }) {
         {status != "loading" ? (
           <div className="bg-transparent w-full h-full">
             {activeScreen == "enrolled" ? (
-              <ActivitiesSubscribed id={id} user={user} />
+              <ActivitiesSubscribed id={id} />
             ) : activeScreen == "qrcode" ? (
               <Code user={user} id={id} />
             ) : (
@@ -302,7 +302,7 @@ const ActivitiesSubscribed = ({ id, user }) => {
                       // console.log(item)
                       return (
                         <div key={index}>
-                          <Activity item={item} userId={id} dados={user} />
+                          <Activity item={item} userId={id} />
                         </div>
                       );
                     }
