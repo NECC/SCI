@@ -27,13 +27,12 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Spinner } from "@nextui-org/react";
 // TODO: Loading state for the button
 
-export default function Activity({ item, userId }) {
+export default function Activity({ item, userId, dados }) {
   const [loading, setLoading] = useState(true);
   const [enrolled, setEnrolled] = useState(false);
   const [attended, setAttended] = useState(false);
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
   const router = useRouter();
-  const [dados, setDados] = useState({});
   // console.log(attended);
   // // console.log(userId);
   // console.log(item.enrollments.length, item.capacity, item.enrollments.length == item.capacity)
@@ -74,18 +73,6 @@ export default function Activity({ item, userId }) {
     getAttended();
     setLoading(false);
   }, [userId, item.id]);
-
-
-  useEffect(() => {
-    setLoading(true);
-    const downloadCertificate = async () => {
-      const { data } = await axios.get(`/api/users/${userId}`);
-      setDados(data.user);
-    };
-
-    downloadCertificate();
-    setLoading(false);
-  }, [userId]);
 
   return (
     <>
@@ -205,7 +192,7 @@ export default function Activity({ item, userId }) {
                 )}
               </div>
             )}
-            {attended && (
+            {attended && dados?.name && (
               <div className="flex flex-row ml-auto">
                 <PDFDownloadLink
                   document={<Pdf data={item} user={dados} />}

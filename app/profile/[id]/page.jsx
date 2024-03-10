@@ -63,7 +63,7 @@ export default function Profile({ params: { id } }) {
         {status != "loading" ? (
           <div className="bg-transparent w-full h-full">
             {activeScreen == "enrolled" ? (
-              <ActivitiesSubscribed id={id} />
+              <ActivitiesSubscribed id={id} user={user} />
             ) : activeScreen == "qrcode" ? (
               <Code user={user} id={id} />
             ) : (
@@ -182,7 +182,7 @@ const ProfileNav = ({ user, activeScreen, setActiveScreen }) => {
   );
 };
 
-const ActivitiesSubscribed = ({ id }) => {
+const ActivitiesSubscribed = ({ id, user }) => {
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([]);
   const [type, setType] = useState(null);
@@ -302,7 +302,7 @@ const ActivitiesSubscribed = ({ id }) => {
                       // console.log(item)
                       return (
                         <div key={index}>
-                          <Activity item={item} userId={id} />
+                          <Activity item={item} userId={id} dados={user} />
                         </div>
                       );
                     }

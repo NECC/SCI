@@ -4,7 +4,7 @@ import { View, Image, Text, Page, Document } from '@react-pdf/renderer';
 const Pdf = (props) => {
     const { data, user } = props;
     const nome = user?.name;
-    const Nome = nome?.charAt(0).toUpperCase() + nome?.slice(1);
+    
     return (
         <Document>
             <Page size="SRA4" orientation="landscape" style={{
@@ -53,7 +53,7 @@ const Pdf = (props) => {
                     color: 'white',
                     textAlign: 'center',
                     fontFamily: 'Helvetica-Bold',
-                }}> {Nome}</ Text>
+                }}> {nome}</ Text>
                 <Text style={{
                     marginTop: 35,
                     fontSize: 20,
