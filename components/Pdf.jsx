@@ -19,7 +19,7 @@ const Pdf = (props) => {
                     right: 0,
                     bottom: 0,
                 }}>
-                    <Image src="./bg-pdf.png" alt="abj" style={{ width: '100%', height: '100%' }} />
+                    <Image src="/bg-pdf.png" alt="abj" style={{ width: '100%', height: '100%' }} />
                 </View>
 
                 <View style={{
@@ -28,8 +28,8 @@ const Pdf = (props) => {
                     justifyContent: 'space-between',
                     alignItems: 'center'
                 }}>
-                    <Image src="./ciencias.png" alt="SCI Logo" style={{ width: '95px', height: '50px' }} />
-                    <Image src="./sci-logo.png" alt="SCI Logo" style={{ width: '110px', height: '50px' }} />
+                    <Image src="/ciencias.png" alt="SCI Logo" style={{ width: '95px', height: '50px' }} />
+                    <Image src="/sci-logo.png" alt="SCI Logo" style={{ width: '110px', height: '50px' }} />
                 </View>
 
                 <Text style={{
@@ -78,7 +78,7 @@ const Pdf = (props) => {
                     gap: 10,
                     color: 'white',
                 }}>
-                    <Image src="./assinatura.png" alt="SCI Logo" style={{ width: '140px', height: '70px' }} />
+                    <Image src="/assinatura.png" alt="SCI Logo" style={{ width: '140px', height: '70px' }} />
                     <View style={{
                         width: '60%',
                         height: '1px',
