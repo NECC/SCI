@@ -37,7 +37,7 @@ export default function SignUpPage() {
           setLoading(false);
         } else {
           signIn("credentials", {
-            email: (formData.email).toLowerCase(),
+            email: formData.email.toLowerCase(),
             password: formData.password,
             redirect: false,
           }).then((res) => {

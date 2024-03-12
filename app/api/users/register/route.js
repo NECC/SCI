@@ -28,7 +28,7 @@ export async function POST(request) {
   // check for duplicate emails
   const emailExists = await prisma.user.findUnique({
     where: {
-      email: (userData.email).toLowerCase(),
+      email: userData.email.toLowerCase(),
     },
   });
 
@@ -48,7 +48,7 @@ export async function POST(request) {
   const user = await prisma.user.create({
     data: {
       name: userData.name,
-      email: (userData.email).toLowerCase(),
+      email: userData.email.toLowerCase(),
       password: userData.password,
       role: "USER",
       points: 0,
