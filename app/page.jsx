@@ -117,7 +117,7 @@ export default function Home() {
 
             <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute  lg:block hidden">
               <div className="w-full h-full relative">
-              <Bolas />
+                <Bolas />
               </div>
             </div>
           </div>
@@ -177,7 +177,7 @@ export default function Home() {
             <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
             <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute lg:block hidden">
               <div className="w-full h-full relative">
-               <Bolas />
+                <Bolas />
               </div>
             </div>
           </div>
@@ -234,7 +234,14 @@ export default function Home() {
                 </div>
                 <div className="md:w-5/12 md:mt-0 mt-9 text-white font-poppins font-light leading-8">
                   <p>
-                    We&apos;re excited to have you join us at Universidade do Minho. You can find us at both CP1 and CP2. Whether you&apos;re looking to explore the latest innovations or delve into scientific discoveries, our event has something for everyone. Join us and be part of this celebration of knowledge and creativity.
+                    We&apos;re excited to have you join us at Universidade do Minho. Whether you&apos;re looking to explore the latest innovations or delve into scientific discoveries, our event has something for everyone. Join us and be part of this celebration of knowledge and creativity.
+                  </p>
+                  <p>This years event will take place at Pedagogic Complex 1 and 2, Building 1, Gualtar Campus.</p>
+                  <h1 className="mt-4 text-xl font-extrabold leading-tight">
+                    Contact us:
+                  </h1>
+                  <p>
+                    Email: sci.uminho@gmail.com
                   </p>
                 </div>
               </div>
