@@ -31,16 +31,25 @@ export default function SignUpPage() {
     setLoading(true);
     axios.post("/api/users/register", formData).then((res) => {
       if (res.status == 200) {
+        console.log(res)
         if (res.data.response == "error") {
           setError(res.data.error);
           setLoading(false);
         } else {
           signIn("credentials", {
-            email: formData.email,
+            email: formData.email.toLowerCase(),
             password: formData.password,
-            callbackUrl: "/",
+            redirect: false,
+          }).then((res) => {
+            console.log(res)
+            if (res.error) {
+              setError("An error occurred! Try again")
+              setLoading(false);
+            } else {
+              router.push("/");
+              setLoading(false);
+            }
           });
-          setLoading(false);
         }
       }
     });

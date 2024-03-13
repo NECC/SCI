@@ -26,7 +26,7 @@ export default function SignInPage() {
   const handleSubmit = async (e) => {
     setLoading(true);
     signIn("credentials", {
-      email: formData.email,
+      email: formData.email.toLowerCase(),
       password: formData.password,
       redirect: false,
     }).then((res) => {

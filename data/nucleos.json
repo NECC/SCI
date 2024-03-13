@@ -2,28 +2,31 @@
     "logo": [
         {
             "path": "/nucleos/necc.svg",
-            "link" : "https://necc.di.uminho.pt/"
+            "link": "https://necc.di.uminho.pt/"
         },
         {
             "path": "/nucleos/nebqum.png",
-            "link" : "https://nebqum.wixsite.com/nebqum"
+            "link": "https://nebqum.wixsite.com/nebqum"
         },
         {
             "path": "/nucleos/nefum.svg",
-            "link" : "https://nefum.di.uminho.pt/"
+            "link": "https://nefum.di.uminho.pt/"
         },
         {
             "path": "/nucleos/nebaum.svg",
-            "link" : "https://nebaum.wixsite.com/uminho"
+            "link": "https://nebaum.wixsite.com/uminho"
         },
         {
             "path": "/nucleos/negum.svg",
-            "link" : "https://www.uminho.pt/PT"
+            "link": "https://www.uminho.pt/PT"
         },
         {
-            "path": "/nucleos/necaum.svg",
-            "link" : "https://necaum.weebly.com/"
+            "path": "/nucleos/necaum.png",
+            "link": "https://necaum.weebly.com/"
+        },
+        {
+            "path": "/escola.png",
+            "link": "https://www.ecum.uminho.pt/pt"
         }
-       
     ]
 }
