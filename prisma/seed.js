@@ -7,22 +7,71 @@ async function main() {
   await prisma.user.deleteMany();
   await prisma.activity.deleteMany();
 
-  const passwordCarlos = await bcrypt.hash('batatadoce', 10);
-  const passwordPedro = await bcrypt.hash('123456', 10);
+  const passwordJoaquina = await bcrypt.hash('coxinha123admin123', 10);
+  const passwordCatarina = await bcrypt.hash('lasanha123admin123', 10);
+  const passwordLeonor = await bcrypt.hash('aguadecoco123admin123', 10);
+  const passwordAnastacia = await bcrypt.hash('costeleta123admin123', 10);
+  const passwordJoao = await bcrypt.hash('hamburguer123admin123', 10);
+  const passwordPedro = await bcrypt.hash('arroz123admin123', 10);
+  const passwordCarlos = await bcrypt.hash('cebola123admin123', 10);
+  const passwordGustavo = await bcrypt.hash('estrugido123admin123', 10);
+
 
   await prisma.user.createMany({
     data: [
       {
-        email: 'carlosdf035@gmail.com',
-        name: 'carlos',
-        password:  passwordCarlos,
+        email: 'joaquina@admin.com',
+        name: 'Joaquina Admin',
+        password:  passwordJoaquina,
         role: 'ADMIN',
         accredited: true,
       },
       {
-        email: 'pedroaugennes@gmail.com',
-        name: 'Maromba',
+        email: 'catarina@admin.com',
+        name: 'Catarina Admin',
+        password: passwordCatarina,
+        role: 'ADMIN',
+        accredited: true,
+      },
+      {
+        email: 'leonor@admin.com',
+        name: 'Leonor Admin',
+        password: passwordLeonor,
+        role: 'ADMIN',
+        accredited: true,
+      },
+      {
+        email: 'anastacia@admin.com',
+        name: 'Anastacia Admin',
+        password: passwordAnastacia,
+        role: 'ADMIN',
+        accredited: true,
+      },
+      {
+        email: 'joao@admin.com',
+        name: 'Joao Admin',
+        password: passwordJoao,
+        role: 'ADMIN',
+        accredited: true,
+      },
+      {
+        email: 'pedro@admin.com',
+        name: 'Pedro Admin',
         password: passwordPedro,
+        role: 'ADMIN',
+        accredited: true,
+      },
+      {
+        email: 'carlos@admin.com',
+        name: 'Carlos Admin',
+        password: passwordCarlos,
+        role: 'ADMIN',
+        accredited: true,
+      },
+      {
+        email: 'gustavo@admin.com',
+        name: 'Gustavo Admin',
+        password: passwordGustavo,
         role: 'ADMIN',
         accredited: true,
       },
