@@ -28,18 +28,11 @@ import { Spinner } from "@nextui-org/react";
 // TODO: Loading state for the button
 
 export default function Activity({ item, userId }) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [enrolled, setEnrolled] = useState(false);
-  const [attended, setAttended] = useState(false);
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
   const [dados, setDados] = useState({});
   const router = useRouter();
-
-
-  // console.log(attended);
-  // console.log(userId);
-  // console.log(item.enrollments.length, item.capacity, item.enrollments.length == item.capacity)
-  // console.log(item);
 
   // TODO: Handle the userId properly (it's undefined for now)
   const createEnrollment = async (activityId, userId) => {
@@ -61,27 +54,18 @@ export default function Activity({ item, userId }) {
   }, [item.alreadyEnrolled]);
 
   useEffect(() => {
-    setLoading(true);
-    const getAttended = async () => {
-      if (userId == undefined) return;
-
+    if (item.attended) {
       setLoading(true);
-      const { data } = await axios.get(
-        `/api/enrollments/attend/${item.id}/${userId}`
-      );
-      // console.log(data.attended);
-      setAttended(data.attended);
-    };
 
-    const downloadCertificate = async () => {
-      const { data } = await axios.get(`/api/users/${userId}`);
-      setDados(data.user);
-    };
+      const downloadCertificate = async () => {
+        const { data } = await axios.get(`/api/users/${userId}`);
+        setDados(data.user);
+      };
 
-    downloadCertificate();
-    getAttended();
-    setLoading(false);
-  }, [userId, item.id]);
+      downloadCertificate();
+      setLoading(false);
+    }
+  }, [userId, item.attended]);
 
   return (
     <>
@@ -180,47 +164,40 @@ export default function Activity({ item, userId }) {
                 </Button>
               </div>
             )}
-            
-            {item.alreadyEnrolled && userId && !attended && (
+
+            {item.alreadyEnrolled && userId && !item.attended && (
               <div className="ml-auto">
-                { !loading && (
-                  <Button
-                    size="sm"
-                    radius="full"
-                    variant="faded"
-                    color="primary"
-                    className="text-tiny"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onOpen();
-                      e.stopPropagation();
-                    }}
-                  >
-                    <BsQrCode className="text-medium" />
-                  </Button>
-                )}
+                <Button
+                  size="sm"
+                  radius="full"
+                  variant="faded"
+                  color="primary"
+                  className="text-tiny"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onOpen();
+                    e.stopPropagation();
+                  }}
+                >
+                  <BsQrCode className="text-medium" />
+                </Button>
               </div>
             )}
-            {attended && dados?.name && (
+            {item.attended && dados?.name && (
               <div className="flex flex-row ml-auto">
                 <PDFDownloadLink
                   document={<Pdf data={item} user={dados} />}
                   fileName="certificate.pdf"
                 >
-                  {({ loading }) =>
-                    loading ? (
-                      <Spinner color="custom-blue-3" size="sm" />
-                    ) : (
-                      <Button
-                        size="sm"
-                        radius="full"
-                        color="success"
-                        className="text-tiny text-white"
-                      >
-                        Certificate <TbFileDownload />
-                      </Button>
-                    )
-                  }
+                  <Button
+                    isLoading={loading}
+                    size="sm"
+                    radius="full"
+                    color="success"
+                    className="text-tiny text-white"
+                  >
+                    Certificate <TbFileDownload />
+                  </Button>
                 </PDFDownloadLink>
               </div>
             )}
