@@ -31,6 +31,9 @@ export default function Schedule() {
           alreadyEnrolled: activity.enrollments.some(
             (enrollment) => enrollment.userId === session?.user.id
           ),
+          attended: activity.enrollments.some(
+            (enrollment) => enrollment.userId === session?.user.id && enrollment.attended === true
+          ),
         };
       })
     );
