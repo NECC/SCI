@@ -236,7 +236,7 @@ export default function Home() {
                   <p>
                     We&apos;re excited to have you join us at Universidade do Minho. Whether you&apos;re looking to explore the latest innovations or delve into scientific discoveries, our event has something for everyone. Join us and be part of this celebration of knowledge and creativity.
                   </p>
-                  <p>This years event will take place at Pedagogic Complex 1 and 2, Building 1, Gualtar Campus.</p>
+                  <p>The event in 18th, 19th and 21st March will take place at CP 2 and in 20th march at CP 1, University of Minho, Gualtar Campus. We hope to see you there!</p>
                   <h1 className="mt-4 text-xl font-extrabold leading-tight">
                     Contact us:
                   </h1>
