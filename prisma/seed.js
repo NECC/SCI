@@ -42,7 +42,7 @@ async function main() {
   await prisma.activity.createMany({
     data: [
       { "picUrl": "", "title": "🚩 Sessão de Abertura", "description": "", "speakers": "unknown", "location": "Sala 1", "capacity": 100, "date": day18, "startTime": "9:00", "endTime": "9:30", "type": "OTHER" },
-      
+
 
       { "picUrl": defaultUrl, "title": "Geologia e Sociedade", "description": "", "date": day18, "startTime": "9:30", "endTime": "10:00", "location": "Campus Gualtar, CP2 - Auditório B1", "capacity": 100, "speakers": "Renato Henriques", "type": "TALK" },
 
@@ -51,13 +51,13 @@ async function main() {
 
       { "picUrl": "/dia18/Cassoni.jpeg", "title": "Valorização de resíduos agrícolas no contexto da economia circular: o caso da lenhina", "description": "", "date": day18, "startTime": "11:00", "endTime": "12:00", "location": "Campus Gualtar, CP2 - Auditório B1", "capacity": 100, "speakers": "Carolina Cassoni", "type": "TALK" },
 
-      { "picUrl": "/dia18/Bruno_Jardim.jpeg", "title": "Python Básico", "description": "", "date": day18, "startTime": "14:00", "endTime": "15:30", "location": "", "capacity": 50, "speakers": "Bruno Jardim (NECC)", "type": "WORKSHOP" },
+      { "picUrl": "/dia18/Bruno_Jardim.jpeg", "title": "Python Básico", "description": "", "date": day18, "startTime": "14:00", "endTime": "15:30", "location": "", "capacity": 60, "speakers": "Bruno Jardim (NECC)", "type": "WORKSHOP" },
 
 
       { "picUrl": "/dia18/Pedro_Martins.jpg", "title": "Development of new materials for environmental remediation applications", "description": "", "date": day18, "startTime": "14:00", "endTime": "15:30", "location": "", "capacity": 50, "speakers": "Pedro Martins", "type": "WORKSHOP" },
 
-      // TODO: Foto do Pedro Gomes 
-      { "picUrl": defaultUrl, "title": "Ciência cidadã", "description": "", "date": day18, "startTime": "14:00", "endTime": "15:30", "location": "", "capacity": 50, "speakers": "Pedro Gomes", "type": "WORKSHOP" },
+      // TODO: Foto do Pedro Gomes
+      { "picUrl": defaultUrl, "title": "Ciência cidadã", "description": "", "date": day18, "startTime": "14:00", "endTime": "15:30", "location": "", "capacity": 55, "speakers": "Pedro Gomes", "type": "WORKSHOP" },
 
       { "picUrl": "/dia18/Filipe_Rocha.jpg", "title": "Computer Aided Drug Discovery", "description": "", "date": day18, "startTime": "14:00", "endTime": "15:30", "location": "", "capacity": 50, "speakers": "Filipe Rocha", "type": "WORKSHOP" },
 
@@ -68,7 +68,7 @@ async function main() {
       { "picUrl": "/dia18/renatogonalves.jpg", "title": "Armazenamento de Energia e futuro da mobilidade elétrica - ESM", "description": "", "date": day18, "startTime": "16:00", "endTime": "16:30", "location": "Campus Gualtar, CP2 - Auditório B2", "capacity": 100, "speakers": "Renato Gonçalves", "type": "TALK" },
       { "picUrl": "/dia18/DANIELACORREIA.jpg", "title": "Materiais multifuncionais para sensores e atuadores - ESM", "description": "", "date": day18, "startTime": "16:30", "endTime": "17:00", "location": "Campus Gualtar, CP2 - Auditório B2", "capacity": 100, "speakers": "Daniela Correia", "type": "TALK" },
 
-      
+
       // TODO: Foto do Júlio Santos ou Catia Santos
       { "picUrl": defaultUrl, "title": "Tertúlia - Exploração de Recursos em Portugal", "description": "", "date": day18, "startTime": "17:00", "endTime": "18:30", "location": "", "capacity": 100, "speakers": "Júlio Santos, Ana Hilário, Rui Moura", "type": "TALK" },
 
@@ -78,9 +78,9 @@ async function main() {
       // ------------------------------ Dia 19 ------------------------------
 
 
-      { "picUrl": "/dia19/David_Machado.jpeg", "title": "Let's make a Website!", "description": "", "date": day19, "startTime": "9:00", "endTime": "11:00", "location": "", "capacity": 50, "speakers": "David Machado (NECC)", "type": "WORKSHOP" },
-      { "picUrl": defaultUrl, "title": "Economia circular", "description": "", "date": day19, "startTime": "9:00", "endTime": "11:00", "location": "", "capacity": 50, "speakers": "unknown", "type": "WORKSHOP" },
-      { "picUrl": "/dia19/JoanaRodrigues.jpeg", "title": "Comunicar Ciência sem Preconceitos", "description": "", "date": day19, "startTime": "9:00", "endTime": "11:00", "location": "", "capacity": 50, "speakers": "Joana Rodrigues", "type": "WORKSHOP" },
+      { "picUrl": "/dia19/David_Machado.jpeg", "title": "Let's make a Website!", "description": "", "date": day19, "startTime": "9:00", "endTime": "11:00", "location": "", "capacity": 54, "speakers": "David Machado (NECC)", "type": "WORKSHOP" },
+      { "picUrl": defaultUrl, "title": "Economia circular", "description": "", "date": day19, "startTime": "9:00", "endTime": "11:00", "location": "", "capacity": 55, "speakers": "unknown", "type": "WORKSHOP" },
+      { "picUrl": "/dia19/JoanaRodrigues.jpeg", "title": "Comunicar Ciência sem Preconceitos", "description": "", "date": day19, "startTime": "9:00", "endTime": "11:00", "location": "", "capacity": 55, "speakers": "Joana Rodrigues", "type": "WORKSHOP" },
       { "picUrl": defaultUrl, "title": "Remediação Ambiental", "description": "", "date": day19, "startTime": "9:00", "endTime": "11:00", "location": "", "capacity": 50, "speakers": "unknown", "type": "WORKSHOP" },
 
 
@@ -91,7 +91,7 @@ async function main() {
       { "picUrl": defaultUrl, "title": "Trabalhos Mestrados", "description": "Genética, Biologia Molecular, Bioinformática", "date": day19, "startTime": "12:00", "endTime": "12:30", "location": "", "capacity": 100, "speakers": "unknown", "type": "TALK" },
 
 
-      { "picUrl": "/dia19/Susana_Costa.jpg", "title": "Aditivos alimentares: Como identificá-los?", "description": "", "date": day19, "startTime": "14:00", "endTime": "15:30", "location": "", "capacity": 50, "speakers": "Susana Costa", "type": "WORKSHOP" },
+      { "picUrl": "/dia19/Susana_Costa.jpg", "title": "Aditivos alimentares: Como identificá-los?", "description": "", "date": day19, "startTime": "14:00", "endTime": "15:30", "location": "", "capacity": 10, "speakers": "Susana Costa", "type": "WORKSHOP" },
       { "picUrl": "/dia19/Paula_Sampaio.png", "title": "The One Health Concept", "description": "", "date": day19, "startTime": "14:00", "endTime": "15:00", "location": "Campus Gualtar, CP2 - Auditório B1", "capacity": 100, "speakers": "Paula Sampaio", "type": "TALK" },
       coffeeBreak({date: day19, startTime: "15:00", endTime: "15:30"}),
       { "picUrl": "/dia19/Fernanda_Proença.jpg", "title": "Alguns desafios da Química: Dos fármacos aos nanomateriais", "description": "", "date": day19, "startTime": "15:30", "endTime": "16:30", "location": "Campus Gualtar, CP2 - Auditório B1", "capacity": 100, "speakers": "Fernanda Proença", "type": "TALK" },
@@ -101,8 +101,8 @@ async function main() {
       // ------------------------------------ Dia 20 ------------------------------------
 
       // TODO: Jordão e DST group speakers and photos
-      { "picUrl": "/dia20/dstGroup.png", "title": "DST", "description": "", "date": day20, "startTime": "9:00", "endTime": "11:00", "location": "", "capacity": 50, "speakers": "DST", "type": "WORKSHOP" },
-      { "picUrl": "/dia20/jordao.jpg", "title": "Jordão Cooling Systems", "description": "", "date": day20, "startTime": "9:00", "endTime": "11:00", "location": "", "capacity": 50, "speakers": "Jordão", "type": "WORKSHOP" },
+      { "picUrl": "/dia20/dstGroup.png", "title": "DST", "description": "", "date": day20, "startTime": "9:00", "endTime": "11:00", "location": "", "capacity": 55, "speakers": "DST", "type": "WORKSHOP" },
+      { "picUrl": "/dia20/jordao.jpg", "title": "Jordão Cooling Systems", "description": "", "date": day20, "startTime": "9:00", "endTime": "11:00", "location": "", "capacity": 55, "speakers": "Jordão", "type": "WORKSHOP" },
 
       coffeeBreak({date: day20, startTime: "11:00", endTime: "11:30"}),
 
@@ -120,8 +120,9 @@ async function main() {
 
       // ------------------------------------------- Dia 21 -------------------------------------------
       { "picUrl": defaultUrl, "title": "LinkedIn e CV", "description": "", "date": day21, "startTime": "10:00", "endTime": "12:00", "location": "", "capacity": 50, "speakers": "Vinicius Silva (NEBAUM)", "type": "WORKSHOP" },
-      { "picUrl": defaultUrl, "title": "Astrobiologia", "description": "", "date": day21, "startTime": "10:00", "endTime": "12:00", "location": "", "capacity": 50, "speakers": "unknown", "type": "WORKSHOP" },
-      { "picUrl": defaultUrl, "title": "Geofísica", "description": "", "date": day21, "startTime": "10:00", "endTime": "12:00", "location": "", "capacity": 50, "speakers": "Luís Gonçalves (NEGUM)", "type": "WORKSHOP" },
+      { "picUrl": defaultUrl, "title": "Astrobiologia", "description": "", "date": day21, "startTime": "10:00", "endTime": "12:00", "location": "", "capacity": 55, "speakers": "unknown", "type": "WORKSHOP" },
+      { "picUrl": defaultUrl, "title": "Geofísica", "description": "", "date": day21, "startTime": "10:00", "endTime": "12:00", "location": "", "capacity": 26, "speakers": "Luís Gonçalves (NEGUM)", "type": "WORKSHOP" },
+      { "picUrl": defaultUrl, "title": "Chemdraw descomplicado: Iniciação ao design molecular", "description": "", "date": day21, "startTime": "10:00", "endTime": "12:00", "location": "", "capacity": 20, "speakers": "Sofia Teixeira, André Lopes", "type": "WORKSHOP" },
       { "picUrl": "/dia21/mathgurl.jpg", "title": "Uma palestra sobre Ciência, Matemática e Frustração", "description": "", "date": day21, "startTime": "14:00", "endTime": "15:00", "location": "Campus Gualtar, CP2 - Auditório B1", "capacity": 100, "speakers": "Inês Guimarães", "type": "TALK" },
       coffeeBreak({date: day21, startTime: "15:00", endTime: "15:30"}),
       { "picUrl": "/dia21/ivan.jpg", "title": "Sessão ALUMNI", "description": "", "date": day21, "startTime": "15:30", "endTime": "16:30", "location": "", "capacity": 100, "speakers": "Ivan", "type": "TALK" },
