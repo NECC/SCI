@@ -64,7 +64,8 @@ function ActivityDayFilter({ selectedDay, setSelectedDay, days, children }) {
         {children}
       </div>
       {days.length > 0 && (
-        <div className="fixed left-0 bottom-0 z-20 w-full h-24 flex gap-6 md:hidden bg-blue-400 items-center justify-center">
+        // Mobile Schedule Bar - Days (Opacity and Blur)
+        <div className="fixed left-0 bottom-0 z-20 w-full h-24 flex gap-6 md:hidden bg-blue-400 bg-opacity-70 backdrop-filter backdrop-blur-md items-center justify-center">
           {days.map((day) => (
             <div
               onClick={() => setSelectedDay(day)}
