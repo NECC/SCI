@@ -26,7 +26,7 @@ export default function Accordion() {
           <p className="w-[80%]">When and where does SCI take place?</p>
           <IoArrowDownCircleOutline size={30} color="white" className={`ease-in-out duration-300 ${active ? 'rotate-180' : 'rotate-0'}`} />
         </div>
-        <div className={`bg-white bg-opacity-25 text-white bg-opacity-10 text-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active ? 'max-h-[500px]' : 'max-h-0'}`}>
+        <div className={`bg-white bg-opacity-25 text-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active ? 'max-h-[500px]' : 'max-h-0'}`}>
           <p className="p-3">{where}</p>
         </div>
       </div>
