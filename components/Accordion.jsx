@@ -26,7 +26,7 @@ export default function Accordion() {
           <p className="w-[80%]">When and where does SCI take place?</p>
           <IoArrowDownCircleOutline size={30} color="white" className={`ease-in-out duration-300 ${active ? 'rotate-180' : 'rotate-0'}`} />
         </div>
-        <div className={`bg-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active ? 'max-h-[500px]' : 'max-h-0'}`}>
+        <div className={`bg-white bg-opacity-25 text-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active ? 'max-h-[500px]' : 'max-h-0'}`}>
           <p className="p-3">{where}</p>
         </div>
       </div>
@@ -36,7 +36,7 @@ export default function Accordion() {
           <p className="w-[80%]">Is SCI free?</p>
           <IoArrowDownCircleOutline size={30} color="white" className={`ease-in-out duration-300 ${active2 ? 'rotate-180' : 'rotate-0'}`} />
         </div>
-        <div className={`bg-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active2 ? 'max-h-[500px]' : 'max-h-0'}`}>
+        <div className={`bg-white bg-opacity-25 text-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active2 ? 'max-h-[500px]' : 'max-h-0'}`}>
           <p className="p-3">{free}</p>
         </div>
       </div>
@@ -46,7 +46,7 @@ export default function Accordion() {
           <p className="w-[80%]">Can I participate, even if I’m not a student?</p>
           <IoArrowDownCircleOutline size={30} color="white" className={`ease-in-out duration-300 ${active3 ? 'rotate-180' : 'rotate-0'}`} />
         </div>
-        <div className={`bg-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active3 ? 'max-h-[500px]' : 'max-h-0'}`}>
+        <div className={`bg-white bg-opacity-25 text-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active3 ? 'max-h-[500px]' : 'max-h-0'}`}>
           <p className="p-3">{participate}</p>
         </div>
       </div>
@@ -56,7 +56,7 @@ export default function Accordion() {
           <p className="w-[80%]">Where can I register to participate?</p>
           <IoArrowDownCircleOutline size={30} color="white" className={`ease-in-out duration-300 ${active4 ? 'rotate-180' : 'rotate-0'}`} />
         </div>
-        <div className={`bg-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active4 ? 'max-h-[500px]' : 'max-h-0'}`}>
+        <div className={`bg-white bg-opacity-25 text-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active4 ? 'max-h-[500px]' : 'max-h-0'}`}>
           <p className="p-3">{register}</p>
         </div>
       </div>
@@ -66,7 +66,7 @@ export default function Accordion() {
           <p className="w-[80%]">How can I contact SCI&apos;s team?</p>
           <IoArrowDownCircleOutline size={30} color="white" className={`ease-in-out duration-300 ${active5 ? 'rotate-180' : 'rotate-0'}`} />
         </div>
-        <div className={`bg-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active5 ? 'max-h-[500px]' : 'max-h-0'}`}>
+        <div className={`bg-white bg-opacity-25 text-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active5 ? 'max-h-[500px]' : 'max-h-0'}`}>
           <p className="p-3">{contact}</p>
         </div>
       </div>
@@ -76,7 +76,7 @@ export default function Accordion() {
           <p className="w-[80%]">How does the system points work?</p>
           <IoArrowDownCircleOutline size={30} color="white" className={`ease-in-out duration-300 ${active6 ? 'rotate-180' : 'rotate-0'}`} />
         </div>
-        <div className={`bg-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active6 ? 'max-h-[500px]' : 'max-h-0'}`}>
+        <div className={`bg-white bg-opacity-25 text-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active6 ? 'max-h-[500px]' : 'max-h-0'}`}>
           <p className="p-3">{points}</p>
         </div>
       </div>
