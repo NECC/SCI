@@ -251,7 +251,7 @@ const Code = ({ userId, activityId }) => {
     };
 
     const code = new QRCode(qrcode.current, options);
-    code.makeCode(`${currentUrl}/admin/qrcodes/${activityId}/${userId}`);
+    code.makeCode(`${currentUrl}admin/qrcodes/${activityId}/${userId}`);
     return () => code.clear();
   }, [qrcode, currentUrl, userId, activityId]);
 
