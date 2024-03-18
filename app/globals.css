@@ -59,6 +59,10 @@ border-radius: 10px;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  .custom-scroll {
+    scrollbar-color: #fff #08a4de;
+  }
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

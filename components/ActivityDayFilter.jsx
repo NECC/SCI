@@ -60,7 +60,7 @@ function ActivityDayFilter({ selectedDay, setSelectedDay, days, children }) {
           </div>
         </div>
       )}
-      <div className="mb-28 md:mb-0 overflow-scroll no-scrollbar">
+      <div className="mb-28 md:mb-0 overflow-scroll custom-scroll">
         {children}
       </div>
       {days.length > 0 && (
