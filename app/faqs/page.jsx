@@ -23,7 +23,7 @@ export default function Faqs() {
           </div>
           <Image
             className="box hidden lg:block"
-            src="/interrogacao.png"
+            src="/betterFAQ.png"
             alt="Banner"
             width={300}
             height={300}

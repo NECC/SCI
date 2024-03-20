@@ -168,9 +168,12 @@ const Nav = (props) => {
             )}
           </div>
         </div>
+        <Link href="/" className="w-[70px] flex justify-end items-center hover:w-[75px] transition-all ml-3">
+          <Image src="/sci-logo.png" alt="Banner" width={75} height={75} />
+        </Link>
         <div
           onClick={() => setToggleDropdown(!toggleDropdown)}
-          className="flex-col flex gap-1 items-end w-11/12 ml-4 m-auto py-4 cursor-pointer"
+          className="flex-col flex gap-1 items-end w-11/12 ml-4 m-auto py-4 cursor-pointer mr-3"
         >
           <div
             className={`h-[4px] w-[24px] rounded-3xl bg-white  transition-all ${

@@ -30,21 +30,21 @@ export const ArrowRight = ({ className, ...props }) => {
         cy="37.9408"
         r="5.615"
         transform="rotate(45 36.9409 37.9408)"
-        fill="#FBBF24"
+        fill="#DFE047"
       />
       <circle
         cx="7.94092"
         cy="66.9408"
         r="5.615"
         transform="rotate(45 7.94092 66.9408)"
-        fill="#FBBF24"
+        fill="#DFE047"
       />
       <circle
         cx="7.94092"
         cy="7.9408"
         r="5.615"
         transform="rotate(45 7.94092 7.9408)"
-        fill="#FBBF24"
+        fill="#DFE047"
       />
     </svg>
   );
