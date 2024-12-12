@@ -5,10 +5,11 @@ import Nav from "@components/Nav";
 
 export const metadata = {
   title: {
-    template: '%s | Sci',
-    default: 'Home | Sci'
+    template: '%s | SCI',
+    default: 'Home | SCI'
   },
-  description: "Jornadas da Ciência",
+  description: "Semana da Ciência e Inovação",
+  metadataBase: new URL(process.env.PRODUCTION_URL)
 };
 
 export default async function RootLayout({ children }) {
