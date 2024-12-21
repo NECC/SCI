@@ -2,7 +2,12 @@ import React from "react";
 import { ArrowRight } from "./ArrowRight";
 import { LineDots } from "./LineDots";
 
-function ActivityDayFilter({ selectedDay, setSelectedDay, days, children }) {
+function ActivityDayFilter({ selectedDay, setSelectedDay, days, children }: {
+  selectedDay: string;
+  setSelectedDay: (day: string) => void;
+  days: string[];
+  children: React.ReactNode;
+}) {
   const setSelectedDayPrev = () => {
     // Find the index of the selected day and subtract 1 and if it's less than 0, set it to the first day
     const index = days.indexOf(selectedDay);

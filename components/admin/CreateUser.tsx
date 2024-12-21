@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import axios from "axios";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Divider,
-  Input,
-} from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+import { UserPostResponse } from "@app/api/users/route";
 
 export default function CreateUser() {
   const router = useRouter();
-  const [formData, setFormData] = useState({ role: "USER" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "USER",
+  });
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
@@ -27,12 +27,12 @@ export default function CreateUser() {
     e.preventDefault();
     setErrorMessage("");
     axios
-      .post("/api/users", formData)
+      .post<UserPostResponse>("/api/users", formData)
       .then((res) => {
         if (res.status == 200) {
           router.push("/admin");
         } else {
-          setErrorMessage(res.data.message);
+          setErrorMessage(res.data.error);
         }
       })
       .catch((err) => {

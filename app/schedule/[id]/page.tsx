@@ -13,14 +13,15 @@ import {
 } from "@nextui-org/react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useEffect, useState } from "react";
+import { ActivityGetResponseById } from "@app/api/activities/[id]/route";
 
 // TODO: Do loading state
 export default function Activity({ params }) {
-  const [activity, setActivity] = useState({});
+  const [activity, setActivity] = useState<ActivityGetResponseById["activity"][0]>();
   
   useEffect(() => {
     const fetchActivity = async () => {
-      const { data } = await axios.get(`/api/activities/${params.id}`);
+      const { data } = await axios.get<ActivityGetResponseById>(`/api/activities/${params.id}`);
       setActivity(data.activity[0]);
     };
     fetchActivity();

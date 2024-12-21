@@ -4,13 +4,24 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
+export interface UserPostAccreditationResponse {
+  response: "success" | "error";
+  update?: {
+    email: string;
+    id: string;
+    name: string;
+    accredited: boolean;
+  };
+  error?: string;
+}
+
 /**
  * Update user accreditation by ID
- * @method GET
+ * @method POST
  * @param {string} id User id to get
  * @returns
  */
-export async function POST(request, context) {
+export async function POST(request: Request, context: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   
   if (session?.user.role != "ADMIN") {

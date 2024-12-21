@@ -13,7 +13,7 @@ import {
 } from "@nextui-org/react";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Types, ActivitySchema } from "/prisma/zod";
+import { Types, ActivitySchema } from "@prisma/zod";
 
 export default function CreateActivity() {
   const router = useRouter();
@@ -60,7 +60,7 @@ export default function CreateActivity() {
               label="Title"
               className="max-w-[220px]"
               isInvalid={!!errors.title}
-              errorMessage={errors.title?.message}
+              errorMessage={errors.title?.message as string}
               {...register('title')}
             />
             <Input
@@ -69,7 +69,7 @@ export default function CreateActivity() {
               label="Date"
               className="max-w-[220px]"
               isInvalid={!!errors.date}
-              errorMessage={errors.date?.message}
+              errorMessage={errors.date?.message as string}
               {...register('date')}
             />
             <Input
@@ -78,7 +78,7 @@ export default function CreateActivity() {
               label="Start Time"
               className="max-w-[220px]"
               isInvalid={!!errors.startTime}
-              errorMessage={errors.startTime?.message}
+              errorMessage={errors.startTime.message as string}
               {...register('startTime')}
             />
             <Input
@@ -87,7 +87,7 @@ export default function CreateActivity() {
               label="End Time"
               className="max-w-[220px]"
               isInvalid={!!errors.endTime}
-              errorMessage={errors.endTime?.message}
+              errorMessage={errors.endTime?.message as string}
               {...register('endTime')}
             />
             <Input
@@ -96,7 +96,7 @@ export default function CreateActivity() {
               label="Description"
               className="max-w-[220px]"
               isInvalid={!!errors.description}
-              errorMessage={errors.description?.message}
+              errorMessage={errors.description?.message as string}
               {...register('description')}
             />
             <Input
@@ -105,7 +105,7 @@ export default function CreateActivity() {
               label="Location"
               className="max-w-[220px]"
               isInvalid={!!errors.location}
-              errorMessage={errors.location?.message}
+              errorMessage={errors.location?.message as string}
               {...register('location')}
             />
             <Input
@@ -115,7 +115,7 @@ export default function CreateActivity() {
               label="Capacity"
               className="max-w-[220px]"
               isInvalid={!!errors.capacity}
-              errorMessage={errors.capacity?.message}
+              errorMessage={errors.capacity?.message as string}
               {...register('capacity')}
             />
             <Input
@@ -124,14 +124,14 @@ export default function CreateActivity() {
               label="Speakers"
               className="max-w-[220px]"
               isInvalid={!!errors.speakers}
-              errorMessage={errors.speakers?.message}
+              errorMessage={errors.speakers?.message as string}
               {...register('speakers')}
             />
             <Select
               label="Type"
               className="max-w-xs"
               isInvalid={!!errors.type}
-              errorMessage={errors.type?.message}
+              errorMessage={errors.type?.message as string}
               defaultSelectedKeys={Types[0]}
               {...register('type')}
             >

@@ -25,22 +25,38 @@ import { useRouter } from "next/navigation";
 import Pdf from "@/components/Pdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Spinner } from "@nextui-org/react";
+import { Activity as ActivityI, Enrollments } from "@prisma/generated/zod";
+import { EnrollmentPostResponse } from "@app/api/enrollments/route";
+import { UserGetResponse } from "@app/api/users/[id]/route";
 // TODO: Loading state for the button
 
-export default function Activity({ item, userId }) {
+interface ActivityProps {
+  item: ActivityI & {
+    enrollments: Enrollments[];
+    enrollable: boolean;
+    alreadyEnrolled: boolean;
+    attended: boolean;
+  };
+  userId: string;
+}
+
+export default function Activity({ item, userId }: ActivityProps) {
   const [loading, setLoading] = useState(false);
   const [enrolled, setEnrolled] = useState(false);
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
-  const [dados, setDados] = useState({});
+  const [dados, setDados] = useState<UserGetResponse["user"]>();
   const router = useRouter();
 
   // TODO: Handle the userId properly (it's undefined for now)
-  const createEnrollment = async (activityId, userId) => {
+  const createEnrollment = async (activityId: number, userId: string) => {
     setLoading(true);
-    const { data } = await axios.post("/api/enrollments", {
-      activityId: activityId,
-      userId: userId,
-    });
+    const { data } = await axios.post<EnrollmentPostResponse>(
+      "/api/enrollments",
+      {
+        activityId: activityId,
+        userId: userId,
+      }
+    );
     if (data.response === "success" || data.response === "already_enrolled") {
       item.alreadyEnrolled = true;
       item.enrollments.push({ userId: userId, activityId: activityId });
@@ -58,7 +74,7 @@ export default function Activity({ item, userId }) {
       setLoading(true);
 
       const downloadCertificate = async () => {
-        const { data } = await axios.get(`/api/users/${userId}`);
+        const { data } = await axios.get<UserGetResponse>(`/api/users/${userId}`);
         setDados(data.user);
       };
 
@@ -157,7 +173,7 @@ export default function Activity({ item, userId }) {
                       router.push("/auth/signup");
                       return;
                     }
-                    createEnrollment(item.id);
+                    createEnrollment(item.id, userId);
                   }}
                 >
                   Enroll

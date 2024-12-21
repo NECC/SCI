@@ -1,7 +1,10 @@
 import React from 'react'
 import Image from 'next/image'
 
-const Nucleos = (data) => {
+const Nucleos = (data: {
+    link: string,
+    path: string,
+}) => {
     return (
             <a href={data.link} target="blank" className='block mt-auto mb-auto'  >
                 <Image

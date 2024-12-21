@@ -16,6 +16,7 @@ import { MdModeEditOutline } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
 import axios from "axios";
 import { set } from "zod";
+import { UserPostAccreditationResponse } from "@app/api/users/accreditation/[id]/route";
 
 const columnsUsers = [
   {
@@ -115,7 +116,7 @@ export default function GetDataTable(props) {
     // TODO: Error handling
     const updateAccreditation = async () => {
       setLoading(true);
-      const { data } = await axios.post(`/api/users/accreditation/${uid}`);
+      const { data } = await axios.post<UserPostAccreditationResponse>(`/api/users/accreditation/${uid}`);
       // console.log(data);
       if (data.response == "error") {
         console.log(data.error);
@@ -221,7 +222,7 @@ export default function GetDataTable(props) {
           )}
         </TableHeader>
         <TableBody emptyContent={"No data selected"} items={data}>
-          {(item) => (
+          {(item: any) => ( // TODO: Fix this any by checking documentation of TableBody
             <TableRow key={item.key}>
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>

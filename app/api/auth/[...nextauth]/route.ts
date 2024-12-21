@@ -3,9 +3,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcrypt";
+import { NextRequest } from "@node_modules/next/server";
+import { NextAuthOptions } from "@node_modules/next-auth";
 
 const prisma = new PrismaClient();
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
   },
@@ -63,7 +65,7 @@ export const authOptions = {
   session: { strategy: "jwt" }
 };
 
-const handler = async (req, context) => {
+const handler = async (req: NextRequest, context) => {
   // console.log("THIS IS AN HANDLER\n", req.url);
 
   if (req.method == "HEAD") {

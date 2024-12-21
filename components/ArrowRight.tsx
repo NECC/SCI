@@ -1,4 +1,9 @@
-export const ArrowRight = ({ className, ...props }) => {
+export const ArrowRight = ({
+  className,
+  ...props
+}: {
+  className?: string;
+} & React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       className={className}

@@ -7,19 +7,28 @@ import ActivityDayFilter from "@components/ActivityDayFilter";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { set } from "zod";
+import { ActivityGetResponse } from "@app/api/activities/route";
+import { Activity as ActivityI, Enrollments } from "@prisma/generated/zod";
+
+type ScheduleActivity = ActivityI & {
+  enrollments: Enrollments[];
+  enrollable: boolean;
+  alreadyEnrolled: boolean;
+  attended: boolean;
+};
 
 export default function Schedule() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const { data: session, status } = useSession({
     required: false,
   });
 
   const getActivitiesGroupedByDay = async () => {
-    const { data } = await axios.get(`/api/activities`);
+    const { data } = await axios.get<ActivityGetResponse>(`/api/activities`);
 
     const activities = data.activities;
 
@@ -27,12 +36,16 @@ export default function Schedule() {
       activities.map((activity) => {
         return {
           ...activity,
-          enrollable: activity.capacity > activity.enrollments.length && activity.type === "WORKSHOP",
+          enrollable:
+            activity.capacity > activity.enrollments.length &&
+            activity.type === "WORKSHOP",
           alreadyEnrolled: activity.enrollments.some(
             (enrollment) => enrollment.userId === session?.user.id
           ),
           attended: activity.enrollments.some(
-            (enrollment) => enrollment.userId === session?.user.id && enrollment.attended === true
+            (enrollment) =>
+              enrollment.userId === session?.user.id &&
+              enrollment.attended === true
           ),
         };
       })
@@ -43,14 +56,14 @@ export default function Schedule() {
     return activities.map(([day, _]) => day);
   };
 
-  const groupActivitiesByStartTime = (activities) => {
+  const groupActivitiesByStartTime = (activities: ScheduleActivity[]) => {
     // Group activities by startTime
     const groups = activities.reduce((groups, activity) => {
       const group = groups[activity.startTime] || [];
       group.push(activity);
       groups[activity.startTime] = group;
       return groups;
-    }, {});
+    }, {}) as Record<string, ScheduleActivity[]>;
 
     // Convert groups to an array and sort by startTime
     return Object.entries(groups).sort(([startTimeA], [startTimeB]) => {
@@ -58,7 +71,10 @@ export default function Schedule() {
       const [hoursA, minutesA] = startTimeA.split(":");
       const [hoursB, minutesB] = startTimeB.split(":");
 
-      return hoursA - hoursB || (hoursA == hoursB && minutesA - minutesB);
+      return (
+        Number(hoursA) - Number(hoursB) ||
+        (hoursA == hoursB && Number(minutesA) - Number(minutesB))
+      );
     });
   };
 
@@ -87,25 +103,32 @@ export default function Schedule() {
   }, [status]);
 
   // TODO: Move this to a helper function
-  const groupAndSortActivitiesByDay = (activities) => {
+  const groupAndSortActivitiesByDay = (activities: ScheduleActivity[]) => {
     // Group activities by date
     const groups = activities.reduce((groups, activity) => {
       const date = new Date(activity.date);
       const day = date.getUTCDate();
       const month = date.getUTCMonth() + 1; // Months are 0-based
       const year = date.getUTCFullYear();
-      const dateString = `${day}`;
+      const dateString = `${day.toString()}`;
 
       const group = groups[dateString] || [];
       group.push(activity);
       groups[dateString] = group;
       return groups;
-    }, {});
+    }, {} as Record<string, ScheduleActivity[]>);
 
+    console.log(groups);
+
+    const res = Object.entries(groups).sort(
+      ([dateA], [dateB]) => Number(new Date(dateA)) - Number(new Date(dateB))
+    ) as [string, ScheduleActivity[]][];
+
+    console.log(res);
+
+    // TODO: Fix this typescript error
     // Convert groups to an array and sort by date
-    return Object.entries(groups).sort(
-      ([dateA], [dateB]) => new Date(dateA) - new Date(dateB)
-    );
+    return res;
   };
 
   return (

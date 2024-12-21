@@ -1,6 +1,11 @@
 import Image from 'next/image'
 
-const Sponsor = (data) => {
+const Sponsor = (data: {
+    link: string,
+    path: string,
+    name: string,
+    size: number
+}) => {
     return (
         <div className='py-8 w-[40%] flex justify-start items-center' >
             <a href={data.link} target="blank">

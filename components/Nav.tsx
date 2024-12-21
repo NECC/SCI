@@ -8,9 +8,15 @@ import { PiSignOutDuotone } from "react-icons/pi";
 import { Button, Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Role } from "@node_modules/.prisma/client";
 
-const Nav = (props) => {
-  const [user, setUser] = useState({});
+const Nav = () => {
+  const [user, setUser] = useState<{
+    name: string;
+    role: Role;
+    id: string;
+    email: string;
+  }>();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const router = useRouter();
 
@@ -59,7 +65,7 @@ const Nav = (props) => {
             <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
 
             <Button
-              color="white"
+              // color="white"
               variant="ghost"
               className="font-comfortaa font-bold text-white"
               onClick={() => router.push("/auth/signin")}
@@ -88,7 +94,9 @@ const Nav = (props) => {
                 className="font-poppins font-normal text-sm text-white"
                 variant="bordered"
                 size="md"
-                onClick={signOut}
+                onClick={() => {
+                  signOut();
+                }}
               >
                 Sign Out
               </Button>
@@ -96,7 +104,10 @@ const Nav = (props) => {
           </>
         )}
         <div className="w-full flex justify-end items-center">
-          <Link href="/" className="w-[70px] flex justify-end items-center hover:w-[75px] transition-all">
+          <Link
+            href="/"
+            className="w-[70px] flex justify-end items-center hover:w-[75px] transition-all"
+          >
             <Image src="/sci-logo.png" alt="Banner" width={75} height={75} />
           </Link>
         </div>
@@ -168,7 +179,10 @@ const Nav = (props) => {
             )}
           </div>
         </div>
-        <Link href="/" className="w-[70px] flex justify-end items-center hover:w-[75px] transition-all ml-3">
+        <Link
+          href="/"
+          className="w-[70px] flex justify-end items-center hover:w-[75px] transition-all ml-3"
+        >
           <Image src="/sci-logo.png" alt="Banner" width={75} height={75} />
         </Link>
         <div

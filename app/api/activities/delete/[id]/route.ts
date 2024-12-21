@@ -4,6 +4,28 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
+
+export interface ActivityDeleteResponse {
+  response: "success" | "error";
+  activityDeleted?: {
+    id: number;
+    title: string;
+    description: string;
+    speakers: string;
+    location: string;
+    capacity: number;
+    date: Date;
+    type: string;
+    enrollments: {
+      id: number;
+      userId: number;
+      activityId: number;
+      attended: boolean;
+    }[];
+  };
+  error?: string;
+}
+
 /**
  * Deletes an Activity by ID
  * @method DELETE

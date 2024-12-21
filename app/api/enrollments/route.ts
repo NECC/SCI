@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]/route";
+import { Enrollments } from "@prisma/generated/zod";
 const prisma = new PrismaClient();
 
 /**
@@ -50,6 +51,13 @@ export async function GET() {
   }
 }
 
+
+export interface EnrollmentPostResponse {
+  response: "success" | "error" | "already_enrolled";
+  enrollment?: Enrollments;
+  error?: string;
+}
+
 /**
   * Creates a new Enrollment
   * @requires AUTH
@@ -57,7 +65,7 @@ export async function GET() {
   * @param body activityId
   * @returns {response: "success", enrollment: enrollment || {response: "error", error: error}}
  */
-export async function POST(request) {
+export async function POST(request: Request) {
   const data = await request.json();
   const session = await getServerSession(authOptions);
 

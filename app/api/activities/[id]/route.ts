@@ -2,16 +2,36 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
+export interface ActivityGetResponseById {
+  response: "success" | "error";
+  activity: {
+    id: number;
+    title: string;
+    description: string;
+    speakers: string;
+    location: string;
+    capacity: number;
+    date: Date;
+    type: string;
+    enrollments: {
+      id: number;
+      userId: number;
+      attended: boolean;
+    }[];
+  }[];
+  error?: string;
+}
+
 /**
  * Get specific Activity from the database
  * @method GET
  * @returns [{ id, title, description, speakers, location, capacity, date, type, enrollments }]
  */
-export async function GET(req, {params: { id }}) {
+export async function GET(req: Request, props: { params: { id: string }}) {
   try {
     const activity = await prisma.activity.findMany({
       where: {
-        id: parseInt(id),
+        id: parseInt(props.params.id),
       },
       select: {
         id: true,

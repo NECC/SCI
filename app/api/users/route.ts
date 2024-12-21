@@ -52,6 +52,19 @@ export async function GET() {
   );
 }
 
+
+export interface UserPostResponse {
+  response: "success" | "error";
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    points: number;
+  };
+  error?: string;
+}
+
 /**
  * Creates a new User
  * @method POST
@@ -60,7 +73,7 @@ export async function GET() {
  * @example body: { "name": "Pedro Camargo", "email": "example@gmail.com", "password": "123456" }
  *
  */
-export async function POST(req) {
+export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   // console.log("SESSION FROM POST: ",session);
 

@@ -1,9 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { ActivitySchema } from "/prisma/zod";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+import { ActivitySchema } from "@prisma/zod";
+import { authOptions } from "../auth/[...nextauth]/route";
+import { Activity, Enrollments } from "@prisma/generated/zod";
 const prisma = new PrismaClient();
+
+export interface ActivityGetResponse {
+  response: "success" | "error";
+  activities: (Activity & { enrollments: Enrollments[]})[]
+  error?: string;
+}
 
 /**
  * Get all Activities from the database
@@ -42,6 +49,8 @@ export async function GET() {
   }
 }
 
+
+
 /**
  * Creates a new Activity
  * @method POST
@@ -50,7 +59,7 @@ export async function GET() {
  * @example body: { "title": "Palestra de React", "description": "Palestra sobre React", "speakers": "Pedro Camargo", "location": "Sala 1", "capacity": 50, "date": "2021-10-10T14:00:00.000Z", "type": "Palestra" }
  *
  */
-export async function POST(request) {
+export async function POST(request: Request) {
   const data = await request.json();
   const response = ActivitySchema.safeParse(data);
 
@@ -67,7 +76,7 @@ export async function POST(request) {
   }
 
   if (!response.success) {
-    console.error(response.error);
+    console.error("An error occurred while validating the data");
     prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: "ja fostes" })
@@ -85,6 +94,7 @@ export async function POST(request) {
       endTime: data.endTime,
       startTime: data.startTime,
       type: data.type,
+      picUrl: "", // TODO: Add a default picture
     },
   });
   prisma.$disconnect();

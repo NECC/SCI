@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { IoLogoGithub } from "react-icons/io";
 import { FaInstagram } from "react-icons/fa";
-import { FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
