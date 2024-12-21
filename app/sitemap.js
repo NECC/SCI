@@ -1,31 +1,31 @@
 export default function sitemap() {
   return [
     {
-      url: `${process.env.BASE_URL}`,
+      url: `${process.env.PRODUCTION_URL}`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: `${process.env.BASE_URL}/schedule`,
+      url: `${process.env.PRODUCTION_URL}/schedule`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: `${process.env.BASE_URL}/faqs`,
+      url: `${process.env.PRODUCTION_URL}/faqs`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: `${process.env.BASE_URL}/profile`,
+      url: `${process.env.PRODUCTION_URL}/profile`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: `${process.env.BASE_URL}/auth/signin`,
+      url: `${process.env.PRODUCTION_URL}/auth/signin`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
