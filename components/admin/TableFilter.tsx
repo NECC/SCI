@@ -8,7 +8,11 @@ const choices = [
   { active: "enrollments", select: ["ENROLLMENTID", "USERID", "ACTIVITYID"] },
 ];
 
-export default function TableFilter(props) {
+export default function TableFilter(props: {
+  active: string;
+  data: any;
+  setData: any;
+}) {
   const { active, data, setData } = props;
   const [filter, setFilter] = useState("");
   const [search, setSearch] = useState("");
@@ -108,17 +112,21 @@ export default function TableFilter(props) {
         radius="none"
         onChange={handleChange}
       >
-        {choices.map((choice) => {
-          if (choice.active == active) {
-            return choice.select.map((select) => {
-              return (
-                <SelectItem key={select} value={select}>
-                  {select}
-                </SelectItem>
-              );
-            });
-          }
-        })}
+        {choices
+          .map((choice) => {
+            if (choice.active == active) {
+              return choice.select
+                .map((select) => {
+                  return (
+                    <SelectItem key={select} value={select}>
+                      {select}
+                    </SelectItem>
+                  );
+                })
+                .flat();
+            }
+          })
+          .flat()}
       </Select>
       <Input
         type="text"

@@ -5,6 +5,11 @@ import { authOptions } from "../auth/[...nextauth]/route";
 
 const prisma = new PrismaClient();
 
+export interface RankingPostResponse {
+  response: "success" | "error";
+  increment?: { user: number, points: number };
+  error?: string;
+}
 
 /**
  * Get csv file of user points

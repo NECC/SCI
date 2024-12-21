@@ -1,13 +1,20 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@app/api/auth/[...nextauth]/route";
 
 const prisma = new PrismaClient();
 
+export interface EnrollmentAttendQRCodePostResponse {
+  response: "success" | "error";
+  updateEnrollment?: Prisma.BatchPayload;
+  error?: string;
+}
+
+
 /**
  * Turn an enrollment attended
- * @method PUT
+ * @method POST
  * @param {Request}  { userId: string, activityId: int }
  * @returns [{ user, points }]
  **/

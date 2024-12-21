@@ -78,7 +78,7 @@ export default function CreateActivity() {
               label="Start Time"
               className="max-w-[220px]"
               isInvalid={!!errors.startTime}
-              errorMessage={errors.startTime.message as string}
+              errorMessage={errors.startTime?.message as string}
               {...register('startTime')}
             />
             <Input

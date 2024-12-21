@@ -1,7 +1,12 @@
 "use client";
 
+import { ActivityGetResponse } from "@app/api/activities/route";
+import { EnrollmentGetResponse } from "@app/api/enrollments/route";
+import { UserGetResponse } from "@app/api/users/[id]/route";
+import { UsersGetResponse } from "@app/api/users/route";
 import GetDataTable from "@components/admin/GetDataTable";
 import TableFilter from "@components/admin/TableFilter";
+import { Role } from "@node_modules/.prisma/client";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -10,10 +15,17 @@ import { IoMdPerson } from "react-icons/io";
 import { MdLocalActivity, MdScreenRotationAlt } from "react-icons/md";
 
 export default function Admin() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<{
+    user: { name: string; email: string; role: Role } | null;
+    loaded: boolean;
+  }>({ user: null, loaded: false });
   const [active, setActive] = useState("activities");
   const [rows, setRows] = useState([]);
-  const [backupData, setBackupData] = useState([]);
+  const [backupData, setBackupData] = useState<
+    | UserGetResponse["user"][]
+    | ActivityGetResponse["activities"]
+    | EnrollmentGetResponse["enrollments"]
+  >([]);
   const router = useRouter();
 
   const { data: session, status } = useSession({
@@ -30,50 +42,53 @@ export default function Admin() {
   }, [session]);
 
   const getUsers = async () => {
-    const { data } = await axios.get("/api/users");
+    const { data } = await axios.get<UsersGetResponse>("/api/users");
     // console.log(data.users);
     setRows(data.users);
     setBackupData(data.users);
   };
 
-  const deleteActivities = async (id) => {
+  const deleteActivities = async (id: string) => {
     // console.log(id);
     const { data } = await axios.delete(`/api/activities/delete/${id}`);
     getActivities();
-  }
+  };
 
-  const deleteUsers = async (id) => {
+  const deleteUsers = async (id: string) => {
     // console.log(id);
     const { data } = await axios.delete(`/api/users/delete/${id}`);
     getUsers();
   };
 
-  const deleteEnrollments = async (id) => {
+  const deleteEnrollments = async (id: string) => {
     // console.log(id);
     const { data } = await axios.delete(`/api/enrollments/delete/${id}`);
     getEnrollments();
   };
 
   const getActivities = async () => {
-    const { data } = await axios.get("/api/activities");
+    const { data } = await axios.get<ActivityGetResponse>("/api/activities");
     // console.log(data.activities);
     setRows(data.activities);
     setBackupData(data.activities);
-  }
+  };
 
   const getEnrollments = async () => {
-    const { data } = await axios.get("/api/enrollments");
+    const { data } = await axios.get<EnrollmentGetResponse>("/api/enrollments");
     // console.log(data.enrollments);
-    setRows(data.enrollments.map((enrollment) => {
-      return {
-        activityId: enrollment.activity.id,
-        activityName: enrollment.activity.title,
-        userId: enrollment.user.id,
-        userName: enrollment.user.name,
-        id: enrollment.id,
-      }}));
+    setRows(
+      data.enrollments.map((enrollment) => {
+        return {
+          activityId: enrollment.activity.id,
+          activityName: enrollment.activity.title,
+          userId: enrollment.user.id,
+          userName: enrollment.user.name,
+          id: enrollment.id,
+        };
+      })
+    );
     setBackupData(data.enrollments);
-  }
+  };
 
   useEffect(() => {
     if (active == "users") {
@@ -134,10 +149,15 @@ export default function Admin() {
           Enrollments
         </div>
 
-        <TableFilter active={active} data={backupData} setData={setRows}/>
-
+        <TableFilter active={active} data={backupData} setData={setRows} />
       </div>
-      <GetDataTable data={rows} active={active} deleteUsers={deleteUsers} deleteActivities={deleteActivities} deleteEnrollments={deleteEnrollments}/>
+      <GetDataTable
+        data={rows}
+        active={active}
+        deleteUsers={deleteUsers}
+        deleteActivities={deleteActivities}
+        deleteEnrollments={deleteEnrollments}
+      />
     </div>
   );
 }

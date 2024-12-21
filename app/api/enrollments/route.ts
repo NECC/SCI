@@ -2,8 +2,23 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]/route";
-import { Enrollments } from "@prisma/generated/zod";
+import { Activity, Enrollments } from "@prisma/generated/zod";
 const prisma = new PrismaClient();
+
+export interface EnrollmentGetResponse {
+  response: "success" | "error";
+  enrollments: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+    activity: Activity;
+    attended: boolean;
+  }[]
+  error?: string;
+}
 
 /**
  * Get all Enrollments from the database

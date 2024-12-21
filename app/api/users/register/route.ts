@@ -6,6 +6,18 @@ import { UserSchema } from "@prisma/zod";
 
 const prisma = new PrismaClient();
 
+export interface UserPostRegisterResponse {
+  response: "success" | "error";
+  user?: {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+    points: number;
+  };
+  error?: string;
+}
+
 /**
  * Registers a new User
  * @method POST
@@ -14,11 +26,11 @@ const prisma = new PrismaClient();
  * @example body: { "name": "Pedro Camargo", "email": "example@gmail.com", "password": "123456" }
  *
  */
-export async function POST(request) {
+export async function POST(request: Request) {
   const userData = await request.json();
   const response = UserSchema.safeParse(userData);
   if (!response.success) {
-    console.error(response.error);
+    console.error("Form validation error");
     prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({ response: "error", error: "form validation" })

@@ -12,10 +12,10 @@ import { Role } from "@node_modules/.prisma/client";
 
 const Nav = () => {
   const [user, setUser] = useState<{
-    name: string;
-    role: Role;
-    id: string;
-    email: string;
+    name?: string;
+    role?: Role;
+    id?: string;
+    email?: string;
   }>();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const router = useRouter();
@@ -60,7 +60,7 @@ const Nav = () => {
           </div>
         )}
 
-        {status != "loading" && !user.name && (
+        {status != "loading" && !user?.name && (
           <>
             <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
 
@@ -75,7 +75,7 @@ const Nav = () => {
           </>
         )}
 
-        {user.role == "ADMIN" && (
+        {user?.role == "ADMIN" && (
           <>
             <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
             <Link href="/admin" className="nav_btn text-base">
@@ -83,7 +83,7 @@ const Nav = () => {
             </Link>
           </>
         )}
-        {user.name && (
+        {user?.name && (
           <>
             <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
             <Link href={`/profile/${user.id}`} className="nav_btn text-base">
@@ -146,7 +146,7 @@ const Nav = () => {
               FAQs
             </Link>
 
-            {user.name ? (
+            {user?.name ? (
               <>
                 <Link
                   href={`/profile/${user.id}`}

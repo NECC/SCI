@@ -5,6 +5,27 @@ import bcrypt from "bcrypt";
 import { authOptions } from "../auth/[...nextauth]/route";
 const prisma = new PrismaClient();
 
+export interface UsersGetResponse {
+  response: "success" | "error";
+  users: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    points: number;
+    accredited: boolean;
+    enrollments: {
+      id: string;
+      activity: {
+        id: string;
+        title: string;
+        type: string;
+      }
+    }[]
+  }[];
+  error?: string;
+}
+
 /**
  * Get all Users from the database
  * @method GET

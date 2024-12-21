@@ -10,8 +10,16 @@ import Image from "next/image";
 import { set } from "zod";
 import { useRouter } from "next/navigation";
 
+interface FormDataI {
+  email: string;
+  password: string;
+}
+
 export default function SignInPage() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<FormDataI>({
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -23,7 +31,7 @@ export default function SignInPage() {
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     setLoading(true);
     signIn("credentials", {
       email: formData.email.toLowerCase(),
@@ -150,8 +158,7 @@ export default function SignInPage() {
         {error && <div className="bg-red-500 p-2 text-white mt-3 rounded">Invalid credentials</div>}
         <Button
           className="mt-3 w-[300px] font-normal text-lg text-black bg-white"
-          size="large"
-          auto
+          size="lg"
           color="primary"
           variant="shadow"
           onPress={() => {

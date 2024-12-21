@@ -5,13 +5,14 @@ import Link from "next/link"
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { ActivityGetResponseById } from "@app/api/activities/[id]/route";
 
-export default function ActivityPage({ params }) {
+export default function ActivityPage({ params }: { params: { id: string, activityid: string } }) {
     // console.log(params)
-    const [activity, setActivity] = useState({});
+    const [activity, setActivity] = useState<ActivityGetResponseById["activity"][0] | null>();
 
     const getActivity = async () => {
-        const { data } = await axios.get(`/api/activities/${params.activityid}`);
+        const { data } = await axios.get<ActivityGetResponseById>(`/api/activities/${params.activityid}`);
         setActivity(data.activity[0]); 
     }
 

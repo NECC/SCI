@@ -1,12 +1,15 @@
 "use client";
 
-import CreateUser from "@components/admin/CreateUser";
+import CreateActivity from "@components/admin/CreateActivity";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-export default function UsersAdmin() {
-  const [user, setUser] = useState({});
+export default function ActivitiesAdmin() {
+  const [user, setUser] = useState<{
+    user: { email: string; role: string } | null;
+    loaded: boolean;
+  }>({ user: null, loaded: false });
   const router = useRouter();
 
   const { data: session, status } = useSession({
@@ -27,7 +30,7 @@ export default function UsersAdmin() {
 
   return (
     <div className="flex justify-start items-start gap-3 my-4 mx-12">
-      <CreateUser />
+      <CreateActivity />
     </div>
   );
 }

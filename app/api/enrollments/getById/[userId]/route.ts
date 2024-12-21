@@ -3,6 +3,30 @@ import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
+
+export interface EnrollmentGetByUserIdResponse {
+  response: "success" | "error";
+  enrollment: {
+    id: number;
+    user: {
+      id: number;
+      name: string;
+      email: string;
+    };
+    activity: {
+      id: number;
+      title: string;
+      description: string;
+      speakers: string;
+      location: string;
+      capacity: number;
+      date: Date;
+      type: string;
+    };
+    attended: boolean;
+  }[];
+}
+
 /**
  * Get all Enrollments from the database
  * @method GET

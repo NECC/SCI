@@ -12,7 +12,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserSchema } from "/prisma/zod";
+import { UserSchema } from "@prisma/zod";
+import { UserPostRegisterResponse } from "@app/api/users/register/route";
 
 export default function SignUpPage() {
   const [error, setError] = useState(null);
@@ -29,7 +30,7 @@ export default function SignUpPage() {
 
   const onSubmit = (formData) => {
     setLoading(true);
-    axios.post("/api/users/register", formData).then((res) => {
+    axios.post<UserPostRegisterResponse>("/api/users/register", formData).then((res) => {
       if (res.status == 200) {
         console.log(res)
         if (res.data.response == "error") {
@@ -115,7 +116,7 @@ export default function SignUpPage() {
               <CgProfile className="text-2xl text-white pointer-events-none flex-shrink-0" />
             }
             isInvalid={!!errors.name}
-            errorMessage={errors.name?.message}
+            errorMessage={errors.name?.message as string}
             {...register("name")}
           />
           <Input
@@ -158,7 +159,7 @@ export default function SignUpPage() {
               <RiLockPasswordLine className="text-2xl text-white pointer-events-none flex-shrink-0" />
             }
             isInvalid={!!errors.password}
-            errorMessage={errors.password?.message}
+            errorMessage={errors.password?.message as string}
             {...register("password")}
           />
 
@@ -202,7 +203,7 @@ export default function SignUpPage() {
               <CiMail className="text-2xl text-white pointer-events-none flex-shrink-0" />
             }
             isInvalid={!!errors.email}
-            errorMessage={errors.email?.message}
+            errorMessage={errors.email?.message as string}
             {...register("email")}
           />
 
@@ -221,8 +222,7 @@ export default function SignUpPage() {
           <Button
             type="submit"
             className="mt-3 w-[300px] lg:font-normal text-lg text-black bg-white font-bold "
-            size="large"
-            auto
+            size="lg"
             color="primary"
             variant="shadow"
           >

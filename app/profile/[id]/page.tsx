@@ -22,9 +22,15 @@ import { LineDots } from "@components/LineDots";
 import ActivityDayFilter from "@components/ActivityDayFilter";
 import { ArrowRight } from "@components/ArrowRight";
 import MinimalArrowDown from "@components/MinimalArrowDown";
+import { UserGetResponse } from "@app/api/users/[id]/route";
+import { EnrollmentGetByUserIdResponse } from "@app/api/enrollments/getById/[userId]/route";
 
-export default function Profile({ params: { id } }) {
-  const [user, setUser] = useState({});
+export default function Profile({
+  params: { id },
+}: {
+  params: { id: string };
+}) {
+  const [user, setUser] = useState<UserGetResponse["user"]>();
   const [activeScreen, setActiveScreen] = useState("enrolled");
   let count = 1;
   let maxCount = 0;
@@ -40,7 +46,7 @@ export default function Profile({ params: { id } }) {
   // get profile user
   useEffect(() => {
     const getUser = async () => {
-      const { data } = await axios.get(`/api/users/${id}`);
+      const { data } = await axios.get<UserGetResponse>(`/api/users/${id}`);
       // console.log(data);
       setUser(data.user);
     };
@@ -78,7 +84,15 @@ export default function Profile({ params: { id } }) {
   );
 }
 
-const ProfileNav = ({ user, activeScreen, setActiveScreen }) => {
+const ProfileNav = ({
+  user,
+  activeScreen,
+  setActiveScreen,
+}: {
+  user: UserGetResponse["user"];
+  activeScreen: string;
+  setActiveScreen: (screen: string) => void;
+}) => {
   const [selectedKeys, setSelectedKeys] = React.useState(
     new Set([activeScreen])
   );
@@ -120,7 +134,7 @@ const ProfileNav = ({ user, activeScreen, setActiveScreen }) => {
                   <p className="text-xl uppercase font-extrabold">
                     {items.find((v) => v.key == activeScreen).label}
                   </p>
-                  <p className="">{user.name}</p>
+                  <p className="">{user?.name}</p>
                 </div>
                 <MinimalArrowDown className="rotate-90" />
                 {/* <Image width={50} alt="" src={"/arrow-down.svg"} /> */}
@@ -135,7 +149,7 @@ const ProfileNav = ({ user, activeScreen, setActiveScreen }) => {
             disallowEmptySelection
             selectionMode="single"
             selectedKeys={selectedKeys}
-            onSelectionChange={setSelectedKeys}
+            onSelectionChange={() => setSelectedKeys(new Set(["enrolled"]))}
           >
             {(item) => <DropdownItem key={item.key}>{item.label}</DropdownItem>}
           </DropdownMenu>
@@ -175,14 +189,14 @@ const ProfileNav = ({ user, activeScreen, setActiveScreen }) => {
       </div>
       <div className="flex flex-row items-center">
         <div className="flex flex-col text-white bg-transparent py-7 pl-3">
-          <p className="text-2xl leading-5"> POINTS: {user.points} </p>
+          <p className="text-2xl leading-5"> POINTS: {user?.points} </p>
         </div>
       </div>
     </>
   );
 };
 
-const ActivitiesSubscribed = ({ id, user }) => {
+const ActivitiesSubscribed = ({ id }: { id: string }) => {
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([]);
   const [type, setType] = useState(null);
@@ -207,13 +221,15 @@ const ActivitiesSubscribed = ({ id, user }) => {
 
     // Convert groups to an array and sort by date
     return Object.entries(groups).sort(
-      ([dateA], [dateB]) => new Date(dateA) - new Date(dateB)
+      ([dateA], [dateB]) => Number(new Date(dateA)) - Number(new Date(dateB))
     );
   };
 
   const getUserEnrolledActivitiesGroupedByDay = async () => {
-    const enrollments = await axios.get(`/api/enrollments/getById/${id}`);
-    const activities = enrollments.data.enrollment;
+    const { data } = await axios.get<EnrollmentGetByUserIdResponse>(
+      `/api/enrollments/getById/${id}`
+    );
+    const activities = data.enrollment;
 
     return groupAndSortActivitiesByDay(
       activities.map((enrollment) => {
@@ -319,7 +335,10 @@ const ActivitiesSubscribed = ({ id, user }) => {
   );
 };
 
-const Code = ({ user, id }) => {
+const Code = ({ user, id }: {
+  user: UserGetResponse["user"];
+  id: string;
+}) => {
   const qrcode = useRef(null);
   const currentUrl =
     process.env.NEXT_PUBLIC_MODE == "development"
@@ -348,10 +367,13 @@ const Code = ({ user, id }) => {
       <div className="px-5 md:px-1 gap-3 flex flex-col h-full">
         <h2 className="text-white font-normal text-2xl md:text-lg leading-5">
           {" "}
-          Points: {user.points}{" "}
+          Points: {user?.points}{" "}
         </h2>
         <div className="flex flex-wrap content-center justify-center h-full">
-          <div className="-mt-56 md:-mt-28 border-[12px] rounded-md border-white" ref={qrcode}></div>
+          <div
+            className="-mt-56 md:-mt-28 border-[12px] rounded-md border-white"
+            ref={qrcode}
+          ></div>
         </div>
       </div>
     </div>
