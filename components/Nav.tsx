@@ -50,6 +50,10 @@ const Nav = () => {
           Schedule
         </Link>
         <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
+        <Link href="/team" className="nav_btn text-base">
+          Team 
+        </Link>
+        <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
         <Link href="/faqs" className="nav_btn text-base">
           FAQs
         </Link>
