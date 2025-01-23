@@ -12,16 +12,36 @@ datasource db {
 }
 
 model User {
-  id          String        @id @default(uuid())
-  email       String        @unique
-  password    String
-  name        String
-  role        Role          @default(USER)
-  points      Int           @default(0)
-  accredited  Boolean       @default(false)
-  accounts    Account[]
-  enrollments Enrollments[]
-  sessions    Session[]
+  id             String        @id @default(uuid())
+
+  // Credentials
+  email          String        @unique
+  password       String
+  name           String
+  role           Role          @default(USER)
+  accredited     Boolean       @default(false) // if the user went to the event check-in
+
+  // Ranking Attributes
+  rewarded       Boolean       @default(false) // if the user has been rewarded in the daily ranking
+  DailyRanking   DailyRanking[]
+
+
+  // Presences Control
+  academicNumber Int
+  graduation     Course?
+  enrollments    Enrollments[]
+
+
+  accounts       Account[]
+  sessions       Session[]
+}
+
+model DailyRanking {
+  id        Int     @id @default(autoincrement())
+  date      DateTime
+  userId    String
+  points    Int
+  user      User    @relation(fields: [userId], references: [id])
 }
 
 model Activity {
@@ -79,6 +99,7 @@ model Session {
 enum Type {
   WORKSHOP
   TALK
+  TERTULIA
   OTHER
 }
 
@@ -86,4 +107,19 @@ enum Role {
   USER
   ADMIN
   STAFF
+}
+
+enum Course {
+  BIOLOGIA_APLICADA
+  BIOLOGIA_E_GEOLOGIA
+  BIOQUIMICA
+  CIENCIA_DE_DADOS
+  CIENCIAS_DA_COMPUTACAO
+  CIENCIAS_DO_AMBIENTE
+  ESTATISTICA_APLICADA
+  FISICA
+  GEOLOGIA
+  MATEMATICA
+  OPTOMETRIA_E_CIENCIAS_DA_VISAO
+  QUIMICA
 }
