@@ -21,10 +21,13 @@ const teams: {
   [key in CoreTypes]: { name: string; role: string; photo: string }[];
 } = {
   necc: [
-    { name: "João Pedro Silva", role: "Coordenador", photo: "" },
-    { name: "Mariana Silva", role: "Vice-Coordenadora", photo: "" },
-    { name: "Mariana Silva", role: "Responsável Financeira", photo: "" },
-    { name: "Mariana Silva", role: "Vogal da Secção Académica", photo: "" },
+    { name: "Renato Garcia", role: "Organização", photo: "/team/RenatoGarcia.png" },
+    { name: "Pedro Camargo", role: "Tecnológico", photo: "/team/PedroCamargo.jpg" },
+    { name: "Miguel Calçado", role: "Tecnológico", photo: "/team/MiguelCalcado.png" },
+    { name: "Edgar Araujo", role: "Tecnológico e Marketing", photo: "/team/EdgarAraujo.png" },
+    { name: "Gabriel Costa", role: "Tecnológico", photo: "/team/GabrielCosta.png" },
+    { name: "Afonso Martins", role: "Recreativo", photo: "/team/AfonsoMartins.png" },
+    { name: "Davide Santos", role: "Marketing", photo: "/team/DavideSantos.png" },
   ],
   necaum: [
     { name: "Hugo Correia", role: "Coordenador", photo: "" },
@@ -58,7 +61,7 @@ export default function Team() {
 
 
   return (
-    <div className="h-screen bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">
+    <div className="min-h-screen bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">
       <h1 className="text-center text-white md:text-5xl text-4xl font-poppins font-bold pt-8">
         Núcleos Organizadores
       </h1>
@@ -89,7 +92,7 @@ export default function Team() {
               teams[core.name].map((team,j) => (
                 <div key={j} className="flex flex-col items-center text-center">
                   <div className="w-[200px] h-[200px] overflow-hidden mb-5 rounded-[50%]">
-                    <Image src={team.photo} className="w-full h-full object-cover" alt={team.name} />
+                    <Image src={team.photo} width={150} height={150} className="w-full h-full object-cover" alt={team.name} />
                   </div>
                   <div className="p-[15px]">
                     <div className="text-white font-poppins font-bold text-lg mb-2">{team.name}</div>
