@@ -29,7 +29,7 @@ const Pdf = (props) => {
                     alignItems: 'center'
                 }}>
                     <Image src="./ciencias.png" alt="SCI Logo" style={{ width: '95px', height: '50px' }} />
-                    <Image src="./sci-logo.png" alt="SCI Logo" style={{ width: '110px', height: '50px' }} />
+                    <Image src="./sci-logo2025.png" alt="SCI Logo" style={{ width: '110px', height: '50px' }} />
                 </View>
 
                 <Text style={{

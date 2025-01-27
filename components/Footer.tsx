@@ -10,7 +10,7 @@ const Footer = () => {
           <a href='https://github.com/NECC/Sci' target="_blank" ><IoLogoGithub className="hover:opacity-60 cursor-pointer" size={25} color={"white"} /></a>
           <a href='https://www.instagram.com/sci.uminho/' target="_blank"><FaInstagram className="hover:opacity-60 cursor-pointer" size={25} color={"white"} /> </a>
         </div>
-        <Image src="/sci-logo.png" alt="logo" width={80} height={80} className='md:order-2 order-first' />
+        <Image src="/sci-logo2025.png" alt="logo" width={80} height={80} className='md:order-2 order-first' />
         <a href="/docs/regulamento.pdf" className='hover:underline decoration-1 cursor-pointer text-white md:order-3' target='_blank'>General Information</a>
       </div>
     </div>
