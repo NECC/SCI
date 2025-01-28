@@ -112,7 +112,7 @@ const Nav = () => {
             href="/"
             className="w-[70px] flex justify-end items-center hover:w-[75px] transition-all"
           >
-            <Image src="/sci-logo.png" alt="Banner" width={75} height={75} />
+            <Image src="/sci-logo2025.png" alt="Banner" width={75} height={75} />
           </Link>
         </div>
       </div>
@@ -187,7 +187,7 @@ const Nav = () => {
           href="/"
           className="w-[70px] flex justify-end items-center hover:w-[75px] transition-all ml-3"
         >
-          <Image src="/sci-logo.png" alt="Banner" width={75} height={75} />
+          <Image src="/sci-logo2025.png" alt="Banner" width={75} height={75} />
         </Link>
         <div
           onClick={() => setToggleDropdown(!toggleDropdown)}
