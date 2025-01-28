@@ -27,7 +27,7 @@ model User {
 
 
   // Presences Control
-  academicNumber Int
+  academicNumber Int?
   graduation     Course?
   enrollments    Enrollments[]
 

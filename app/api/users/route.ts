@@ -12,7 +12,6 @@ export interface UsersGetResponse {
     name: string;
     email: string;
     role: string;
-    points: number;
     accredited: boolean;
     enrollments: {
       id: string;
@@ -50,7 +49,6 @@ export async function GET() {
       name: true,
       email: true,
       role: true,
-      points: true,
       accredited: true,
       enrollments: {
         select: {
@@ -150,7 +148,6 @@ export async function POST(req: Request) {
         name: true,
         email: true,
         role: true,
-        points: true,
       },
     });
 
@@ -201,7 +198,6 @@ export async function PUT(req) {
         name: data.params.name,
         email: data.params.email,
         role: data.params.role,
-        points: data.params.points,
       },
     });
 
