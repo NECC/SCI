@@ -13,7 +13,6 @@ export interface UserPostRegisterResponse {
     name: string;
     email: string;
     role: string;
-    points: number;
   };
   error?: string;
 }
@@ -63,14 +62,12 @@ export async function POST(request: Request) {
       email: userData.email.toLowerCase(),
       password: userData.password,
       role: "USER",
-      points: 0,
     },
     select: {
       id: true,
       name: true,
       email: true,
       role: true,
-      points: true,
     },
   });
   prisma.$disconnect();
