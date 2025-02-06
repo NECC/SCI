@@ -13,7 +13,6 @@ export interface UserPostRegisterResponse {
     name: string;
     email: string;
     role: string;
-    points: number;
   };
   error?: string;
 }
@@ -63,7 +62,6 @@ export async function POST(request: Request) {
       email: userData.email.toLowerCase(),
       password: userData.password,
       role: "USER",
-      academicNumber: 105530,
     },
     select: {
       id: true,

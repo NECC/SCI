@@ -59,7 +59,7 @@ export const UserSchema = z.object({
   name: z.string(),
   accredited: z.boolean(),
   rewarded: z.boolean(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().nullable(),
 })
 
 export type User = z.infer<typeof UserSchema>
@@ -199,7 +199,7 @@ export const DailyRankingIncludeSchema: z.ZodType<Prisma.DailyRankingInclude> = 
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
 
-export const DailyRankingArgsSchema: z.object({
+export const DailyRankingArgsSchema: z.ZodType<Prisma.DailyRankingDefaultArgs> = z.object({
   select: z.lazy(() => DailyRankingSelectSchema).optional(),
   include: z.lazy(() => DailyRankingIncludeSchema).optional(),
 }).strict();
@@ -579,7 +579,7 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
   role: z.union([ z.lazy(() => EnumRoleFilterSchema),z.lazy(() => RoleSchema) ]).optional(),
   accredited: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   rewarded: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  academicNumber: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  academicNumber: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => EnumCourseNullableFilterSchema),z.lazy(() => CourseSchema) ]).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingListRelationFilterSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsListRelationFilterSchema).optional(),
@@ -595,7 +595,7 @@ export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWit
   role: z.lazy(() => SortOrderSchema).optional(),
   accredited: z.lazy(() => SortOrderSchema).optional(),
   rewarded: z.lazy(() => SortOrderSchema).optional(),
-  academicNumber: z.lazy(() => SortOrderSchema).optional(),
+  academicNumber: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   graduation: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   DailyRanking: z.lazy(() => DailyRankingOrderByRelationAggregateInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsOrderByRelationAggregateInputSchema).optional(),
@@ -626,7 +626,7 @@ export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> 
   role: z.union([ z.lazy(() => EnumRoleFilterSchema),z.lazy(() => RoleSchema) ]).optional(),
   accredited: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   rewarded: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  academicNumber: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
+  academicNumber: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().int() ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => EnumCourseNullableFilterSchema),z.lazy(() => CourseSchema) ]).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingListRelationFilterSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsListRelationFilterSchema).optional(),
@@ -642,7 +642,7 @@ export const UserOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserOrderBy
   role: z.lazy(() => SortOrderSchema).optional(),
   accredited: z.lazy(() => SortOrderSchema).optional(),
   rewarded: z.lazy(() => SortOrderSchema).optional(),
-  academicNumber: z.lazy(() => SortOrderSchema).optional(),
+  academicNumber: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   graduation: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   _count: z.lazy(() => UserCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => UserAvgOrderByAggregateInputSchema).optional(),
@@ -662,7 +662,7 @@ export const UserScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.UserScal
   role: z.union([ z.lazy(() => EnumRoleWithAggregatesFilterSchema),z.lazy(() => RoleSchema) ]).optional(),
   accredited: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
   rewarded: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
-  academicNumber: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  academicNumber: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => EnumCourseNullableWithAggregatesFilterSchema),z.lazy(() => CourseSchema) ]).optional().nullable(),
 }).strict();
 
@@ -674,7 +674,7 @@ export const DailyRankingWhereInputSchema: z.ZodType<Prisma.DailyRankingWhereInp
   date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   points: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
-  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict();
 
 export const DailyRankingOrderByWithRelationInputSchema: z.ZodType<Prisma.DailyRankingOrderByWithRelationInput> = z.object({
@@ -696,7 +696,7 @@ export const DailyRankingWhereUniqueInputSchema: z.ZodType<Prisma.DailyRankingWh
   date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   points: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
-  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict());
 
 export const DailyRankingOrderByWithAggregationInputSchema: z.ZodType<Prisma.DailyRankingOrderByWithAggregationInput> = z.object({
@@ -1054,7 +1054,7 @@ export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object
   role: z.lazy(() => RoleSchema).optional(),
   accredited: z.boolean().optional(),
   rewarded: z.boolean().optional(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().optional().nullable(),
   graduation: z.lazy(() => CourseSchema).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingCreateNestedManyWithoutUserInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsCreateNestedManyWithoutUserInputSchema).optional(),
@@ -1070,7 +1070,7 @@ export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreat
   role: z.lazy(() => RoleSchema).optional(),
   accredited: z.boolean().optional(),
   rewarded: z.boolean().optional(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().optional().nullable(),
   graduation: z.lazy(() => CourseSchema).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
@@ -1086,7 +1086,7 @@ export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUpdateManyWithoutUserNestedInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -1102,7 +1102,7 @@ export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdat
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -1118,7 +1118,7 @@ export const UserCreateManyInputSchema: z.ZodType<Prisma.UserCreateManyInput> = 
   role: z.lazy(() => RoleSchema).optional(),
   accredited: z.boolean().optional(),
   rewarded: z.boolean().optional(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().optional().nullable(),
   graduation: z.lazy(() => CourseSchema).optional().nullable()
 }).strict();
 
@@ -1130,7 +1130,7 @@ export const UserUpdateManyMutationInputSchema: z.ZodType<Prisma.UserUpdateManyM
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -1142,7 +1142,7 @@ export const UserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserUncheckedU
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -1513,15 +1513,15 @@ export const BoolFilterSchema: z.ZodType<Prisma.BoolFilter> = z.object({
   not: z.union([ z.boolean(),z.lazy(() => NestedBoolFilterSchema) ]).optional(),
 }).strict();
 
-export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
+export const IntNullableFilterSchema: z.ZodType<Prisma.IntNullableFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
   lt: z.number().optional(),
   lte: z.number().optional(),
   gt: z.number().optional(),
   gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableFilterSchema) ]).optional().nullable(),
 }).strict();
 
 export const EnumCourseNullableFilterSchema: z.ZodType<Prisma.EnumCourseNullableFilter> = z.object({
@@ -1656,20 +1656,20 @@ export const BoolWithAggregatesFilterSchema: z.ZodType<Prisma.BoolWithAggregates
   _max: z.lazy(() => NestedBoolFilterSchema).optional()
 }).strict();
 
-export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
+export const IntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.IntNullableWithAggregatesFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
   lt: z.number().optional(),
   lte: z.number().optional(),
   gt: z.number().optional(),
   gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
-  _count: z.lazy(() => NestedIntFilterSchema).optional(),
-  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
-  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
-  _min: z.lazy(() => NestedIntFilterSchema).optional(),
-  _max: z.lazy(() => NestedIntFilterSchema).optional()
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntNullableFilterSchema).optional()
 }).strict();
 
 export const EnumCourseNullableWithAggregatesFilterSchema: z.ZodType<Prisma.EnumCourseNullableWithAggregatesFilter> = z.object({
@@ -1680,6 +1680,17 @@ export const EnumCourseNullableWithAggregatesFilterSchema: z.ZodType<Prisma.Enum
   _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _min: z.lazy(() => NestedEnumCourseNullableFilterSchema).optional(),
   _max: z.lazy(() => NestedEnumCourseNullableFilterSchema).optional()
+}).strict();
+
+export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
 }).strict();
 
 export const DateTimeFilterSchema: z.ZodType<Prisma.DateTimeFilter> = z.object({
@@ -1693,7 +1704,7 @@ export const DateTimeFilterSchema: z.ZodType<Prisma.DateTimeFilter> = z.object({
   not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeFilterSchema) ]).optional(),
 }).strict();
 
-export const UserScalarRelationFilterSchema: z.ZodType<Prisma.UserScalarRelationFilter> = z.object({
+export const UserRelationFilterSchema: z.ZodType<Prisma.UserRelationFilter> = z.object({
   is: z.lazy(() => UserWhereInputSchema).optional(),
   isNot: z.lazy(() => UserWhereInputSchema).optional()
 }).strict();
@@ -1727,6 +1738,22 @@ export const DailyRankingMinOrderByAggregateInputSchema: z.ZodType<Prisma.DailyR
 export const DailyRankingSumOrderByAggregateInputSchema: z.ZodType<Prisma.DailyRankingSumOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   points: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntFilterSchema).optional()
 }).strict();
 
 export const DateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.DateTimeWithAggregatesFilter> = z.object({
@@ -1868,17 +1895,6 @@ export const StringNullableFilterSchema: z.ZodType<Prisma.StringNullableFilter> 
   not: z.union([ z.string(),z.lazy(() => NestedStringNullableFilterSchema) ]).optional().nullable(),
 }).strict();
 
-export const IntNullableFilterSchema: z.ZodType<Prisma.IntNullableFilter> = z.object({
-  equals: z.number().optional().nullable(),
-  in: z.number().array().optional().nullable(),
-  notIn: z.number().array().optional().nullable(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntNullableFilterSchema) ]).optional().nullable(),
-}).strict();
-
 export const AccountProviderProviderAccountIdCompoundUniqueInputSchema: z.ZodType<Prisma.AccountProviderProviderAccountIdCompoundUniqueInput> = z.object({
   provider: z.string(),
   providerAccountId: z.string()
@@ -1953,22 +1969,6 @@ export const StringNullableWithAggregatesFilterSchema: z.ZodType<Prisma.StringNu
   _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _min: z.lazy(() => NestedStringNullableFilterSchema).optional(),
   _max: z.lazy(() => NestedStringNullableFilterSchema).optional()
-}).strict();
-
-export const IntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.IntNullableWithAggregatesFilter> = z.object({
-  equals: z.number().optional().nullable(),
-  in: z.number().array().optional().nullable(),
-  notIn: z.number().array().optional().nullable(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
-  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
-  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
-  _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
-  _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
-  _max: z.lazy(() => NestedIntNullableFilterSchema).optional()
 }).strict();
 
 export const SessionCountOrderByAggregateInputSchema: z.ZodType<Prisma.SessionCountOrderByAggregateInput> = z.object({
@@ -2060,8 +2060,8 @@ export const BoolFieldUpdateOperationsInputSchema: z.ZodType<Prisma.BoolFieldUpd
   set: z.boolean().optional()
 }).strict();
 
-export const IntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.IntFieldUpdateOperationsInput> = z.object({
-  set: z.number().optional(),
+export const NullableIntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableIntFieldUpdateOperationsInput> = z.object({
+  set: z.number().optional().nullable(),
   increment: z.number().optional(),
   decrement: z.number().optional(),
   multiply: z.number().optional(),
@@ -2194,6 +2194,14 @@ export const DateTimeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.DateTime
   set: z.coerce.date().optional()
 }).strict();
 
+export const IntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.IntFieldUpdateOperationsInput> = z.object({
+  set: z.number().optional(),
+  increment: z.number().optional(),
+  decrement: z.number().optional(),
+  multiply: z.number().optional(),
+  divide: z.number().optional()
+}).strict();
+
 export const UserUpdateOneRequiredWithoutDailyRankingNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutDailyRankingNestedInput> = z.object({
   create: z.union([ z.lazy(() => UserCreateWithoutDailyRankingInputSchema),z.lazy(() => UserUncheckedCreateWithoutDailyRankingInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutDailyRankingInputSchema).optional(),
@@ -2286,14 +2294,6 @@ export const NullableStringFieldUpdateOperationsInputSchema: z.ZodType<Prisma.Nu
   set: z.string().optional().nullable()
 }).strict();
 
-export const NullableIntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableIntFieldUpdateOperationsInput> = z.object({
-  set: z.number().optional().nullable(),
-  increment: z.number().optional(),
-  decrement: z.number().optional(),
-  multiply: z.number().optional(),
-  divide: z.number().optional()
-}).strict();
-
 export const UserUpdateOneRequiredWithoutAccountsNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutAccountsNestedInput> = z.object({
   create: z.union([ z.lazy(() => UserCreateWithoutAccountsInputSchema),z.lazy(() => UserUncheckedCreateWithoutAccountsInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutAccountsInputSchema).optional(),
@@ -2342,15 +2342,15 @@ export const NestedBoolFilterSchema: z.ZodType<Prisma.NestedBoolFilter> = z.obje
   not: z.union([ z.boolean(),z.lazy(() => NestedBoolFilterSchema) ]).optional(),
 }).strict();
 
-export const NestedIntFilterSchema: z.ZodType<Prisma.NestedIntFilter> = z.object({
-  equals: z.number().optional(),
-  in: z.number().array().optional(),
-  notIn: z.number().array().optional(),
+export const NestedIntNullableFilterSchema: z.ZodType<Prisma.NestedIntNullableFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
   lt: z.number().optional(),
   lte: z.number().optional(),
   gt: z.number().optional(),
   gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableFilterSchema) ]).optional().nullable(),
 }).strict();
 
 export const NestedEnumCourseNullableFilterSchema: z.ZodType<Prisma.NestedEnumCourseNullableFilter> = z.object({
@@ -2377,6 +2377,17 @@ export const NestedStringWithAggregatesFilterSchema: z.ZodType<Prisma.NestedStri
   _max: z.lazy(() => NestedStringFilterSchema).optional()
 }).strict();
 
+export const NestedIntFilterSchema: z.ZodType<Prisma.NestedIntFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
+}).strict();
+
 export const NestedEnumRoleWithAggregatesFilterSchema: z.ZodType<Prisma.NestedEnumRoleWithAggregatesFilter> = z.object({
   equals: z.lazy(() => RoleSchema).optional(),
   in: z.lazy(() => RoleSchema).array().optional(),
@@ -2393,6 +2404,54 @@ export const NestedBoolWithAggregatesFilterSchema: z.ZodType<Prisma.NestedBoolWi
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedBoolFilterSchema).optional(),
   _max: z.lazy(() => NestedBoolFilterSchema).optional()
+}).strict();
+
+export const NestedIntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntNullableWithAggregatesFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntNullableFilterSchema).optional()
+}).strict();
+
+export const NestedFloatNullableFilterSchema: z.ZodType<Prisma.NestedFloatNullableFilter> = z.object({
+  equals: z.number().optional().nullable(),
+  in: z.number().array().optional().nullable(),
+  notIn: z.number().array().optional().nullable(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedFloatNullableFilterSchema) ]).optional().nullable(),
+}).strict();
+
+export const NestedEnumCourseNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedEnumCourseNullableWithAggregatesFilter> = z.object({
+  equals: z.lazy(() => CourseSchema).optional().nullable(),
+  in: z.lazy(() => CourseSchema).array().optional().nullable(),
+  notIn: z.lazy(() => CourseSchema).array().optional().nullable(),
+  not: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NestedEnumCourseNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedEnumCourseNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedEnumCourseNullableFilterSchema).optional()
+}).strict();
+
+export const NestedDateTimeFilterSchema: z.ZodType<Prisma.NestedDateTimeFilter> = z.object({
+  equals: z.coerce.date().optional(),
+  in: z.coerce.date().array().optional(),
+  notIn: z.coerce.date().array().optional(),
+  lt: z.coerce.date().optional(),
+  lte: z.coerce.date().optional(),
+  gt: z.coerce.date().optional(),
+  gte: z.coerce.date().optional(),
+  not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeFilterSchema) ]).optional(),
 }).strict();
 
 export const NestedIntWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntWithAggregatesFilter> = z.object({
@@ -2420,38 +2479,6 @@ export const NestedFloatFilterSchema: z.ZodType<Prisma.NestedFloatFilter> = z.ob
   gt: z.number().optional(),
   gte: z.number().optional(),
   not: z.union([ z.number(),z.lazy(() => NestedFloatFilterSchema) ]).optional(),
-}).strict();
-
-export const NestedEnumCourseNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedEnumCourseNullableWithAggregatesFilter> = z.object({
-  equals: z.lazy(() => CourseSchema).optional().nullable(),
-  in: z.lazy(() => CourseSchema).array().optional().nullable(),
-  notIn: z.lazy(() => CourseSchema).array().optional().nullable(),
-  not: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NestedEnumCourseNullableWithAggregatesFilterSchema) ]).optional().nullable(),
-  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
-  _min: z.lazy(() => NestedEnumCourseNullableFilterSchema).optional(),
-  _max: z.lazy(() => NestedEnumCourseNullableFilterSchema).optional()
-}).strict();
-
-export const NestedIntNullableFilterSchema: z.ZodType<Prisma.NestedIntNullableFilter> = z.object({
-  equals: z.number().optional().nullable(),
-  in: z.number().array().optional().nullable(),
-  notIn: z.number().array().optional().nullable(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntNullableFilterSchema) ]).optional().nullable(),
-}).strict();
-
-export const NestedDateTimeFilterSchema: z.ZodType<Prisma.NestedDateTimeFilter> = z.object({
-  equals: z.coerce.date().optional(),
-  in: z.coerce.date().array().optional(),
-  notIn: z.coerce.date().array().optional(),
-  lt: z.coerce.date().optional(),
-  lte: z.coerce.date().optional(),
-  gt: z.coerce.date().optional(),
-  gte: z.coerce.date().optional(),
-  not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeFilterSchema) ]).optional(),
 }).strict();
 
 export const NestedDateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.NestedDateTimeWithAggregatesFilter> = z.object({
@@ -2514,33 +2541,6 @@ export const NestedStringNullableWithAggregatesFilterSchema: z.ZodType<Prisma.Ne
   _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _min: z.lazy(() => NestedStringNullableFilterSchema).optional(),
   _max: z.lazy(() => NestedStringNullableFilterSchema).optional()
-}).strict();
-
-export const NestedIntNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntNullableWithAggregatesFilter> = z.object({
-  equals: z.number().optional().nullable(),
-  in: z.number().array().optional().nullable(),
-  notIn: z.number().array().optional().nullable(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedIntNullableWithAggregatesFilterSchema) ]).optional().nullable(),
-  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
-  _avg: z.lazy(() => NestedFloatNullableFilterSchema).optional(),
-  _sum: z.lazy(() => NestedIntNullableFilterSchema).optional(),
-  _min: z.lazy(() => NestedIntNullableFilterSchema).optional(),
-  _max: z.lazy(() => NestedIntNullableFilterSchema).optional()
-}).strict();
-
-export const NestedFloatNullableFilterSchema: z.ZodType<Prisma.NestedFloatNullableFilter> = z.object({
-  equals: z.number().optional().nullable(),
-  in: z.number().array().optional().nullable(),
-  notIn: z.number().array().optional().nullable(),
-  lt: z.number().optional(),
-  lte: z.number().optional(),
-  gt: z.number().optional(),
-  gte: z.number().optional(),
-  not: z.union([ z.number(),z.lazy(() => NestedFloatNullableFilterSchema) ]).optional().nullable(),
 }).strict();
 
 export const DailyRankingCreateWithoutUserInputSchema: z.ZodType<Prisma.DailyRankingCreateWithoutUserInput> = z.object({
@@ -2765,7 +2765,7 @@ export const UserCreateWithoutDailyRankingInputSchema: z.ZodType<Prisma.UserCrea
   role: z.lazy(() => RoleSchema).optional(),
   accredited: z.boolean().optional(),
   rewarded: z.boolean().optional(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().optional().nullable(),
   graduation: z.lazy(() => CourseSchema).optional().nullable(),
   enrollments: z.lazy(() => EnrollmentsCreateNestedManyWithoutUserInputSchema).optional(),
   accounts: z.lazy(() => AccountCreateNestedManyWithoutUserInputSchema).optional(),
@@ -2780,7 +2780,7 @@ export const UserUncheckedCreateWithoutDailyRankingInputSchema: z.ZodType<Prisma
   role: z.lazy(() => RoleSchema).optional(),
   accredited: z.boolean().optional(),
   rewarded: z.boolean().optional(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().optional().nullable(),
   graduation: z.lazy(() => CourseSchema).optional().nullable(),
   enrollments: z.lazy(() => EnrollmentsUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   accounts: z.lazy(() => AccountUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
@@ -2811,7 +2811,7 @@ export const UserUpdateWithoutDailyRankingInputSchema: z.ZodType<Prisma.UserUpda
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   enrollments: z.lazy(() => EnrollmentsUpdateManyWithoutUserNestedInputSchema).optional(),
   accounts: z.lazy(() => AccountUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -2826,7 +2826,7 @@ export const UserUncheckedUpdateWithoutDailyRankingInputSchema: z.ZodType<Prisma
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   enrollments: z.lazy(() => EnrollmentsUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   accounts: z.lazy(() => AccountUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -2910,7 +2910,7 @@ export const UserCreateWithoutEnrollmentsInputSchema: z.ZodType<Prisma.UserCreat
   role: z.lazy(() => RoleSchema).optional(),
   accredited: z.boolean().optional(),
   rewarded: z.boolean().optional(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().optional().nullable(),
   graduation: z.lazy(() => CourseSchema).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingCreateNestedManyWithoutUserInputSchema).optional(),
   accounts: z.lazy(() => AccountCreateNestedManyWithoutUserInputSchema).optional(),
@@ -2925,7 +2925,7 @@ export const UserUncheckedCreateWithoutEnrollmentsInputSchema: z.ZodType<Prisma.
   role: z.lazy(() => RoleSchema).optional(),
   accredited: z.boolean().optional(),
   rewarded: z.boolean().optional(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().optional().nullable(),
   graduation: z.lazy(() => CourseSchema).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   accounts: z.lazy(() => AccountUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
@@ -2994,7 +2994,7 @@ export const UserUpdateWithoutEnrollmentsInputSchema: z.ZodType<Prisma.UserUpdat
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUpdateManyWithoutUserNestedInputSchema).optional(),
   accounts: z.lazy(() => AccountUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -3009,7 +3009,7 @@ export const UserUncheckedUpdateWithoutEnrollmentsInputSchema: z.ZodType<Prisma.
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   accounts: z.lazy(() => AccountUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -3024,7 +3024,7 @@ export const UserCreateWithoutAccountsInputSchema: z.ZodType<Prisma.UserCreateWi
   role: z.lazy(() => RoleSchema).optional(),
   accredited: z.boolean().optional(),
   rewarded: z.boolean().optional(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().optional().nullable(),
   graduation: z.lazy(() => CourseSchema).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingCreateNestedManyWithoutUserInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsCreateNestedManyWithoutUserInputSchema).optional(),
@@ -3039,7 +3039,7 @@ export const UserUncheckedCreateWithoutAccountsInputSchema: z.ZodType<Prisma.Use
   role: z.lazy(() => RoleSchema).optional(),
   accredited: z.boolean().optional(),
   rewarded: z.boolean().optional(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().optional().nullable(),
   graduation: z.lazy(() => CourseSchema).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
@@ -3070,7 +3070,7 @@ export const UserUpdateWithoutAccountsInputSchema: z.ZodType<Prisma.UserUpdateWi
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUpdateManyWithoutUserNestedInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -3085,7 +3085,7 @@ export const UserUncheckedUpdateWithoutAccountsInputSchema: z.ZodType<Prisma.Use
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -3100,7 +3100,7 @@ export const UserCreateWithoutSessionsInputSchema: z.ZodType<Prisma.UserCreateWi
   role: z.lazy(() => RoleSchema).optional(),
   accredited: z.boolean().optional(),
   rewarded: z.boolean().optional(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().optional().nullable(),
   graduation: z.lazy(() => CourseSchema).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingCreateNestedManyWithoutUserInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsCreateNestedManyWithoutUserInputSchema).optional(),
@@ -3115,7 +3115,7 @@ export const UserUncheckedCreateWithoutSessionsInputSchema: z.ZodType<Prisma.Use
   role: z.lazy(() => RoleSchema).optional(),
   accredited: z.boolean().optional(),
   rewarded: z.boolean().optional(),
-  academicNumber: z.number().int(),
+  academicNumber: z.number().int().optional().nullable(),
   graduation: z.lazy(() => CourseSchema).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
@@ -3146,7 +3146,7 @@ export const UserUpdateWithoutSessionsInputSchema: z.ZodType<Prisma.UserUpdateWi
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUpdateManyWithoutUserNestedInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -3161,7 +3161,7 @@ export const UserUncheckedUpdateWithoutSessionsInputSchema: z.ZodType<Prisma.Use
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   accredited: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   rewarded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  academicNumber: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  academicNumber: z.union([ z.number().int(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => CourseSchema),z.lazy(() => NullableEnumCourseFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   enrollments: z.lazy(() => EnrollmentsUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -3763,11 +3763,6 @@ export const DailyRankingCreateManyArgsSchema: z.ZodType<Prisma.DailyRankingCrea
   skipDuplicates: z.boolean().optional(),
 }).strict() ;
 
-export const DailyRankingAndReturnCreateManyArgsSchema: z.ZodType<Prisma.DailyRankingAndReturnCreateManyArgs> = z.object({
-  data: z.union([ DailyRankingCreateManyInputSchema,DailyRankingCreateManyInputSchema.array() ]),
-  skipDuplicates: z.boolean().optional(),
-}).strict() ;
-
 export const DailyRankingDeleteArgsSchema: z.ZodType<Prisma.DailyRankingDeleteArgs> = z.object({
   select: DailyRankingSelectSchema.optional(),
   include: DailyRankingIncludeSchema.optional(),
@@ -3782,11 +3777,6 @@ export const DailyRankingUpdateArgsSchema: z.ZodType<Prisma.DailyRankingUpdateAr
 }).strict() ;
 
 export const DailyRankingUpdateManyArgsSchema: z.ZodType<Prisma.DailyRankingUpdateManyArgs> = z.object({
-  data: z.union([ DailyRankingUpdateManyMutationInputSchema,DailyRankingUncheckedUpdateManyInputSchema ]),
-  where: DailyRankingWhereInputSchema.optional(),
-}).strict() ;
-
-export const DailyRankingAndReturnUpdateManyArgsSchema: z.ZodType<Prisma.DailyRankingAndReturnUpdateManyArgs> = z.object({
   data: z.union([ DailyRankingUpdateManyMutationInputSchema,DailyRankingUncheckedUpdateManyInputSchema ]),
   where: DailyRankingWhereInputSchema.optional(),
 }).strict() ;
