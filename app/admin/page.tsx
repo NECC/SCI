@@ -20,6 +20,7 @@ export default function Admin() {
     loaded: boolean;
   }>({ user: null, loaded: false });
   const [active, setActive] = useState("activities");
+  const [prev, setPrev] = useState("activities");
   const [rows, setRows] = useState([]);
   const [backupData, setBackupData] = useState<
     | UserGetResponse["user"][]
@@ -35,6 +36,9 @@ export default function Admin() {
     },
   });
 
+  const [page,setPage] = useState(0);
+  const [more,setMore] = useState(true);
+
   useEffect(() => {
     if (session) {
       setUser({ user: session.user, loaded: true });
@@ -42,10 +46,17 @@ export default function Admin() {
   }, [session]);
 
   const getUsers = async () => {
-    const { data } = await axios.get<UsersGetResponse>("/api/users");
-    // console.log(data.users);
-    setRows(data.users);
-    setBackupData(data.users);
+    const { data } = await axios.get<UsersGetResponse>(`/api/users?skip=${page}&take=10`);
+    console.log(data);
+    if (data.users.length == 0){
+      setMore(false);
+    }
+    else{
+      // console.log(data.users);
+      setMore(true);
+      data.users.map((user) => {setRows([...rows,user])});
+      setBackupData(data.users);
+    }
   };
 
   const deleteActivities = async (id: string) => {
@@ -93,12 +104,25 @@ export default function Admin() {
   useEffect(() => {
     if (active == "users") {
       getUsers();
+      if (prev != "users") {
+        setRows([]);
+        setPrev("users");
+        setPage(0);
+      }
     } else if (active == "activities") {
       getActivities();
+      if (prev != "activities") {
+        setRows([]);
+        setPrev("activities");
+      }
     } else if (active == "enrollments") {
       getEnrollments();
+      if (prev != "enrollments") {
+        setRows([]);
+        setPrev("enrollments");
+      }
     }
-  }, [active]);
+  }, [active,page]);
 
   if (status == "loading") return <p>Loading...</p>;
   if (user.user?.role != "ADMIN" && user.loaded) router.push("/");
@@ -154,6 +178,9 @@ export default function Admin() {
       <GetDataTable
         data={rows}
         active={active}
+        page={page}
+        changePage={setPage}
+        more={more}
         deleteUsers={deleteUsers}
         deleteActivities={deleteActivities}
         deleteEnrollments={deleteEnrollments}

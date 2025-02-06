@@ -63,14 +63,13 @@ export async function POST(request: Request) {
       email: userData.email.toLowerCase(),
       password: userData.password,
       role: "USER",
-      points: 0,
+      academicNumber: 105530,
     },
     select: {
       id: true,
       name: true,
       email: true,
       role: true,
-      points: true,
     },
   });
   prisma.$disconnect();

@@ -9,10 +9,12 @@ import {
   Tooltip,
   User,
   Checkbox,
+  Spinner,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
-import { MdModeEditOutline } from "react-icons/md";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { Button, ButtonGroup } from "@node_modules/@nextui-org/button/dist";
 import { IoMdTrash } from "react-icons/io";
 import axios from "axios";
 import { set } from "zod";
@@ -104,7 +106,7 @@ const columnsEnrollments = [
 ];
 
 export default function GetDataTable(props) {
-  const { data, active, deleteUsers, deleteActivities, deleteEnrollments } = props;
+  const { data, active, page, changePage, more, deleteUsers, deleteActivities, deleteEnrollments } = props;
   const [columns, setColumns] = useState([...columnsActivities]);
   const [loading, setLoading] = useState(false);
   const [checkChanged, setCheckChanged] = useState(false);
@@ -212,6 +214,15 @@ export default function GetDataTable(props) {
   return (
     <div className="w-full p-4 flex justify-center">
       <Table
+        bottomContent={
+          more && !loading ? (
+            <div className="flex w-full justify-center">
+              <Button variant="flat" onClick={() => changePage(page+1)}>
+                Load More
+              </Button>
+            </div>
+          ) : <></>
+        } 
         aria-label="Example static collection table"
         className="w-full max-w-[1700px] box-content"
         isStriped={true}
@@ -230,7 +241,19 @@ export default function GetDataTable(props) {
             </TableRow>
           )}
         </TableBody>
+        
       </Table>
     </div>
   );
 }
+/*<ButtonGroup>
+          <Button onClick={() => changePage(page-1)}>
+            <MdKeyboardArrowLeft/>
+          </Button>
+          <Button>
+            {page}
+          </Button>
+          <Button onClick={() => changePage(page+1)}>
+            <MdKeyboardArrowRight/>
+          </Button>
+        </ButtonGroup>*/
