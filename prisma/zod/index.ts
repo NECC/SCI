@@ -28,7 +28,7 @@ export const QueryModeSchema = z.enum(['default','insensitive']);
 
 export const NullsOrderSchema = z.enum(['first','last']);
 
-export const Types = [ "WORKSHOP", "TALK", "OTHER" ] as const;
+export const Types = [ "WORKSHOP", "TALK", "OTHER", "TERTULIA" ] as const;
 export const TypeSchema = z.enum(Types);
 
 export type TypeType = `${z.infer<typeof TypeSchema>}`

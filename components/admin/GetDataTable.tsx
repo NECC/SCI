@@ -11,11 +11,12 @@ import {
   Checkbox,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { FaEye } from "react-icons/fa";
-import { MdModeEditOutline } from "react-icons/md";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { Button, ButtonGroup } from "@node_modules/@nextui-org/button/dist";
 import { IoMdTrash } from "react-icons/io";
 import axios from "axios";
-import { set } from "zod";
+import { useRouter } from "next/navigation";
 import { UserPostAccreditationResponse } from "@app/api/users/accreditation/[id]/route";
 
 const columnsUsers = [
@@ -30,10 +31,6 @@ const columnsUsers = [
   {
     key: "role",
     label: "ROLE",
-  },
-  {
-    key: "points",
-    label: "POINTS",
   },
   {
     key: "accredited",
@@ -104,10 +101,19 @@ const columnsEnrollments = [
 ];
 
 export default function GetDataTable(props) {
-  const { data, active, deleteUsers, deleteActivities, deleteEnrollments } = props;
+  const router = useRouter();
+  const { data, active, page, changePage, more, deleteUsers, deleteActivities, deleteEnrollments} = props;
   const [columns, setColumns] = useState([...columnsActivities]);
   const [loading, setLoading] = useState(false);
   const [checkChanged, setCheckChanged] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    role: "NOCHANGE",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const onSubmit = (d) => console.log(d);
 
   const renderCell = (item, columnKey) => {
     const uid = item.id;
@@ -124,6 +130,28 @@ export default function GetDataTable(props) {
       setCheckChanged(!checkChanged);
       setLoading(false);
     };
+
+    /*const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prevState) => ({ ...prevState, [name]: value }));
+    };
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setErrorMessage("");
+      axios
+        .put(`/api/users/edit/${uid}`, formData)
+        .then((res) => {
+          if (res.status == 200) {
+            router.push("/admin");
+          };
+          console.log(res);
+        })
+        .catch((err) => {
+          setErrorMessage(err.message);
+        });
+      changePage(0);
+    };*/
 
     // console.log(item);
 
@@ -158,6 +186,14 @@ export default function GetDataTable(props) {
                 <IoMdTrash />
               </span>
             </Tooltip>
+            {/*<Tooltip color="primary" content="Edit user">
+              <span
+                onClick={() => editUsers(uid)}
+                className="text-lg text-primary cursor-pointer active:opacity-50"
+              >
+                <MdEdit />
+              </span>
+            </Tooltip>*/}
           </div>
         );
       case "deleteActivities":
@@ -194,6 +230,15 @@ export default function GetDataTable(props) {
             avatarProps={{ src: "/user.svg", isBordered: true, size: "sm" }}
           />
         );
+      case "name":
+        return (
+          <>
+            <div className="relative flex items-center gap-2"> 
+              {getKeyValue(item,columnKey)}
+            </div>
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+          </>
+        )
       default:
         return getKeyValue(item, columnKey);
     }
@@ -212,6 +257,15 @@ export default function GetDataTable(props) {
   return (
     <div className="w-full p-4 flex justify-center">
       <Table
+        bottomContent={
+          more ? (
+            <div className="flex w-full justify-center">
+              <Button variant="flat" onClick={() => changePage(page+1)}>
+                Load More
+              </Button>
+            </div>
+          ) : <></>
+        } 
         aria-label="Example static collection table"
         className="w-full max-w-[1700px] box-content"
         isStriped={true}
@@ -229,8 +283,19 @@ export default function GetDataTable(props) {
               )}
             </TableRow>
           )}
-        </TableBody>
+        </TableBody> 
       </Table>
     </div>
   );
 }
+/*<ButtonGroup>
+          <Button onClick={() => changePage(page-1)}>
+            <MdKeyboardArrowLeft/>
+          </Button>
+          <Button>
+            {page}
+          </Button>
+          <Button onClick={() => changePage(page+1)}>
+            <MdKeyboardArrowRight/>
+          </Button>
+        </ButtonGroup>*/
