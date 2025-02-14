@@ -64,7 +64,7 @@ export async function GET(req : Request) {
         }
       },
     },
-    skip: +params.searchParams.get("skip"),
+    skip: +params.searchParams.get("skip")*(+params.searchParams.get("take")),
     take: +params.searchParams.get("take"),
   });
   // // console.log(users);

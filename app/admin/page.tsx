@@ -2,7 +2,6 @@
 
 import { ActivityGetResponse } from "@app/api/activities/route";
 import { EnrollmentGetResponse } from "@app/api/enrollments/route";
-import { UserGetResponse } from "@app/api/users/[id]/route";
 import { UsersGetResponse } from "@app/api/users/route";
 import GetDataTable from "@components/admin/GetDataTable";
 import TableFilter from "@components/admin/TableFilter";
@@ -22,11 +21,7 @@ export default function Admin() {
   const [active, setActive] = useState("activities");
   const [prev, setPrev] = useState("activities");
   const [rows, setRows] = useState([]);
-  const [backupData, setBackupData] = useState<
-    | UserGetResponse["user"][]
-    | ActivityGetResponse["activities"]
-    | EnrollmentGetResponse["enrollments"]
-  >([]);
+  const [backupData, setBackupData] = useState([]);
   const router = useRouter();
 
   const { data: session, status } = useSession({
@@ -46,16 +41,22 @@ export default function Admin() {
   }, [session]);
 
   const getUsers = async () => {
+    if (prev != "users") setPage(0);
     const { data } = await axios.get<UsersGetResponse>(`/api/users?skip=${page}&take=10`);
-    console.log(data);
     if (data.users.length == 0){
       setMore(false);
     }
     else{
       // console.log(data.users);
       setMore(true);
-      data.users.map((user) => {setRows([...rows,user])});
-      setBackupData(data.users);
+      if (page == 0 || prev != "users") {
+        setRows(data.users);
+        setBackupData(data.users);
+      }
+      else{
+        data.users.map((user) => {setRows([...rows,user])});
+        data.users.map((user) => {setBackupData([...backupData,user])});
+      }
     }
   };
 
@@ -78,49 +79,89 @@ export default function Admin() {
   };
 
   const getActivities = async () => {
-    const { data } = await axios.get<ActivityGetResponse>("/api/activities");
-    // console.log(data.activities);
-    setRows(data.activities);
-    setBackupData(data.activities);
+    if (prev != "activities") setPage(0);
+    const { data } = await axios.get<ActivityGetResponse>(`/api/activities?skip=${page}&take=10`);
+    if (data.activities.length == 0){
+      setMore(false);
+    }
+    else{
+      // console.log(data.activities);
+      setMore(true);
+      if (page == 0 || prev != "activities"){
+        setRows(data.activities);
+        setBackupData(data.activities);
+      }
+      else{
+        data.activities.map((activity) => {setRows([...rows,activity])});
+        data.activities.map((activity) => {setBackupData([...rows,activity])});
+      }
+    }
   };
 
   const getEnrollments = async () => {
-    const { data } = await axios.get<EnrollmentGetResponse>("/api/enrollments");
-    // console.log(data.enrollments);
-    setRows(
-      data.enrollments.map((enrollment) => {
-        return {
+    if (prev != "enrollments") setPage(0);
+    const { data } = await axios.get<EnrollmentGetResponse>(`/api/enrollments?skip=${page}&take=20`);
+    if (data.enrollments.length == 0){
+      setMore(false);
+    }
+    else{
+      // console.log(data.enrollments);
+      setMore(true);
+      if (page == 0 || prev != "enrollments"){
+        setRows(
+          data.enrollments.map((enrollment) => {
+            return {
+              activityId: enrollment.activity.id,
+              activityName: enrollment.activity.title,
+              userId: enrollment.user.id,
+              userName: enrollment.user.name,
+              id: enrollment.id,
+            };
+          })
+        );
+        setBackupData(data.enrollments);
+      }
+      else{
+        data.enrollments.map((enrollment) => {setRows([...rows,{
           activityId: enrollment.activity.id,
           activityName: enrollment.activity.title,
           userId: enrollment.user.id,
           userName: enrollment.user.name,
           id: enrollment.id,
-        };
-      })
-    );
-    setBackupData(data.enrollments);
+        }])});
+        data.enrollments.map((enrollment) => {setBackupData([...rows,{
+          activityId: enrollment.activity.id,
+          activityName: enrollment.activity.title,
+          userId: enrollment.user.id,
+          userName: enrollment.user.name,
+          id: enrollment.id,
+        }])});
+      }
+    }
   };
 
   useEffect(() => {
     if (active == "users") {
-      getUsers();
-      if (prev != "users") {
+      if (prev != active) {
         setRows([]);
         setPrev("users");
         setPage(0);
       }
+      getUsers();
     } else if (active == "activities") {
-      getActivities();
       if (prev != "activities") {
         setRows([]);
         setPrev("activities");
+        setPage(0);
       }
+      getActivities();
     } else if (active == "enrollments") {
-      getEnrollments();
       if (prev != "enrollments") {
         setRows([]);
         setPrev("enrollments");
+        setPage(0);
       }
+      getEnrollments();
     }
   }, [active,page]);
 
