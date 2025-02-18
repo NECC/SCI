@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoMdPerson } from "react-icons/io";
 import { MdLocalActivity, MdScreenRotationAlt } from "react-icons/md";
+import { Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
+import { FaRegCheckCircle } from "react-icons/fa";
 
 export default function Admin() {
   const [user, setUser] = useState<{
@@ -22,6 +24,12 @@ export default function Admin() {
   const [prev, setPrev] = useState("activities");
   const [rows, setRows] = useState([]);
   const [backupData, setBackupData] = useState([]);
+  const [edit, setEdit] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    role: "NO CHANGE",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
   const { data: session, status } = useSession({
@@ -41,6 +49,7 @@ export default function Admin() {
   }, [session]);
 
   const getUsers = async () => {
+    console.log("I'm in");
     if (prev != "users") setPage(0);
     const { data } = await axios.get<UsersGetResponse>(`/api/users?skip=${page}&take=10`);
     if (data.users.length == 0){
@@ -180,8 +189,91 @@ export default function Admin() {
     setActive(active);
   };
 
+  const editUser = (id: string) => {
+    setEdit(id);
+  }
+
+  useEffect(() => {
+    setEdit("");
+  },[active]);
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    const name = e.target.name;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  }
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage("");
+    axios
+      .put(`/api/users/edit/${edit}`, formData)
+      .then((res) => {
+        if (res.status == 200) {
+          router.push("/admin");
+        };
+        console.log(res);
+        setPage(0);
+        getUsers();
+      })
+      .catch((err) => {
+        setErrorMessage(err.message);
+      });
+    setEdit("");
+    setFormData({
+      name: "",
+      role: "NO CHANGE",
+    });
+  };
+
   return (
     <div className="w-full p-3">
+      <div className={`${edit != "" ? "absolute z-20 text-white right-5" : "hidden"}`}>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col items-center justify-center gap-1 mt-1"
+        >
+          <Card className="w-[250px]">
+            <CardHeader className="flex justify-center bg-black text-white">
+              Edit User: <br/> {edit}
+            </CardHeader>
+            <Divider />
+            <CardBody className="flex flex-col items-center justify-center gap-1">
+              <Input
+                key="primary"
+                color="default"
+                type="text"
+                label="Name"
+                className="max-w-[220px]"
+                required={true}
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+              <select
+                name="role"
+                onChange={handleChange}
+                required={true}
+                value={formData.role}
+                className="mx-2 rounded border p-2"
+              >
+                <option value="NOCHANGE">NO CHANGE</option>
+                <option value="USER">USER</option>
+                <option value="STAFF">STAFF</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
+            </CardBody>
+            <button
+              type="submit"
+              className="flex bg-black hover:bg-slate-800 text-white justify-center items-center gap-1 p-2 w-full"
+            >
+              Confirm <FaRegCheckCircle />
+            </button>
+          </Card>
+
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+        </form> 
+      </div>
       <div className="w-full flex rounded-lg bg-black border">
         <span className="text-white font-comfortaa font-bold text-base p-4 bg-white/20">
           Filter:{" "}
@@ -225,6 +317,7 @@ export default function Admin() {
         deleteUsers={deleteUsers}
         deleteActivities={deleteActivities}
         deleteEnrollments={deleteEnrollments}
+        edit={editUser}
       />
     </div>
   );

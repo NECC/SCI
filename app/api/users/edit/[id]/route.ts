@@ -26,7 +26,7 @@ export async function PUT(req: Request, props: Props){
     if (userData.email == ""){
       userData.email = null;
     }
-    if (userData.role == "NOCHANGE"){
+    if (userData.role == "NO CHANGE"){
       userData.role = null;
     }
 

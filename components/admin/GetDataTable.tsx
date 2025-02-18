@@ -11,12 +11,10 @@ import {
   Checkbox,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { FaRegCheckCircle } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { Button, ButtonGroup } from "@node_modules/@nextui-org/button/dist";
+import { Button } from "@node_modules/@nextui-org/button/dist";
 import { IoMdTrash } from "react-icons/io";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { UserPostAccreditationResponse } from "@app/api/users/accreditation/[id]/route";
 
 const columnsUsers = [
@@ -101,19 +99,9 @@ const columnsEnrollments = [
 ];
 
 export default function GetDataTable(props) {
-  const router = useRouter();
-  const { data, active, page, changePage, more, deleteUsers, deleteActivities, deleteEnrollments} = props;
+  const { data, active, page, changePage, more, deleteUsers, deleteActivities, deleteEnrollments, edit} = props;
   const [columns, setColumns] = useState([...columnsActivities]);
   const [loading, setLoading] = useState(false);
-  const [checkChanged, setCheckChanged] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    role: "NOCHANGE",
-  });
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const onSubmit = (d) => console.log(d);
 
   const renderCell = (item, columnKey) => {
     const uid = item.id;
@@ -127,33 +115,8 @@ export default function GetDataTable(props) {
       if (data.response == "error") {
         console.log(data.error);
       }
-      setCheckChanged(!checkChanged);
       setLoading(false);
     };
-
-    /*const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData((prevState) => ({ ...prevState, [name]: value }));
-    };
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setErrorMessage("");
-      axios
-        .put(`/api/users/edit/${uid}`, formData)
-        .then((res) => {
-          if (res.status == 200) {
-            router.push("/admin");
-          };
-          console.log(res);
-        })
-        .catch((err) => {
-          setErrorMessage(err.message);
-        });
-      changePage(0);
-    };*/
-
-    // console.log(item);
 
     switch (columnKey) {
       case "profile":
@@ -186,14 +149,14 @@ export default function GetDataTable(props) {
                 <IoMdTrash />
               </span>
             </Tooltip>
-            {/*<Tooltip color="primary" content="Edit user">
+            <Tooltip color="primary" content="Edit user">
               <span
-                onClick={() => editUsers(uid)}
+                onClick={() => edit(uid)}
                 className="text-lg text-primary cursor-pointer active:opacity-50"
               >
                 <MdEdit />
               </span>
-            </Tooltip>*/}
+            </Tooltip>
           </div>
         );
       case "deleteActivities":
@@ -236,7 +199,6 @@ export default function GetDataTable(props) {
             <div className="relative flex items-center gap-2"> 
               {getKeyValue(item,columnKey)}
             </div>
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           </>
         )
       default:
@@ -255,7 +217,7 @@ export default function GetDataTable(props) {
   }, [active]);
 
   return (
-    <div className="w-full p-4 flex justify-center">
+    <div className="w-full p-4 flex justify-center z-5">
       <Table
         bottomContent={
           more ? (
