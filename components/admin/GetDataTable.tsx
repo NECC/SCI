@@ -11,11 +11,10 @@ import {
   Checkbox,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { FaEye } from "react-icons/fa";
-import { MdModeEditOutline } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
+import { Button } from "@node_modules/@nextui-org/button/dist";
 import { IoMdTrash } from "react-icons/io";
 import axios from "axios";
-import { set } from "zod";
 import { UserPostAccreditationResponse } from "@app/api/users/accreditation/[id]/route";
 
 const columnsUsers = [
@@ -30,10 +29,6 @@ const columnsUsers = [
   {
     key: "role",
     label: "ROLE",
-  },
-  {
-    key: "points",
-    label: "POINTS",
   },
   {
     key: "accredited",
@@ -104,10 +99,9 @@ const columnsEnrollments = [
 ];
 
 export default function GetDataTable(props) {
-  const { data, active, deleteUsers, deleteActivities, deleteEnrollments } = props;
+  const { data, active, page, changePage, more, deleteUsers, deleteActivities, deleteEnrollments, edit} = props;
   const [columns, setColumns] = useState([...columnsActivities]);
   const [loading, setLoading] = useState(false);
-  const [checkChanged, setCheckChanged] = useState(false);
 
   const renderCell = (item, columnKey) => {
     const uid = item.id;
@@ -121,11 +115,8 @@ export default function GetDataTable(props) {
       if (data.response == "error") {
         console.log(data.error);
       }
-      setCheckChanged(!checkChanged);
       setLoading(false);
     };
-
-    // console.log(item);
 
     switch (columnKey) {
       case "profile":
@@ -156,6 +147,14 @@ export default function GetDataTable(props) {
                 className="text-lg text-danger cursor-pointer active:opacity-50"
               >
                 <IoMdTrash />
+              </span>
+            </Tooltip>
+            <Tooltip color="primary" content="Edit user">
+              <span
+                onClick={() => edit(uid)}
+                className="text-lg text-primary cursor-pointer active:opacity-50"
+              >
+                <MdEdit />
               </span>
             </Tooltip>
           </div>
@@ -194,6 +193,14 @@ export default function GetDataTable(props) {
             avatarProps={{ src: "/user.svg", isBordered: true, size: "sm" }}
           />
         );
+      case "name":
+        return (
+          <>
+            <div className="relative flex items-center gap-2"> 
+              {getKeyValue(item,columnKey)}
+            </div>
+          </>
+        )
       default:
         return getKeyValue(item, columnKey);
     }
@@ -210,8 +217,17 @@ export default function GetDataTable(props) {
   }, [active]);
 
   return (
-    <div className="w-full p-4 flex justify-center">
+    <div className="w-full p-4 flex justify-center z-5">
       <Table
+        bottomContent={
+          more ? (
+            <div className="flex w-full justify-center">
+              <Button variant="flat" onClick={() => changePage(page+1)}>
+                Load More
+              </Button>
+            </div>
+          ) : <></>
+        } 
         aria-label="Example static collection table"
         className="w-full max-w-[1700px] box-content"
         isStriped={true}
@@ -229,8 +245,19 @@ export default function GetDataTable(props) {
               )}
             </TableRow>
           )}
-        </TableBody>
+        </TableBody> 
       </Table>
     </div>
   );
 }
+/*<ButtonGroup>
+          <Button onClick={() => changePage(page-1)}>
+            <MdKeyboardArrowLeft/>
+          </Button>
+          <Button>
+            {page}
+          </Button>
+          <Button onClick={() => changePage(page+1)}>
+            <MdKeyboardArrowRight/>
+          </Button>
+        </ButtonGroup>*/

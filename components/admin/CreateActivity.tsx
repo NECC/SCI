@@ -25,11 +25,11 @@ export default function CreateActivity() {
         if (res.status == 200) {
           router.push("/admin");
         } else {
-          // console.log(res.data.message);
+          //console.log(res.data.message);
         }
       })
       .catch((err) => {
-        // console.log(err.message)
+        console.log(err.message)
       });
   }
 

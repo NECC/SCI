@@ -30,8 +30,9 @@ export interface UsersGetResponse {
  * @method GET
  * @returns [{ id, name, email, role, points }]
  */
-export async function GET() {
+export async function GET(req : Request) {
   const session = await getServerSession(authOptions);
+  const params = new URL(req.url);
   
   if (session?.user.role != "ADMIN") {
     prisma.$disconnect();
@@ -63,6 +64,8 @@ export async function GET() {
         }
       },
     },
+    skip: +params.searchParams.get("skip")*(+params.searchParams.get("take")),
+    take: +params.searchParams.get("take"),
   });
   // // console.log(users);
 
@@ -79,7 +82,6 @@ export interface UserPostResponse {
     name: string;
     email: string;
     role: string;
-    points: number;
   };
   error?: string;
 }
@@ -142,6 +144,7 @@ export async function POST(req: Request) {
         email: userData.email,
         password: userData.password,
         role: userData.role,
+        academicNumber: userData.academicNumber,
       },
       select: {
         id: true,

@@ -17,7 +17,8 @@ export interface ActivityGetResponse {
  * @method GET
  * @returns [{ id, title, description, speakers, location, capacity, date, type, enrollments }]
  */
-export async function GET() {
+export async function GET(req: Request) {
+  const params = new URL(req.url);
   try {
     const activities = await prisma.activity.findMany({
       select: {
@@ -34,6 +35,8 @@ export async function GET() {
         endTime: true,
         picUrl: true,
       },
+      skip: +params.searchParams.get("skip")*+params.searchParams.get("take"),
+      take: +params.searchParams.get("take"),
     });
     // console.log(activities);
 

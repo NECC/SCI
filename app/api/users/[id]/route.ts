@@ -14,7 +14,6 @@ export interface UserGetResponse {
         name: string;
         email: string;
         role: string;
-        points: number;
         enrollments: {
             id: string;
             activity: {
@@ -46,7 +45,6 @@ export async function GET(request: Request, props: Props) {
             name: true,
             email: true,
             role: true,
-            points: true,
             enrollments: {
                 select: {
                     id: true,
