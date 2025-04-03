@@ -72,6 +72,8 @@ export default function Profile({
               <ActivitiesSubscribed id={id} />
             ) : activeScreen == "qrcode" ? (
               <Code user={user} id={id} />
+            ) : activeScreen == "info" ? (
+              <ProfileInfo user={user} id={id} />
             ) : (
               <></>
             )}
@@ -109,6 +111,10 @@ const ProfileNav = ({
     {
       key: "qrcode",
       label: "QR Code",
+    },
+    {
+      key: "info",
+      label: "Info",
     },
   ];
 
@@ -156,6 +162,21 @@ const ProfileNav = ({
         </Dropdown>
       </div>
       <div className="hidden md:block">
+      <div className="flex flex-row items-center">
+          <Button
+            disableRipple={true}
+            radius={"none"}
+            onClick={() => setSelectedKeys(new Set(["info"]))}
+            className={
+              activeScreen != "info"
+                ? "pl-3 flex flex-col text-white bg-transparent py-7"
+                : "pl-3 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold border-l-2"
+            }
+          >
+            {activeScreen == "info" && <LineDots />}
+            <p className="text-2xl leading-5">INFO</p>
+          </Button>
+        </div>
         <div className="flex flex-row items-center">
           <Button
             disableRipple={true}
@@ -379,3 +400,28 @@ const Code = ({ user, id }: {
     </div>
   );
 };
+
+
+const ProfileInfo = ({ user, id }: {
+  user: UserGetResponse["user"];
+  id: string;
+}) => {
+  return (
+    <div>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-row items-center gap-2">
+          <p className="text-white">Name:</p>
+          <p className="text-white">{user.name}</p>
+        </div>
+        <div className="flex flex-row items-center gap-2">
+          <p className="text-white">Email:</p>
+          <p className="text-white">{user.email}</p>
+        </div>
+        <div className="flex flex-row items-center gap-2">
+          <p className="text-white">Course:</p>
+          <p className="text-white">{user.graduation}</p>
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -150,6 +150,7 @@ export default function Admin() {
   };
 
   useEffect(() => {
+    setEdit("");
     if (active == "users") {
       if (prev != active) {
         setRows([]);
@@ -192,10 +193,6 @@ export default function Admin() {
   const editUser = (id: string) => {
     setEdit(id);
   }
-
-  useEffect(() => {
-    setEdit("");
-  },[active]);
 
   const handleChange = (e) => {
     const value = e.target.value;

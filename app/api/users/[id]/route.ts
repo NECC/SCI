@@ -14,6 +14,7 @@ export interface UserGetResponse {
         name: string;
         email: string;
         role: string;
+        graduation: string;
         enrollments: {
             id: string;
             activity: {
