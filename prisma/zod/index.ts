@@ -37,6 +37,12 @@ export const RoleSchema = z.enum(['USER','ADMIN','STAFF']);
 
 export type RoleType = `${z.infer<typeof RoleSchema>}`
 
+export const FormattedCourses = ["Biologia Aplicada", "Biologia e Geologia", "Bioquímica", "Ciência de Dados", "Ciências da Computação", "Ciências do Ambiente", "Estatística Aplicada", "Física", "Geologia", "Matemática", "Optometria e Ciências da Visão ", "Química"] as const;
+
+export const Courses = ["BIOLOGIA_APLICADA", "BIOLOGIA_E_GEOLOGIA", "BIOQUIMICA", "CIENCIA_DE_DADOS", "CIENCIAS_DA_COMPUTACAO", "CIENCIAS_DO_AMBIENTE", "ESTATISTICA_APLICADA", "FISICA", "GEOLOGIA", "MATEMATICA", "OPTOMETRIA_E_CIENCIAS_DA_VISAO", "QUIMICA"] as const;
+
+export const CourseSchema = z.enum(Courses);
+
 /////////////////////////////////////////
 // MODELS
 /////////////////////////////////////////
@@ -49,6 +55,8 @@ export const UserSchema = z.object({
   email: z.string().email().nonempty(),
   password: z.string().nonempty(),
   name: z.string().nonempty(),
+  academicNumber: z.number().optional(),
+  graduation: CourseSchema.optional(),
 })
 
 export type User = z.infer<typeof UserSchema>

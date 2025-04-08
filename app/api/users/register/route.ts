@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { Course, PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { signIn } from "next-auth/react";
 import { UserSchema } from "@prisma/zod";
@@ -13,6 +13,8 @@ export interface UserPostRegisterResponse {
     name: string;
     email: string;
     role: string;
+    academicNumber?: number;
+    graduation?: Course;
   };
   error?: string;
 }
@@ -62,6 +64,8 @@ export async function POST(request: Request) {
       email: userData.email.toLowerCase(),
       password: userData.password,
       role: "USER",
+      academicNumber: userData.academicNumber,
+      graduation: userData.graduation,
     },
     select: {
       id: true,

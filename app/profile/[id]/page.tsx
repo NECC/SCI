@@ -208,11 +208,6 @@ const ProfileNav = ({
           </Button>
         </div>
       </div>
-      <div className="flex flex-row items-center">
-        <div className="flex flex-col text-white bg-transparent py-7 pl-3">
-          <p className="text-2xl leading-5"> POINTS: {user?.points} </p>
-        </div>
-      </div>
     </>
   );
 };
@@ -386,10 +381,6 @@ const Code = ({ user, id }: {
   return (
     <div className="dark:bg-black/40 h-full md:ml-8 mt-8">
       <div className="px-5 md:px-1 gap-3 flex flex-col h-full">
-        <h2 className="text-white font-normal text-2xl md:text-lg leading-5">
-          {" "}
-          Points: {user?.points}{" "}
-        </h2>
         <div className="flex flex-wrap content-center justify-center h-full">
           <div
             className="-mt-56 md:-mt-28 border-[12px] rounded-md border-white"

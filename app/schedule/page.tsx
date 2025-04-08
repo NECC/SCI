@@ -28,7 +28,7 @@ export default function Schedule() {
   });
 
   const getActivitiesGroupedByDay = async () => {
-    const { data } = await axios.get<ActivityGetResponse>(`/api/activities`);
+    const { data } = await axios.get<ActivityGetResponse>(`/api/activities?skip=0&take=-1`);
 
     const activities = data.activities;
 

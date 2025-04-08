@@ -19,6 +19,7 @@ export interface ActivityGetResponse {
  */
 export async function GET(req: Request) {
   const params = new URL(req.url);
+  const all = +params.searchParams.get("take") == -1;
   try {
     const activities = await prisma.activity.findMany({
       select: {
@@ -35,8 +36,8 @@ export async function GET(req: Request) {
         endTime: true,
         picUrl: true,
       },
-      skip: +params.searchParams.get("skip")*+params.searchParams.get("take"),
-      take: +params.searchParams.get("take"),
+
+      ...(all ? {} : {skip: +params.searchParams.get("skip")*+params.searchParams.get("take"),take: +params.searchParams.get("take"),}),
     });
     // console.log(activities);
 
