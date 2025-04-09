@@ -6,6 +6,7 @@ import { FaIdCard, FaUniversity } from "react-icons/fa";
 import { FaGraduationCap } from "react-icons/fa6";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
+import { AiOutlineFieldNumber } from "react-icons/ai";
 import { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
@@ -14,8 +15,24 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormattedCourses, Courses, UserSchema } from "@prisma/zod";
+import { CourseSchema, UserSchema } from "@prisma/zod";
 import { UserPostRegisterResponse } from "@app/api/users/register/route";
+
+const Courses = CourseSchema.options;
+
+const FormattedCourses = ["Biologia Aplicada", 
+                          "Biologia e Geologia", 
+                          "Bioquímica", 
+                          "Ciência de Dados", 
+                          "Ciências da Computação", 
+                          "Ciências do Ambiente", 
+                          "Estatística Aplicada", 
+                          "Física", 
+                          "Geologia", 
+                          "Matemática", 
+                          "Optometria e Ciências da Visão ", 
+                          "Química"
+                        ]
 
 export default function SignUpPage() {
   const [error, setError] = useState(null);
@@ -221,8 +238,8 @@ export default function SignUpPage() {
               startContent={
                 <CiMail className="text-2xl text-white pointer-events-none flex-shrink-0" />
               }
-              isInvalid={!!errors.academicNumber}
-              errorMessage={errors.academicNumber?.message as string}
+              isInvalid={!!errors.email}
+              errorMessage={errors.email?.message as string}
               {...register("email")}
             />
 
@@ -314,7 +331,6 @@ export default function SignUpPage() {
                   value="YES"
                   onClick={() => {
                     setIsPart(true);
-                    console.log(watch("graduation"))
                   }}
                 >
                   Yes
@@ -324,7 +340,7 @@ export default function SignUpPage() {
                   value="NO"
                   onClick={() => {
                     setIsPart(false);
-                    {unregister(["academicNumber","graduation"])}
+                    {unregister(["academicNumber","graduation","courseYear"])}
                   }}
                 >
                   No
@@ -437,6 +453,50 @@ export default function SignUpPage() {
                     isInvalid={!!errors.academicNumber}
                     errorMessage={errors.academicNumber?.message as string}
                     {...register("academicNumber", {valueAsNumber: true})}
+                  />
+                  <Input
+                    type="number"
+                    placeholder="2"
+                    defaultValue={watch("courseYear") ? watch("courseYear") : 0}
+                    labelPlacement="outside"
+                    className="w-[350px] mt-2 text-white"
+                    classNames={{
+                      input: [
+                        "border-none",
+                        "border-b-2",
+                        "border-custom-blue-2",
+                        "rounded-none",
+                        "rounded-b-lg",
+                        "light:text-black",
+                        "dark:text-white",
+                        "",
+                        "font-normal",
+                        "text-xl",
+                        "placeholder:text-white/60",
+                        "bg-none"
+                      ],
+                      innerWrapper: ["bg-transparent"],
+                      inputWrapper: [
+                        "shadow-md",
+                        "bg-custom-blue-3",
+                        "backdrop-blur-xl",
+                        "backdrop-saturate-200",
+                        "hover:bg-default-0/70",
+                        "dark:hover:bg-default/70",
+                        "group-data-[focused=true]:bg-default-200/50",
+                        "dark:group-data-[focused=true]:bg-default/60",
+                        "!cursor-text",
+                      ],
+                    }}
+                    color="primary"
+                    variant="bordered"
+                    size="lg"
+                    endContent={
+                      <AiOutlineFieldNumber className="text-2xl text-white pointer-events-none flex-shrink-0" />
+                    }
+                    isInvalid={!!errors.courseYear}
+                    errorMessage={errors.courseYear?.message as string}
+                    {...register("courseYear", {valueAsNumber: true})}
                   />
               </div>
             )}

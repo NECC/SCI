@@ -15,6 +15,7 @@ export interface UserPostRegisterResponse {
     role: string;
     academicNumber?: number;
     graduation?: Course;
+    courseYear?: number;
   };
   error?: string;
 }
@@ -66,6 +67,7 @@ export async function POST(request: Request) {
       role: "USER",
       academicNumber: userData.academicNumber,
       graduation: userData.graduation,
+      courseYear: userData.courseYear,
     },
     select: {
       id: true,

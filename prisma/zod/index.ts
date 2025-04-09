@@ -52,11 +52,12 @@ export const CourseSchema = z.enum(Courses);
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-  email: z.string().email().nonempty(),
-  password: z.string().nonempty(),
-  name: z.string().nonempty(),
-  academicNumber: z.number().optional(),
-  graduation: CourseSchema.optional(),
+  graduation: CourseSchema.nullable(),
+  email: z.string(),
+  password: z.string(),
+  name: z.string(),
+  academicNumber: z.number().min(1).nullable(),
+  courseYear: z.number().min(1).max(3).nullable(),
 })
 
 export type User = z.infer<typeof UserSchema>
