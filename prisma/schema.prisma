@@ -22,6 +22,7 @@ model User {
   accredited     Boolean       @default(false) // if the user went to the event check-in
 
   // Ranking Attributes
+  points         Int           @default(0) // total points of user
   rewarded       Boolean       @default(false) // if the user has been rewarded in the daily ranking
   DailyRanking   DailyRanking[]
 
