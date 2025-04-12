@@ -35,6 +35,10 @@ const columnsUsers = [
     label: "ACCREDITED",
   },
   {
+    key: "graduation",
+    label: "COURSE",
+  },
+  {
     key: "actions",
     label: "ACTIONS",
   },

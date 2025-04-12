@@ -12,6 +12,8 @@ export interface UsersGetResponse {
     name: string;
     email: string;
     role: string;
+    graduation: string;
+    courseYear: number;
     accredited: boolean;
     enrollments: {
       id: string;
@@ -50,6 +52,8 @@ export async function GET(req : Request) {
       name: true,
       email: true,
       role: true,
+      graduation: true,
+      courseYear: true,
       accredited: true,
       enrollments: {
         select: {

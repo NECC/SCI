@@ -321,252 +321,6 @@ export const SessionSelectSchema: z.ZodType<Prisma.SessionSelect> = z.object({
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
 
-// CREATE MANY USER AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const CreateManyUserAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.CreateManyUserAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  email: z.boolean().optional(),
-  password: z.boolean().optional(),
-  name: z.boolean().optional(),
-  role: z.boolean().optional(),
-  accredited: z.boolean().optional(),
-  rewarded: z.boolean().optional(),
-  academicNumber: z.boolean().optional(),
-  graduation: z.boolean().optional(),
-  courseYear: z.boolean().optional(),
-}).strict()
-
-// UPDATE MANY USER AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const UpdateManyUserAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.UpdateManyUserAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  email: z.boolean().optional(),
-  password: z.boolean().optional(),
-  name: z.boolean().optional(),
-  role: z.boolean().optional(),
-  accredited: z.boolean().optional(),
-  rewarded: z.boolean().optional(),
-  academicNumber: z.boolean().optional(),
-  graduation: z.boolean().optional(),
-  courseYear: z.boolean().optional(),
-}).strict()
-
-// CREATE MANY DAILY RANKING AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const CreateManyDailyRankingAndReturnOutputTypeIncludeSchema: z.ZodType<Prisma.CreateManyDailyRankingAndReturnOutputTypeInclude> = z.object({
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-export const CreateManyDailyRankingAndReturnOutputTypeArgsSchema: z.ZodType<Prisma.CreateManyDailyRankingAndReturnOutputTypeDefaultArgs> = z.object({
-  select: z.lazy(() => CreateManyDailyRankingAndReturnOutputTypeSelectSchema).optional(),
-  include: z.lazy(() => CreateManyDailyRankingAndReturnOutputTypeIncludeSchema).optional(),
-}).strict();
-
-export const CreateManyDailyRankingAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.CreateManyDailyRankingAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  date: z.boolean().optional(),
-  userId: z.boolean().optional(),
-  points: z.boolean().optional(),
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-// UPDATE MANY DAILY RANKING AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const UpdateManyDailyRankingAndReturnOutputTypeIncludeSchema: z.ZodType<Prisma.UpdateManyDailyRankingAndReturnOutputTypeInclude> = z.object({
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-export const UpdateManyDailyRankingAndReturnOutputTypeArgsSchema: z.ZodType<Prisma.UpdateManyDailyRankingAndReturnOutputTypeDefaultArgs> = z.object({
-  select: z.lazy(() => UpdateManyDailyRankingAndReturnOutputTypeSelectSchema).optional(),
-  include: z.lazy(() => UpdateManyDailyRankingAndReturnOutputTypeIncludeSchema).optional(),
-}).strict();
-
-export const UpdateManyDailyRankingAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.UpdateManyDailyRankingAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  date: z.boolean().optional(),
-  userId: z.boolean().optional(),
-  points: z.boolean().optional(),
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-// CREATE MANY ACTIVITY AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const CreateManyActivityAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.CreateManyActivityAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  title: z.boolean().optional(),
-  description: z.boolean().optional(),
-  date: z.boolean().optional(),
-  location: z.boolean().optional(),
-  capacity: z.boolean().optional(),
-  speakers: z.boolean().optional(),
-  type: z.boolean().optional(),
-  endTime: z.boolean().optional(),
-  startTime: z.boolean().optional(),
-  picUrl: z.boolean().optional(),
-}).strict()
-
-// UPDATE MANY ACTIVITY AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const UpdateManyActivityAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.UpdateManyActivityAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  title: z.boolean().optional(),
-  description: z.boolean().optional(),
-  date: z.boolean().optional(),
-  location: z.boolean().optional(),
-  capacity: z.boolean().optional(),
-  speakers: z.boolean().optional(),
-  type: z.boolean().optional(),
-  endTime: z.boolean().optional(),
-  startTime: z.boolean().optional(),
-  picUrl: z.boolean().optional(),
-}).strict()
-
-// CREATE MANY ENROLLMENTS AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const CreateManyEnrollmentsAndReturnOutputTypeIncludeSchema: z.ZodType<Prisma.CreateManyEnrollmentsAndReturnOutputTypeInclude> = z.object({
-  activity: z.union([z.boolean(),z.lazy(() => ActivityArgsSchema)]).optional(),
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-export const CreateManyEnrollmentsAndReturnOutputTypeArgsSchema: z.ZodType<Prisma.CreateManyEnrollmentsAndReturnOutputTypeDefaultArgs> = z.object({
-  select: z.lazy(() => CreateManyEnrollmentsAndReturnOutputTypeSelectSchema).optional(),
-  include: z.lazy(() => CreateManyEnrollmentsAndReturnOutputTypeIncludeSchema).optional(),
-}).strict();
-
-export const CreateManyEnrollmentsAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.CreateManyEnrollmentsAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  userId: z.boolean().optional(),
-  activityId: z.boolean().optional(),
-  attended: z.boolean().optional(),
-  activity: z.union([z.boolean(),z.lazy(() => ActivityArgsSchema)]).optional(),
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-// UPDATE MANY ENROLLMENTS AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const UpdateManyEnrollmentsAndReturnOutputTypeIncludeSchema: z.ZodType<Prisma.UpdateManyEnrollmentsAndReturnOutputTypeInclude> = z.object({
-  activity: z.union([z.boolean(),z.lazy(() => ActivityArgsSchema)]).optional(),
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-export const UpdateManyEnrollmentsAndReturnOutputTypeArgsSchema: z.ZodType<Prisma.UpdateManyEnrollmentsAndReturnOutputTypeDefaultArgs> = z.object({
-  select: z.lazy(() => UpdateManyEnrollmentsAndReturnOutputTypeSelectSchema).optional(),
-  include: z.lazy(() => UpdateManyEnrollmentsAndReturnOutputTypeIncludeSchema).optional(),
-}).strict();
-
-export const UpdateManyEnrollmentsAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.UpdateManyEnrollmentsAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  userId: z.boolean().optional(),
-  activityId: z.boolean().optional(),
-  attended: z.boolean().optional(),
-  activity: z.union([z.boolean(),z.lazy(() => ActivityArgsSchema)]).optional(),
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-// CREATE MANY ACCOUNT AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const CreateManyAccountAndReturnOutputTypeIncludeSchema: z.ZodType<Prisma.CreateManyAccountAndReturnOutputTypeInclude> = z.object({
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-export const CreateManyAccountAndReturnOutputTypeArgsSchema: z.ZodType<Prisma.CreateManyAccountAndReturnOutputTypeDefaultArgs> = z.object({
-  select: z.lazy(() => CreateManyAccountAndReturnOutputTypeSelectSchema).optional(),
-  include: z.lazy(() => CreateManyAccountAndReturnOutputTypeIncludeSchema).optional(),
-}).strict();
-
-export const CreateManyAccountAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.CreateManyAccountAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  userId: z.boolean().optional(),
-  type: z.boolean().optional(),
-  provider: z.boolean().optional(),
-  providerAccountId: z.boolean().optional(),
-  refresh_token: z.boolean().optional(),
-  access_token: z.boolean().optional(),
-  expires_at: z.boolean().optional(),
-  token_type: z.boolean().optional(),
-  scope: z.boolean().optional(),
-  id_token: z.boolean().optional(),
-  session_state: z.boolean().optional(),
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-// UPDATE MANY ACCOUNT AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const UpdateManyAccountAndReturnOutputTypeIncludeSchema: z.ZodType<Prisma.UpdateManyAccountAndReturnOutputTypeInclude> = z.object({
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-export const UpdateManyAccountAndReturnOutputTypeArgsSchema: z.ZodType<Prisma.UpdateManyAccountAndReturnOutputTypeDefaultArgs> = z.object({
-  select: z.lazy(() => UpdateManyAccountAndReturnOutputTypeSelectSchema).optional(),
-  include: z.lazy(() => UpdateManyAccountAndReturnOutputTypeIncludeSchema).optional(),
-}).strict();
-
-export const UpdateManyAccountAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.UpdateManyAccountAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  userId: z.boolean().optional(),
-  type: z.boolean().optional(),
-  provider: z.boolean().optional(),
-  providerAccountId: z.boolean().optional(),
-  refresh_token: z.boolean().optional(),
-  access_token: z.boolean().optional(),
-  expires_at: z.boolean().optional(),
-  token_type: z.boolean().optional(),
-  scope: z.boolean().optional(),
-  id_token: z.boolean().optional(),
-  session_state: z.boolean().optional(),
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-// CREATE MANY SESSION AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const CreateManySessionAndReturnOutputTypeIncludeSchema: z.ZodType<Prisma.CreateManySessionAndReturnOutputTypeInclude> = z.object({
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-export const CreateManySessionAndReturnOutputTypeArgsSchema: z.ZodType<Prisma.CreateManySessionAndReturnOutputTypeDefaultArgs> = z.object({
-  select: z.lazy(() => CreateManySessionAndReturnOutputTypeSelectSchema).optional(),
-  include: z.lazy(() => CreateManySessionAndReturnOutputTypeIncludeSchema).optional(),
-}).strict();
-
-export const CreateManySessionAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.CreateManySessionAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  sessionToken: z.boolean().optional(),
-  userId: z.boolean().optional(),
-  expires: z.boolean().optional(),
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-// UPDATE MANY SESSION AND RETURN OUTPUT TYPE
-//------------------------------------------------------
-
-export const UpdateManySessionAndReturnOutputTypeIncludeSchema: z.ZodType<Prisma.UpdateManySessionAndReturnOutputTypeInclude> = z.object({
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
-export const UpdateManySessionAndReturnOutputTypeArgsSchema: z.ZodType<Prisma.UpdateManySessionAndReturnOutputTypeDefaultArgs> = z.object({
-  select: z.lazy(() => UpdateManySessionAndReturnOutputTypeSelectSchema).optional(),
-  include: z.lazy(() => UpdateManySessionAndReturnOutputTypeIncludeSchema).optional(),
-}).strict();
-
-export const UpdateManySessionAndReturnOutputTypeSelectSchema: z.ZodType<Prisma.UpdateManySessionAndReturnOutputTypeSelect> = z.object({
-  id: z.boolean().optional(),
-  sessionToken: z.boolean().optional(),
-  userId: z.boolean().optional(),
-  expires: z.boolean().optional(),
-  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-}).strict()
-
 
 /////////////////////////////////////////
 // INPUT TYPES
@@ -612,18 +366,35 @@ export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWit
 export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> = z.union([
   z.object({
     id: z.string().uuid(),
-    email: z.string()
+    email: z.string(),
+    academicNumber: z.number().min(1)
+  }),
+  z.object({
+    id: z.string().uuid(),
+    email: z.string(),
+  }),
+  z.object({
+    id: z.string().uuid(),
+    academicNumber: z.number().min(1),
   }),
   z.object({
     id: z.string().uuid(),
   }),
   z.object({
     email: z.string(),
+    academicNumber: z.number().min(1),
+  }),
+  z.object({
+    email: z.string(),
+  }),
+  z.object({
+    academicNumber: z.number().min(1),
   }),
 ])
 .and(z.object({
   id: z.string().uuid().optional(),
   email: z.string().optional(),
+  academicNumber: z.number().min(1).optional(),
   AND: z.union([ z.lazy(() => UserWhereInputSchema),z.lazy(() => UserWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => UserWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => UserWhereInputSchema),z.lazy(() => UserWhereInputSchema).array() ]).optional(),
@@ -632,7 +403,6 @@ export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> 
   role: z.union([ z.lazy(() => EnumRoleFilterSchema),z.lazy(() => RoleSchema) ]).optional(),
   accredited: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   rewarded: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  academicNumber: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().min(1) ]).optional().nullable(),
   graduation: z.union([ z.lazy(() => EnumCourseNullableFilterSchema),z.lazy(() => CourseSchema) ]).optional().nullable(),
   courseYear: z.union([ z.lazy(() => IntNullableFilterSchema),z.number().min(1).max(3) ]).optional().nullable(),
   DailyRanking: z.lazy(() => DailyRankingListRelationFilterSchema).optional(),
@@ -683,7 +453,7 @@ export const DailyRankingWhereInputSchema: z.ZodType<Prisma.DailyRankingWhereInp
   date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   points: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
-  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict();
 
 export const DailyRankingOrderByWithRelationInputSchema: z.ZodType<Prisma.DailyRankingOrderByWithRelationInput> = z.object({
@@ -705,7 +475,7 @@ export const DailyRankingWhereUniqueInputSchema: z.ZodType<Prisma.DailyRankingWh
   date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   points: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
-  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict());
 
 export const DailyRankingOrderByWithAggregationInputSchema: z.ZodType<Prisma.DailyRankingOrderByWithAggregationInput> = z.object({
@@ -828,8 +598,8 @@ export const EnrollmentsWhereInputSchema: z.ZodType<Prisma.EnrollmentsWhereInput
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   activityId: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
   attended: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  activity: z.union([ z.lazy(() => ActivityScalarRelationFilterSchema),z.lazy(() => ActivityWhereInputSchema) ]).optional(),
-  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  activity: z.union([ z.lazy(() => ActivityRelationFilterSchema),z.lazy(() => ActivityWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict();
 
 export const EnrollmentsOrderByWithRelationInputSchema: z.ZodType<Prisma.EnrollmentsOrderByWithRelationInput> = z.object({
@@ -862,8 +632,8 @@ export const EnrollmentsWhereUniqueInputSchema: z.ZodType<Prisma.EnrollmentsWher
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   activityId: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
   attended: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  activity: z.union([ z.lazy(() => ActivityScalarRelationFilterSchema),z.lazy(() => ActivityWhereInputSchema) ]).optional(),
-  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  activity: z.union([ z.lazy(() => ActivityRelationFilterSchema),z.lazy(() => ActivityWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict());
 
 export const EnrollmentsOrderByWithAggregationInputSchema: z.ZodType<Prisma.EnrollmentsOrderByWithAggregationInput> = z.object({
@@ -904,7 +674,7 @@ export const AccountWhereInputSchema: z.ZodType<Prisma.AccountWhereInput> = z.ob
   scope: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   id_token: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   session_state: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict();
 
 export const AccountOrderByWithRelationInputSchema: z.ZodType<Prisma.AccountOrderByWithRelationInput> = z.object({
@@ -952,7 +722,7 @@ export const AccountWhereUniqueInputSchema: z.ZodType<Prisma.AccountWhereUniqueI
   scope: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   id_token: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   session_state: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict());
 
 export const AccountOrderByWithAggregationInputSchema: z.ZodType<Prisma.AccountOrderByWithAggregationInput> = z.object({
@@ -1001,7 +771,7 @@ export const SessionWhereInputSchema: z.ZodType<Prisma.SessionWhereInput> = z.ob
   sessionToken: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   expires: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict();
 
 export const SessionOrderByWithRelationInputSchema: z.ZodType<Prisma.SessionOrderByWithRelationInput> = z.object({
@@ -1032,7 +802,7 @@ export const SessionWhereUniqueInputSchema: z.ZodType<Prisma.SessionWhereUniqueI
   NOT: z.union([ z.lazy(() => SessionWhereInputSchema),z.lazy(() => SessionWhereInputSchema).array() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   expires: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict());
 
 export const SessionOrderByWithAggregationInputSchema: z.ZodType<Prisma.SessionOrderByWithAggregationInput> = z.object({
@@ -1725,7 +1495,7 @@ export const DateTimeFilterSchema: z.ZodType<Prisma.DateTimeFilter> = z.object({
   not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeFilterSchema) ]).optional(),
 }).strict();
 
-export const UserScalarRelationFilterSchema: z.ZodType<Prisma.UserScalarRelationFilter> = z.object({
+export const UserRelationFilterSchema: z.ZodType<Prisma.UserRelationFilter> = z.object({
   is: z.lazy(() => UserWhereInputSchema).optional(),
   isNot: z.lazy(() => UserWhereInputSchema).optional()
 }).strict();
@@ -1860,7 +1630,7 @@ export const EnumTypeWithAggregatesFilterSchema: z.ZodType<Prisma.EnumTypeWithAg
   _max: z.lazy(() => NestedEnumTypeFilterSchema).optional()
 }).strict();
 
-export const ActivityScalarRelationFilterSchema: z.ZodType<Prisma.ActivityScalarRelationFilter> = z.object({
+export const ActivityRelationFilterSchema: z.ZodType<Prisma.ActivityRelationFilter> = z.object({
   is: z.lazy(() => ActivityWhereInputSchema).optional(),
   isNot: z.lazy(() => ActivityWhereInputSchema).optional()
 }).strict();
@@ -3749,11 +3519,6 @@ export const UserCreateManyArgsSchema: z.ZodType<Prisma.UserCreateManyArgs> = z.
   skipDuplicates: z.boolean().optional(),
 }).strict() ;
 
-export const UserAndReturnCreateManyArgsSchema: z.ZodType<Prisma.UserAndReturnCreateManyArgs> = z.object({
-  data: z.union([ UserCreateManyInputSchema,UserCreateManyInputSchema.array() ]),
-  skipDuplicates: z.boolean().optional(),
-}).strict() ;
-
 export const UserDeleteArgsSchema: z.ZodType<Prisma.UserDeleteArgs> = z.object({
   select: UserSelectSchema.optional(),
   include: UserIncludeSchema.optional(),
@@ -3768,11 +3533,6 @@ export const UserUpdateArgsSchema: z.ZodType<Prisma.UserUpdateArgs> = z.object({
 }).strict() ;
 
 export const UserUpdateManyArgsSchema: z.ZodType<Prisma.UserUpdateManyArgs> = z.object({
-  data: z.union([ UserUpdateManyMutationInputSchema,UserUncheckedUpdateManyInputSchema ]),
-  where: UserWhereInputSchema.optional(),
-}).strict() ;
-
-export const UserAndReturnUpdateManyArgsSchema: z.ZodType<Prisma.UserAndReturnUpdateManyArgs> = z.object({
   data: z.union([ UserUpdateManyMutationInputSchema,UserUncheckedUpdateManyInputSchema ]),
   where: UserWhereInputSchema.optional(),
 }).strict() ;
@@ -3800,11 +3560,6 @@ export const DailyRankingCreateManyArgsSchema: z.ZodType<Prisma.DailyRankingCrea
   skipDuplicates: z.boolean().optional(),
 }).strict() ;
 
-export const DailyRankingAndReturnCreateManyArgsSchema: z.ZodType<Prisma.DailyRankingAndReturnCreateManyArgs> = z.object({
-  data: z.union([ DailyRankingCreateManyInputSchema,DailyRankingCreateManyInputSchema.array() ]),
-  skipDuplicates: z.boolean().optional(),
-}).strict() ;
-
 export const DailyRankingDeleteArgsSchema: z.ZodType<Prisma.DailyRankingDeleteArgs> = z.object({
   select: DailyRankingSelectSchema.optional(),
   include: DailyRankingIncludeSchema.optional(),
@@ -3819,11 +3574,6 @@ export const DailyRankingUpdateArgsSchema: z.ZodType<Prisma.DailyRankingUpdateAr
 }).strict() ;
 
 export const DailyRankingUpdateManyArgsSchema: z.ZodType<Prisma.DailyRankingUpdateManyArgs> = z.object({
-  data: z.union([ DailyRankingUpdateManyMutationInputSchema,DailyRankingUncheckedUpdateManyInputSchema ]),
-  where: DailyRankingWhereInputSchema.optional(),
-}).strict() ;
-
-export const DailyRankingAndReturnUpdateManyArgsSchema: z.ZodType<Prisma.DailyRankingAndReturnUpdateManyArgs> = z.object({
   data: z.union([ DailyRankingUpdateManyMutationInputSchema,DailyRankingUncheckedUpdateManyInputSchema ]),
   where: DailyRankingWhereInputSchema.optional(),
 }).strict() ;
@@ -3851,11 +3601,6 @@ export const ActivityCreateManyArgsSchema: z.ZodType<Prisma.ActivityCreateManyAr
   skipDuplicates: z.boolean().optional(),
 }).strict() ;
 
-export const ActivityAndReturnCreateManyArgsSchema: z.ZodType<Prisma.ActivityAndReturnCreateManyArgs> = z.object({
-  data: z.union([ ActivityCreateManyInputSchema,ActivityCreateManyInputSchema.array() ]),
-  skipDuplicates: z.boolean().optional(),
-}).strict() ;
-
 export const ActivityDeleteArgsSchema: z.ZodType<Prisma.ActivityDeleteArgs> = z.object({
   select: ActivitySelectSchema.optional(),
   include: ActivityIncludeSchema.optional(),
@@ -3870,11 +3615,6 @@ export const ActivityUpdateArgsSchema: z.ZodType<Prisma.ActivityUpdateArgs> = z.
 }).strict() ;
 
 export const ActivityUpdateManyArgsSchema: z.ZodType<Prisma.ActivityUpdateManyArgs> = z.object({
-  data: z.union([ ActivityUpdateManyMutationInputSchema,ActivityUncheckedUpdateManyInputSchema ]),
-  where: ActivityWhereInputSchema.optional(),
-}).strict() ;
-
-export const ActivityAndReturnUpdateManyArgsSchema: z.ZodType<Prisma.ActivityAndReturnUpdateManyArgs> = z.object({
   data: z.union([ ActivityUpdateManyMutationInputSchema,ActivityUncheckedUpdateManyInputSchema ]),
   where: ActivityWhereInputSchema.optional(),
 }).strict() ;
@@ -3902,11 +3642,6 @@ export const EnrollmentsCreateManyArgsSchema: z.ZodType<Prisma.EnrollmentsCreate
   skipDuplicates: z.boolean().optional(),
 }).strict() ;
 
-export const EnrollmentsAndReturnCreateManyArgsSchema: z.ZodType<Prisma.EnrollmentsAndReturnCreateManyArgs> = z.object({
-  data: z.union([ EnrollmentsCreateManyInputSchema,EnrollmentsCreateManyInputSchema.array() ]),
-  skipDuplicates: z.boolean().optional(),
-}).strict() ;
-
 export const EnrollmentsDeleteArgsSchema: z.ZodType<Prisma.EnrollmentsDeleteArgs> = z.object({
   select: EnrollmentsSelectSchema.optional(),
   include: EnrollmentsIncludeSchema.optional(),
@@ -3921,11 +3656,6 @@ export const EnrollmentsUpdateArgsSchema: z.ZodType<Prisma.EnrollmentsUpdateArgs
 }).strict() ;
 
 export const EnrollmentsUpdateManyArgsSchema: z.ZodType<Prisma.EnrollmentsUpdateManyArgs> = z.object({
-  data: z.union([ EnrollmentsUpdateManyMutationInputSchema,EnrollmentsUncheckedUpdateManyInputSchema ]),
-  where: EnrollmentsWhereInputSchema.optional(),
-}).strict() ;
-
-export const EnrollmentsAndReturnUpdateManyArgsSchema: z.ZodType<Prisma.EnrollmentsAndReturnUpdateManyArgs> = z.object({
   data: z.union([ EnrollmentsUpdateManyMutationInputSchema,EnrollmentsUncheckedUpdateManyInputSchema ]),
   where: EnrollmentsWhereInputSchema.optional(),
 }).strict() ;
@@ -3953,11 +3683,6 @@ export const AccountCreateManyArgsSchema: z.ZodType<Prisma.AccountCreateManyArgs
   skipDuplicates: z.boolean().optional(),
 }).strict() ;
 
-export const AccountAndReturnCreateManyArgsSchema: z.ZodType<Prisma.AccountAndReturnCreateManyArgs> = z.object({
-  data: z.union([ AccountCreateManyInputSchema,AccountCreateManyInputSchema.array() ]),
-  skipDuplicates: z.boolean().optional(),
-}).strict() ;
-
 export const AccountDeleteArgsSchema: z.ZodType<Prisma.AccountDeleteArgs> = z.object({
   select: AccountSelectSchema.optional(),
   include: AccountIncludeSchema.optional(),
@@ -3972,11 +3697,6 @@ export const AccountUpdateArgsSchema: z.ZodType<Prisma.AccountUpdateArgs> = z.ob
 }).strict() ;
 
 export const AccountUpdateManyArgsSchema: z.ZodType<Prisma.AccountUpdateManyArgs> = z.object({
-  data: z.union([ AccountUpdateManyMutationInputSchema,AccountUncheckedUpdateManyInputSchema ]),
-  where: AccountWhereInputSchema.optional(),
-}).strict() ;
-
-export const AccountAndReturnUpdateManyArgsSchema: z.ZodType<Prisma.AccountAndReturnUpdateManyArgs> = z.object({
   data: z.union([ AccountUpdateManyMutationInputSchema,AccountUncheckedUpdateManyInputSchema ]),
   where: AccountWhereInputSchema.optional(),
 }).strict() ;
@@ -4004,11 +3724,6 @@ export const SessionCreateManyArgsSchema: z.ZodType<Prisma.SessionCreateManyArgs
   skipDuplicates: z.boolean().optional(),
 }).strict() ;
 
-export const SessionAndReturnCreateManyArgsSchema: z.ZodType<Prisma.SessionAndReturnCreateManyArgs> = z.object({
-  data: z.union([ SessionCreateManyInputSchema,SessionCreateManyInputSchema.array() ]),
-  skipDuplicates: z.boolean().optional(),
-}).strict() ;
-
 export const SessionDeleteArgsSchema: z.ZodType<Prisma.SessionDeleteArgs> = z.object({
   select: SessionSelectSchema.optional(),
   include: SessionIncludeSchema.optional(),
@@ -4023,11 +3738,6 @@ export const SessionUpdateArgsSchema: z.ZodType<Prisma.SessionUpdateArgs> = z.ob
 }).strict() ;
 
 export const SessionUpdateManyArgsSchema: z.ZodType<Prisma.SessionUpdateManyArgs> = z.object({
-  data: z.union([ SessionUpdateManyMutationInputSchema,SessionUncheckedUpdateManyInputSchema ]),
-  where: SessionWhereInputSchema.optional(),
-}).strict() ;
-
-export const SessionAndReturnUpdateManyArgsSchema: z.ZodType<Prisma.SessionAndReturnUpdateManyArgs> = z.object({
   data: z.union([ SessionUpdateManyMutationInputSchema,SessionUncheckedUpdateManyInputSchema ]),
   where: SessionWhereInputSchema.optional(),
 }).strict() ;

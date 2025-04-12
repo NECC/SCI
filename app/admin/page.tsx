@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoMdPerson } from "react-icons/io";
 import { MdLocalActivity, MdScreenRotationAlt } from "react-icons/md";
-import { Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Divider, Input, Spinner } from "@nextui-org/react";
 import { FaRegCheckCircle } from "react-icons/fa";
 
 export default function Admin() {
@@ -30,6 +30,7 @@ export default function Admin() {
     role: "NO CHANGE",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const { data: session, status } = useSession({
@@ -49,8 +50,8 @@ export default function Admin() {
   }, [session]);
 
   const getUsers = async () => {
-    console.log("I'm in");
     if (prev != "users") setPage(0);
+    setLoading(true);
     const { data } = await axios.get<UsersGetResponse>(`/api/users?skip=${page}&take=10`);
     if (data.users.length == 0){
       setMore(false);
@@ -67,6 +68,7 @@ export default function Admin() {
         data.users.map((user) => {setBackupData([...backupData,user])});
       }
     }
+    setLoading(false);
   };
 
   const deleteActivities = async (id: string) => {
@@ -89,6 +91,7 @@ export default function Admin() {
 
   const getActivities = async () => {
     if (prev != "activities") setPage(0);
+    setLoading(true);
     const { data } = await axios.get<ActivityGetResponse>(`/api/activities?skip=${page}&take=10`);
     if (data.activities.length == 0){
       setMore(false);
@@ -105,10 +108,12 @@ export default function Admin() {
         data.activities.map((activity) => {setBackupData([...rows,activity])});
       }
     }
+    setLoading(false);
   };
 
   const getEnrollments = async () => {
     if (prev != "enrollments") setPage(0);
+    setLoading(true);
     const { data } = await axios.get<EnrollmentGetResponse>(`/api/enrollments?skip=${page}&take=20`);
     if (data.enrollments.length == 0){
       setMore(false);
@@ -147,6 +152,7 @@ export default function Admin() {
         }])});
       }
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -305,6 +311,7 @@ export default function Admin() {
 
         <TableFilter active={active} data={backupData} setData={setRows} />
       </div>
+      {loading ? <div className="flex justify-center items-center h-[200px]"> <Spinner/> </div> : 
       <GetDataTable
         data={rows}
         active={active}
@@ -315,7 +322,7 @@ export default function Admin() {
         deleteActivities={deleteActivities}
         deleteEnrollments={deleteEnrollments}
         edit={editUser}
-      />
+      />}
     </div>
   );
 }
