@@ -27,8 +27,9 @@ model User {
 
 
   // Presences Control
-  academicNumber Int?
+  academicNumber Int?          @unique /// @zod.number.min(1)
   graduation     Course?
+  courseYear     Int?                  /// @zod.number.min(1).max(3)
   enrollments    Enrollments[]
 
 

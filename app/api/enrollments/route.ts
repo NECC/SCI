@@ -25,7 +25,8 @@ export interface EnrollmentGetResponse {
  * @method GET
  * @returns [{ enrollments }]
 **/
-export async function GET() {
+export async function GET(req: Request) {
+  const params = new URL(req.url);
   const session = await getServerSession(authOptions);
 
   if (session?.user.role != "ADMIN") {
@@ -52,6 +53,8 @@ export async function GET() {
         activity: true,
         attended: true,
       },
+      skip: +params.searchParams.get("skip")*+params.searchParams.get("take"),
+      take: +params.searchParams.get("take"),
     });
     // console.log(enrollments);
     prisma.$disconnect();

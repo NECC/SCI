@@ -36,7 +36,6 @@ export async function DELETE(req, { params: { uuid }}) {
         name: true,
         email: true,
         role: true,
-        points: true,
       }
     });
 

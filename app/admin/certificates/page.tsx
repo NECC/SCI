@@ -2,7 +2,7 @@
 
 import Pdf from "@components/Pdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { Card, CardBody, CardFooter, CardHeader, Divider, Input } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -54,7 +54,7 @@ export default function UsersAdmin() {
                         key="primary"
                         color="default"
                         type="text"
-                        label="Name"
+                        label="User"
                         className="max-w-[220px]"
                         required={true}
                         name="name"
