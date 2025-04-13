@@ -54,7 +54,7 @@ export default function SignInPage() {
       <Image
         width={500}
         height={500}
-        src="/sci-logo.png"
+        src="/sci-logo2025.png"
         alt="Logo"
         className="lg:block hidden"
       ></Image>

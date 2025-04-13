@@ -36,7 +36,7 @@ function ActivityDayFilter({ selectedDay, setSelectedDay, days, children }: {
                   onClick={() => setSelectedDay(day)}
                 >
                   <h1 className="text-2xl font-bold">{day}</h1>
-                  <h2 className="uppercase text-lg">March</h2>
+                  <h2 className="uppercase text-lg">April</h2>
                 </div>
                 <ArrowRight onClick={() => setSelectedDayNext()} />
               </>
@@ -59,7 +59,7 @@ function ActivityDayFilter({ selectedDay, setSelectedDay, days, children }: {
             <LineDots />
             <div className="flex flex-1 flex-col items-start whitespace-break-spaces text-left">
               <p className="text-xl uppercase">
-                <span className="font-extrabold">{selectedDay}</span> March
+                <span className="font-extrabold">{selectedDay}</span> April
               </p>
             </div>
           </div>
