@@ -54,7 +54,7 @@ export default function Home() {
       <div className="lg:relative ">
         <div className="sm:w-4/5 w-11/12 m-auto">
           <div className="lg:w-4/5 w-full flex-col gap-12 flex md:pt-20 pt-10 ">
-            <Image src="/sci-logo.png" alt="Banner" width={400} height={400} />
+            <Image src="/sci-logo2025.png" alt="Banner" width={400} height={400} />
             <p className="text-white lg:text-7xl md:text-6xl text-5xl text-start font-extrabold cursor-default">
               SEMANA DA CIÊNCIA E INOVAÇÃO
             </p>
@@ -69,7 +69,7 @@ export default function Home() {
                 </Button>
               </Link>
 
-              <p className="text-white text-xl text-start cursor-default">18 - 21 MARCH</p>
+              <p className="text-white text-xl text-start cursor-default">22 - 24 APRIL</p>
             </div>
           </div>
         </div>
@@ -236,7 +236,7 @@ export default function Home() {
                   <p>
                     We&apos;re excited to have you join us at Universidade do Minho. Whether you&apos;re looking to explore the latest innovations or delve into scientific discoveries, our event has something for everyone. Join us and be part of this celebration of knowledge and creativity.
                   </p>
-                  <p>The event in 18th, 19th and 21st March will take place at CP 2 and in 20th march at CP 1, University of Minho, Gualtar Campus. We hope to see you there!</p>
+                  <p>The event will take place at CP 2, University of Minho, Gualtar Campus. We hope to see you there!</p>
                   <h1 className="mt-4 text-xl font-extrabold leading-tight">
                     Contact us:
                   </h1>
