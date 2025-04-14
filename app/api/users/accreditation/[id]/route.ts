@@ -1,4 +1,4 @@
-import { authOptions } from "@app/api/auth/[...nextauth]/route";
+import { authOptions } from "@lib/auth";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -47,6 +47,13 @@ export async function POST(request: Request, context: { params: { id: string } }
         accredited: true,
       }
     });
+
+    if (!user) {
+      prisma.$disconnect();
+      return new NextResponse(
+        JSON.stringify({ response: "error", error: "User not found!" })
+      );
+    }
 
     const update = await prisma.user.update({
       where: {

@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { ActivitySchema } from "@prisma/zod";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@lib/auth";
 import { Activity, Enrollments } from "@prisma/generated/zod";
 const prisma = new PrismaClient();
 
@@ -19,7 +19,8 @@ export interface ActivityGetResponse {
  */
 export async function GET(req: Request) {
   const params = new URL(req.url);
-  const all = +params.searchParams.get("take") == -1;
+  const takeParam = params.searchParams.get("take");
+  const all = (takeParam !== null && +takeParam === -1) || takeParam === null;
   try {
     const activities = await prisma.activity.findMany({
       select: {
@@ -37,7 +38,12 @@ export async function GET(req: Request) {
         picUrl: true,
       },
 
-      ...(all ? {} : {skip: +params.searchParams.get("skip")*+params.searchParams.get("take"),take: +params.searchParams.get("take"),}),
+      ...(all
+        ? {}
+        : {
+            skip: +(params.searchParams.get("skip") ?? 0) * +(params.searchParams.get("take") ?? 0),
+            take: +(params.searchParams.get("take") ?? 0),
+          }),
     });
     // console.log(activities);
 

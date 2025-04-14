@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@lib/auth";
 
 const prisma = new PrismaClient();
 
@@ -82,7 +82,7 @@ export async function GET() {
  * @method POST
  * @returns [{ user, points }]
 **/
-export async function POST(request) {
+export async function POST(request : Request) {
   const data = await request.json();
   const session = await getServerSession(authOptions);
 

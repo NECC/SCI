@@ -17,7 +17,7 @@ import { Types, ActivitySchema } from "@prisma/zod";
 
 export default function CreateActivity() {
   const router = useRouter();
-  const onSubmit = (formData) => {
+  const onSubmit = (formData: any) => {
     // console.log(formData)
     axios
       .post("/api/activities", formData)

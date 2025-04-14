@@ -35,7 +35,7 @@ const FormattedCourses = ["Biologia Aplicada",
                         ]
 
 export default function SignUpPage() {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [isPart, setIsPart] = useState(false);
@@ -48,7 +48,7 @@ export default function SignUpPage() {
     watch,
     unregister,
     formState: { errors, isLoading, isSubmitting, },
-  } = useForm({
+  } = useForm<FormData>({
     resolver: zodResolver(UserSchema),
     shouldUnregister: false,
   });
@@ -58,12 +58,20 @@ export default function SignUpPage() {
     if (isStepValid) {setPage(1)};
   };
 
-  const onSubmit = (formData) => {
+  interface FormData {
+    name: string;
+    email: string;
+    password: string;
+    academicNumber?: number;
+    graduation?: string;
+    courseYear?: number;
+  }
+
+  const onSubmit = (formData: FormData): void => {
     setLoading(true);
     axios.post<UserPostRegisterResponse>("/api/users/register", formData).then((res) => {
       if (res.status == 200) {
-        console.log(res)
-        if (res.data.response == "error") {
+        if (res.data.error && res.data.response == "error") {
           setError(res.data.error);
           setLoading(false);
         } else {
@@ -73,7 +81,7 @@ export default function SignUpPage() {
             redirect: false,
           }).then((res) => {
             console.log(res)
-            if (res.error) {
+            if (res && res.error) {
               setError("An error occurred! Try again")
               setLoading(false);
             } else {
@@ -403,7 +411,7 @@ export default function SignUpPage() {
                       }
                       isInvalid={!!errors.graduation}
                       errorMessage={errors.graduation?.message as string}
-                      defaultSelectedKeys={watch("graduation") ? [watch("graduation")] : [Courses[4]]}
+                      defaultSelectedKeys={watch("graduation") ? [watch("graduation") as string] : [Courses[4]]}
                       {...register("graduation")}
                     > 
                     {Courses.map((course,index) => 
@@ -413,7 +421,7 @@ export default function SignUpPage() {
                   <Input
                     type="number"
                     placeholder="123456"
-                    defaultValue={watch("academicNumber") ? watch("academicNumber") : 0}
+                    defaultValue={watch("academicNumber") ? String(watch("academicNumber")) : "0"}
                     labelPlacement="outside"
                     className="w-[350px] mt-2 text-white"
                     classNames={{
@@ -457,7 +465,7 @@ export default function SignUpPage() {
                   <Input
                     type="number"
                     placeholder="2"
-                    defaultValue={watch("courseYear") ? watch("courseYear") : 0}
+                    defaultValue={watch("courseYear") ? String(watch("courseYear")) : ""}
                     labelPlacement="outside"
                     className="w-[350px] mt-2 text-white"
                     classNames={{

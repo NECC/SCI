@@ -24,7 +24,7 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     // console.log(formData);
     const value = e.target.value;
     const name = e.target.name;
@@ -38,7 +38,7 @@ export default function SignInPage() {
       password: formData.password,
       redirect: false,
     }).then((res) => {
-      if (res.ok) {
+      if (res && res.ok) {
         router.push("/");
         setLoading(false);
         setError(false);
