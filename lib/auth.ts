@@ -44,7 +44,7 @@ import { NextAuthOptions } from "@node_modules/next-auth";
              }
            }
          } catch (error) {
-           // console.log(error);
+           console.log(error);
            return null;
          }
        },
