@@ -50,7 +50,7 @@ export default function Home() {
   });
 
   return (
-    <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 h-screen">
+    <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 h-full">
       <div className="lg:relative ">
         <div className="sm:w-4/5 w-11/12 m-auto">
           <div className="lg:w-4/5 w-full flex-col gap-12 flex md:pt-20 pt-10 ">
@@ -105,67 +105,6 @@ export default function Home() {
               <p className="text-white font-poppins font-light leading-8 lg:w-[70%] ">
                 Prepare to embark on a journey of exploration and discovery as we delve into the realms of science and innovation over the course of four exhilarating days. Our event is designed to ignite curiosity, foster collaboration, and inspire the next generation of innovators. Throughout the week, we will host a diverse array of workshops, thought-provoking talks, and engaging pitches from pioneering companies. Whether you&apos;re passionate about cutting-edge research, eager to learn new skills, or seeking inspiration for your own entrepreneurial endeavors, there&apos;s something here for everyone.
               </p>
-            </div>
-          </motion.div>
-
-          <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto mt-[70px] ">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">
-              SPONSORS
-            </h1>
-            <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
-            <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
-
-            <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute  lg:block hidden">
-              <div className="w-full h-full relative">
-                <Bolas />
-              </div>
-            </div>
-          </div>
-
-          <motion.div
-            ref={ref_2}
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0 },
-            }}
-            initial="hidden"
-            animate={inView_2 ? "visible" : "hidden"}
-            transition={{ duration: 0.8, delay: 0.5, transition: "easeInOut" }}
-            className="overflow-hidden"
-          >
-            <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
-              <div className="lg:w-4/5 w-full mt-9 flex flex-wrap justify-between gap-12 ">
-                {/* Estes sponsors estao fora do compoenete pq são "gold" */}
-                <div className="py-8 w-[40%] flex justify-start items-center">
-                  <a href="https://jordao.com/en" target="blank">
-                    <Image
-                      src="/sponsor/jordao.svg"
-                      alt="Jordão"
-                      width={400}
-                      height={270}
-                      className="hover:scale-105 md:-mt-10"
-                    />
-                  </a>
-                </div>
-                <div className="py-8 w-[40%] flex justify-start items-center">
-                  <a
-                    href="https://www.dstsgps.com/intro-pt-pt/#/#intro"
-                    target="blank"
-                  >
-                    <Image
-                      src="/sponsor/dst.svg"
-                      alt="DST"
-                      width={400}
-                      height={270}
-                      className="hover:scale-105"
-                    />
-                  </a>
-                </div>
-
-                {sponsor.map((singleSponsor, index) => (
-                  <Sponsor {...singleSponsor} key={index} />
-                ))}
-              </div>
             </div>
           </motion.div>
 
