@@ -55,6 +55,7 @@ export default function SignUpPage() {
 
   const handleNext = async () => {
     const isStepValid = await trigger(["name","email","password"]);
+    console.log(isStepValid);
     if (isStepValid) {setPage(1)};
   };
 

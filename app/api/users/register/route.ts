@@ -65,9 +65,9 @@ export async function POST(request: Request) {
       email: userData.email.toLowerCase(),
       password: userData.password,
       role: "USER",
-      academicNumber: userData.academicNumber,
-      graduation: userData.graduation,
-      courseYear: userData.courseYear,
+      ...(userData.academicNumber && { academicNumber: userData.academicNumber }),
+      ...(userData.graduation && { graduation: userData.graduation }),
+      ...(userData.courseYear && { courseYear: userData.courseYear }),
     },
     select: {
       id: true,
