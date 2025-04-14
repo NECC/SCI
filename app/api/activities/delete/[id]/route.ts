@@ -33,7 +33,7 @@ export interface ActivityDeleteResponse {
  * @param {string} id Activity id to delete
  * @returns {response: "success", activityDeleted: { id, title, description, speakers, location, capacity, date, type, enrollments } | {response: "error", error: error}}
 **/
-export async function DELETE(req, { params: { id } }) {
+export async function DELETE(req: Request, { params: { id } }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
 
   if (session?.user.role != "ADMIN") {

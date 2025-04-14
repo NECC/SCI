@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
@@ -16,14 +16,14 @@ export default function CreateUser() {
   });
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     // console.log(formData);
     const value = e.target.value;
     const name = e.target.name;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage("");
     axios
@@ -32,7 +32,7 @@ export default function CreateUser() {
         if (res.status == 200) {
           router.push("/admin");
         } else {
-          setErrorMessage(res.data.error);
+          setErrorMessage(res.data.error || "");
         }
       })
       .catch((err) => {

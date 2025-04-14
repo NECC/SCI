@@ -32,12 +32,9 @@ import { UserGetResponse } from "@app/api/users/[id]/route";
 
 interface ActivityProps {
   item: ActivityI & {
-    enrollments: {userId: string, activityId: number}[];
-    enrollable: boolean;
-    alreadyEnrolled: boolean;
     attended: boolean;
   };
-  userId: string | null;
+  userId: string;
 }
 
 export default function Activity({ item, userId }: ActivityProps) {
@@ -46,32 +43,6 @@ export default function Activity({ item, userId }: ActivityProps) {
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
   const [dados, setDados] = useState<UserGetResponse["user"]>();
   const router = useRouter();
-
-  // TODO: Handle the userId properly (it's undefined for now)
-  const createEnrollment = async (activityId: number, userId: string) => {
-    if (!userId) {
-      router.push("/auth/signup");
-      return;
-    }
-    setLoading(true);
-    const { data } = await axios.post<EnrollmentPostResponse>(
-      "/api/enrollments",
-      {
-        activityId: activityId,
-        userId: userId,
-      }
-    );
-    if (data.response === "success" || data.response === "already_enrolled") {
-      item.alreadyEnrolled = true;
-      item.enrollments.push({ userId: userId, activityId: activityId });
-      setEnrolled(true);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    setEnrolled(item.alreadyEnrolled);
-  }, [item.alreadyEnrolled]);
 
   useEffect(() => {
     if (item.attended) {
@@ -94,33 +65,6 @@ export default function Activity({ item, userId }: ActivityProps) {
           {item.speakers && item.type !== "OTHER" && (
             <div className="text-tiny text-black/60 dark:text-white/60 uppercase font-bold mb-1">
               {item.type}
-
-              {item.enrollments && item.capacity == item.enrollments.length && (
-                <Chip
-                  color="danger"
-                  variant="bordered"
-                  size="sm"
-                  className="ml-2"
-                >
-                  Full
-                </Chip>
-              )}
-              {enrolled && (
-                <Chip
-                  color="success"
-                  variant="bordered"
-                  size="sm"
-                  className="ml-2"
-                >
-                  Enrolled
-                </Chip>
-              )}
-
-              {item.capacity == item.enrollments?.length && (
-                <Chip color="danger" size="sm" className="ml-2 text-white">
-                  Full
-                </Chip>
-              )}
             </div>
           )}
           <h4 className="dark:text-white/90 font-bold text-xl">{item.title}</h4>
@@ -143,17 +87,6 @@ export default function Activity({ item, userId }: ActivityProps) {
               </p>
             </div>
           )}
-          {item.type == "WORKSHOP" &&
-            item.enrollments?.length != 0 &&
-            item.enrollments?.length && (
-              <div className="flex flex-row mr-auto items-center">
-                <MdOutlineEventSeat className="inline mr-2" />
-                <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
-                  {item.enrollments !== undefined ? item.enrollments.length : 0}
-                  /{item.capacity}
-                </p>
-              </div>
-            )}
         </CardBody>
         {item.speakers && item.type !== "OTHER" && (
           <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
@@ -161,31 +94,8 @@ export default function Activity({ item, userId }: ActivityProps) {
             <p className="text-tiny dark:text-white/60 font-medium">
               {item.speakers}
             </p>
-            {item.enrollable && !item.alreadyEnrolled && (
-              <div className="ml-auto">
-                <Button
-                  isLoading={loading}
-                  className=""
-                  size="sm"
-                  radius="full"
-                  color="primary"
-                  isDisabled={enrolled}
-                  variant="solid"
-                  endContent={!enrolled ? <FaLongArrowAltRight /> : <FaCheck />}
-                  onClick={(e) => {
-                    if (userId == undefined) {
-                      router.push("/auth/signup");
-                      return;
-                    }
-                    createEnrollment(item.id, userId);
-                  }}
-                >
-                  Enroll
-                </Button>
-              </div>
-            )}
-
-            {item.alreadyEnrolled && userId && !item.attended && (
+    
+            {userId && !item.attended && (
               <div className="ml-auto">
                 <Button
                   size="sm"
@@ -236,7 +146,7 @@ export default function Activity({ item, userId }: ActivityProps) {
                   Show this QRCode to any staff member in the end of your
                   workshop to withdraw your certificate.
                 </p>
-                {userId && <Code activityId={item.id} userId={userId} />}
+                <Code activityId={item.id} userId={userId} />
               </ModalBody>
               <ModalFooter className="flex justify-center">
                 <Button color="danger" variant="solid" onPress={onClose}>

@@ -1,10 +1,20 @@
-import { NextAuthOptions } from "@node_modules/next-auth";
+import { NextAuthOptions, AdapterUser } from "@node_modules/next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcrypt";
+import { Role } from "@prisma/client";
 
 const prisma = new PrismaClient();
+declare module "@node_modules/next-auth" {
+  interface AdapterUser {
+    role?: Role;
+  }
+  interface User {
+    role?: Role;
+  }
+}
+
 export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
@@ -21,7 +31,10 @@ export const authOptions: NextAuthOptions = {
           placeholder: "Password",
         },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
+        if (!credentials) {
+          return null;
+        }
         try {
           const findUser = await prisma.user.findUnique({
             where: {
@@ -39,10 +52,14 @@ export const authOptions: NextAuthOptions = {
 
             if (match) {
               // console.log("Passwords Match!");
-              delete findUser.password;
-              return findUser;
+              const { password, ...userWithoutPassword } = findUser;
+              //delete findUser.password;
+              return userWithoutPassword;
             }
           }
+
+          return null;
+
         } catch (error) {
           // console.log(error);
           return null;
@@ -53,10 +70,22 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
-      return { ...token, ...user };
+      if (user) {
+        console.log("User in JWT callback", user);
+        token.id = user.id;
+        token.email = user.email ?? "";
+        token.name = user.name ?? "";
+        token.role = user.role ?? "USER"; // assuming your user model includes role
+      }
+      return token;
     },
     async session({ session, token }) {
-      session.user = token;
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
+        session.user.role = token.role as Role;
+      }
       return session;
     },
   },

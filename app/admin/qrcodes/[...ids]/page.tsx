@@ -17,7 +17,7 @@ export default function QRCodesAdmin({
     user: { email: string; role: string } | null;
     loaded: boolean;
   }>({ user: null, loaded: false });
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | undefined>("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const router = useRouter();

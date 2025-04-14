@@ -2,7 +2,7 @@ import NextAuth from "next-auth/next";
 import { NextRequest } from "@node_modules/next/server";
 import { authOptions } from "@lib/auth";
 
-const handler = async (req: NextRequest, context) => {
+const handler = async (req: NextRequest, context: any) => {
   // console.log("THIS IS AN HANDLER\n", req.url);
 
   if (req.method == "HEAD") {

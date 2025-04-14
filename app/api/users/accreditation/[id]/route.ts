@@ -48,6 +48,13 @@ export async function POST(request: Request, context: { params: { id: string } }
       }
     });
 
+    if (!user) {
+      prisma.$disconnect();
+      return new NextResponse(
+        JSON.stringify({ response: "error", error: "User not found!" })
+      );
+    }
+
     const update = await prisma.user.update({
       where: {
         id: id,

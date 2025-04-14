@@ -22,8 +22,8 @@ export default function Admin() {
   }>({ user: null, loaded: false });
   const [active, setActive] = useState("activities");
   const [prev, setPrev] = useState("activities");
-  const [rows, setRows] = useState([]);
-  const [backupData, setBackupData] = useState([]);
+  const [rows, setRows] = useState<any>([]);
+  const [backupData, setBackupData] = useState<any>([]);
   const [edit, setEdit] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -190,7 +190,7 @@ export default function Admin() {
     "font-comfortaa font-bold p-4 flex cursor-pointer transition";
   const Icons = "text-lg mr-2 mt-[1px]";
 
-  const handleActive = (e) => {
+  const handleActive = (e: any) => {
     const active = e.target.innerText?.toLowerCase();
     // console.log(active);
     setActive(active);
@@ -200,13 +200,13 @@ export default function Admin() {
     setEdit(id);
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const value = e.target.value;
     const name = e.target.name;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   }
   
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setErrorMessage("");
     axios

@@ -32,7 +32,7 @@ export default function UsersAdmin() {
     title: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     //console.log(formData);
     const value = e.target.value;
     const name = e.target.name;

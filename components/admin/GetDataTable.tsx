@@ -102,12 +102,12 @@ const columnsEnrollments = [
   },
 ];
 
-export default function GetDataTable(props) {
+export default function GetDataTable(props: any) {
   const { data, active, page, changePage, more, deleteUsers, deleteActivities, deleteEnrollments, edit} = props;
   const [columns, setColumns] = useState([...columnsActivities]);
   const [loading, setLoading] = useState(false);
 
-  const renderCell = (item, columnKey) => {
+  const renderCell = (item: any, columnKey: any) => {
     const uid = item.id;
     // console.log(item)
 

@@ -1,7 +1,16 @@
 import React from 'react';
 import { Document, Page, View, Image, Text } from '@react-pdf/renderer';
 
-const Pdf = (props) => {
+const Pdf = (props: {
+    data: {
+        name: string;
+        title: string;
+    },
+    user: {
+        name: string;
+        title: string;
+    };
+}) => {
     const { user } = props;
     const nome = user?.name;
     const Nome = nome?.charAt(0).toUpperCase() + nome?.slice(1);

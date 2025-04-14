@@ -27,6 +27,8 @@ export interface EnrollmentGetResponse {
 **/
 export async function GET(req: Request) {
   const params = new URL(req.url);
+  const takeParam = params.searchParams.get("take");
+  const all = (takeParam !== null && +takeParam === -1) || takeParam === null;
   const session = await getServerSession(authOptions);
 
   if (session?.user.role != "ADMIN") {
@@ -53,8 +55,12 @@ export async function GET(req: Request) {
         activity: true,
         attended: true,
       },
-      skip: +params.searchParams.get("skip")*+params.searchParams.get("take"),
-      take: +params.searchParams.get("take"),
+      ...(all
+        ? {}
+        : {
+            skip: +(params.searchParams.get("skip") ?? 0) * +(params.searchParams.get("take") ?? 0),
+            take: +(params.searchParams.get("take") ?? 0),
+          }),
     });
     // console.log(enrollments);
     prisma.$disconnect();
@@ -109,7 +115,7 @@ export async function POST(request: Request) {
     });
 
     // If it's full, return an error
-    if (activityEnrollments.enrollments && activityEnrollments.enrollments.length >= activityEnrollments.capacity) {
+    if (activityEnrollments !== null && activityEnrollments.enrollments && activityEnrollments.enrollments.length >= activityEnrollments.capacity) {
       return new NextResponse(
         JSON.stringify({
           response: "error",

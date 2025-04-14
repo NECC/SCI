@@ -18,7 +18,7 @@ export interface EnrollmentAttendQRCodePostResponse {
  * @param {Request}  { userId: string, activityId: int }
  * @returns [{ user, points }]
  **/
-export async function POST(request) {
+export async function POST(request: Request) {
   const data = await request.json();
   const session = await getServerSession(authOptions);
 

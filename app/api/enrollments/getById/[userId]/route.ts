@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { Activity as ActivityS } from "@prisma/generated/zod";
 
 const prisma = new PrismaClient();
 
@@ -13,16 +14,7 @@ export interface EnrollmentGetByUserIdResponse {
       name: string;
       email: string;
     };
-    activity: {
-      id: number;
-      title: string;
-      description: string;
-      speakers: string;
-      location: string;
-      capacity: number;
-      date: Date;
-      type: string;
-    };
+    activity: ActivityS;
     attended: boolean;
   }[];
 }
@@ -34,7 +26,7 @@ export interface EnrollmentGetByUserIdResponse {
  * @param {string} activityId
  * @returns [{ enrollments }]
  */
-export async function GET(request, context) {
+export async function GET(request: Request, context: any) {
   const id = context.params.userId;
 
   try {
