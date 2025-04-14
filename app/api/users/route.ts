@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth"
 import bcrypt from "bcrypt";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@lib/auth";
 const prisma = new PrismaClient();
 
 export interface UsersGetResponse {
@@ -12,6 +12,8 @@ export interface UsersGetResponse {
     name: string;
     email: string;
     role: string;
+    graduation: string;
+    courseYear: number;
     accredited: boolean;
     enrollments: {
       id: string;
@@ -33,6 +35,8 @@ export interface UsersGetResponse {
 export async function GET(req : Request) {
   const session = await getServerSession(authOptions);
   const params = new URL(req.url);
+  const takeParam = params.searchParams.get("take");
+  const all = (takeParam !== null && +takeParam === -1) || takeParam === null;
   
   if (session?.user.role != "ADMIN") {
     prisma.$disconnect();
@@ -50,6 +54,8 @@ export async function GET(req : Request) {
       name: true,
       email: true,
       role: true,
+      graduation: true,
+      courseYear: true,
       accredited: true,
       enrollments: {
         select: {
@@ -64,8 +70,12 @@ export async function GET(req : Request) {
         }
       },
     },
-    skip: +params.searchParams.get("skip")*(+params.searchParams.get("take")),
-    take: +params.searchParams.get("take"),
+    ...(all
+      ? {}
+      : {
+          skip: +(params.searchParams.get("skip") ?? 0) * +(params.searchParams.get("take") ?? 0),
+          take: +(params.searchParams.get("take") ?? 0),
+        }),
   });
   // // console.log(users);
 
@@ -174,7 +184,7 @@ export async function POST(req: Request) {
  *
  * @example body: { "uuid": "6143a3cb-2f08-43ae-9932-18a3c951d591", "params": { "name": "Pedro Camargo", "email": "pedrao@gmail.com", "role": "ADMIN", "points": 0 } }
  */
-export async function PUT(req) {
+export async function PUT(req: Request) {
   const data = await req.json();
   const uuid = data.uuid;
 

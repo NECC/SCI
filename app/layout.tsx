@@ -9,10 +9,10 @@ export const metadata = {
     default: 'Home | SCI'
   },
   description: "Semana da Ciência e Inovação",
-  metadataBase: new URL(process.env.PRODUCTION_URL)
+  metadataBase: new URL(process.env.PRODUCTION_URL || "https://sci.ecum.uminho.pt/"),
 };
 
-export default async function RootLayout({ children }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>

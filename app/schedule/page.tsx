@@ -18,8 +18,8 @@ type ScheduleActivity = ActivityI & {
 };
 
 export default function Schedule() {
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [activities, setActivities] = useState([]);
+  const [selectedDay, setSelectedDay] = useState("");
+  const [activities, setActivities] = useState<[string, ScheduleActivity[]][]>([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -28,7 +28,7 @@ export default function Schedule() {
   });
 
   const getActivitiesGroupedByDay = async () => {
-    const { data } = await axios.get<ActivityGetResponse>(`/api/activities`);
+    const { data } = await axios.get<ActivityGetResponse>(`/api/activities?skip=0&take=-1`);
 
     const activities = data.activities;
 
@@ -52,13 +52,13 @@ export default function Schedule() {
     );
   };
 
-  const getDays = (activities) => {
-    return activities.map(([day, _]) => day);
+  const getDays = (activities: any) => {
+    return activities.map(([day, _]: any) => day);
   };
 
   const groupActivitiesByStartTime = (activities: ScheduleActivity[]) => {
     // Group activities by startTime
-    const groups = activities.reduce((groups, activity) => {
+    const groups = activities.reduce((groups: {[key: string]: ScheduleActivity[]}, activity) => {
       const group = groups[activity.startTime] || [];
       group.push(activity);
       groups[activity.startTime] = group;
@@ -71,14 +71,11 @@ export default function Schedule() {
       const [hoursA, minutesA] = startTimeA.split(":");
       const [hoursB, minutesB] = startTimeB.split(":");
 
-      return (
-        Number(hoursA) - Number(hoursB) ||
-        (hoursA == hoursB && Number(minutesA) - Number(minutesB))
-      );
+      return (!(hoursA == hoursB)) ? Number(hoursA) - Number(hoursB) : Number(minutesA) - Number(minutesB);
     });
   };
 
-  const getActivitiesOfDay = (selectedDay) => {
+  const getActivitiesOfDay = (selectedDay: string) => {
     const activitiesOfDay = activities.find(([date]) => date === selectedDay);
     // console.log( groupActivitiesByStartTime(
     //   activitiesOfDay && activitiesOfDay[1] ? activitiesOfDay[1] : []

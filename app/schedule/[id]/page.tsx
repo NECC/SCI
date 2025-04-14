@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { ActivityGetResponseById } from "@app/api/activities/[id]/route";
 
 // TODO: Do loading state
-export default function Activity({ params }) {
+export default function Activity({ params }: { params: { id: string } }) {
   const [activity, setActivity] = useState<ActivityGetResponseById["activity"][0] | null>();
   
   useEffect(() => {
@@ -28,13 +28,13 @@ export default function Activity({ params }) {
   }
   , []);
 
+  if (!activity) return null;
+
   const getActivityDay = () => {
       const date = new Date(activity?.date);
       const day = date.getUTCDate();
       return day
   }
-
-  if (!activity) return null;
 
   return (
     <div className="bg-white dark:bg-black bg-[url('/rectangle_light.png')] dark:bg-[url('/rectangle.png')] h-screen bg-no-repeat bg-top bg-cover">

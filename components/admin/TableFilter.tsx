@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { CgSearch } from "react-icons/cg";
 
 const choices = [
-  { active: "users", select: ["EMAIL", "NAME", "ID"] },
+  { active: "users", select: ["EMAIL", "NAME", "ID", "COURSE"] },
   { active: "activities", select: ["TITLE", "ID"] },
   { active: "enrollments", select: ["ENROLLMENTID", "USERID", "ACTIVITYID"] },
 ];
@@ -17,7 +17,7 @@ export default function TableFilter(props: {
   const [filter, setFilter] = useState("");
   const [search, setSearch] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     // console.log(data);
     // console.log(e.target.value);
     setFilter(e.target.value);
@@ -29,33 +29,38 @@ export default function TableFilter(props: {
   }, [active]);
 
   useEffect(() => {
-    const filterData = (data, filter) => {
+    const filterData = (data: any, filter: string) => {
       if (filter == "EMAIL") {
-        const filteredData = data.filter((row) => {
+        const filteredData = data.filter((row: any) => {
           return row.email.toLowerCase().includes(search.toLowerCase());
         });
         setData(filteredData);
       } else if (filter == "NAME") {
-        const filteredData = data.filter((row) => {
+        const filteredData = data.filter((row: any) => {
           return row.name.toLowerCase().includes(search.toLowerCase());
         });
         setData(filteredData);
       } else if (filter == "ID") {
-        const filteredData = data.filter((row) => {
+        const filteredData = data.filter((row: any) => {
           return row.id.toString().includes(search);
         });
         setData(filteredData);
+      } else if (filter == "COURSE") {
+        const filteredData = data.filter((row: any) => {
+          return (search != "") ? row.graduation?.toString().includes(search) : true;
+        });
+        setData(filteredData);
       } else if (filter == "TITLE") {
-        const filteredData = data.filter((row) => {
+        const filteredData = data.filter((row: any) => {
           return row.title.toLowerCase().includes(search.toLowerCase());
         });
         setData(filteredData);
       } else if (filter == "ACTIVITYID") {
-        const filteredData = data.filter((row) => {
+        const filteredData = data.filter((row: any) => {
           return row.activity.id.toString().includes(search);
         });
 
-        const filteredData2 = filteredData.map((enrollment) => {
+        const filteredData2 = filteredData.map((enrollment: any) => {
           return {
             activityId: enrollment.activity.id,
             activityName: enrollment.activity.title,
@@ -67,11 +72,11 @@ export default function TableFilter(props: {
 
         setData(filteredData2);
       } else if (filter == "USERID") {
-        const filteredData = data.filter((row) => {
+        const filteredData = data.filter((row: any) => {
           return row.user.id.toString().includes(search);
         });
 
-        const filteredData2 = filteredData.map((enrollment) => {
+        const filteredData2 = filteredData.map((enrollment: any) => {
           return {
             activityId: enrollment.activity.id,
             activityName: enrollment.activity.title,
@@ -83,11 +88,11 @@ export default function TableFilter(props: {
 
         setData(filteredData2);
       } else if (filter == "ENROLLMENTID") {
-        const filteredData = data.filter((row) => {
+        const filteredData = data.filter((row: any) => {
           return row.id.toString().includes(search);
         });
 
-        const filteredData2 = filteredData.map((enrollment) => {
+        const filteredData2 = filteredData.map((enrollment: any) => {
           return {
             activityId: enrollment.activity.id,
             activityName: enrollment.activity.title,
@@ -125,6 +130,7 @@ export default function TableFilter(props: {
                 })
                 .flat();
             }
+            else return [];
           })
           .flat()}
       </Select>

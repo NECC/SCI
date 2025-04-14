@@ -1,6 +1,6 @@
 "use client";
 
-import Activity from "@app/schedule/Activity";
+import Activity from "@app/profile/[id]/Activity";
 import QRCode from "easyqrcodejs";
 import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
@@ -24,6 +24,7 @@ import { ArrowRight } from "@components/ArrowRight";
 import MinimalArrowDown from "@components/MinimalArrowDown";
 import { UserGetResponse } from "@app/api/users/[id]/route";
 import { EnrollmentGetByUserIdResponse } from "@app/api/enrollments/getById/[userId]/route";
+import { Activity as ActivityI } from "@prisma/generated/zod";
 
 export default function Profile({
   params: { id },
@@ -58,20 +59,24 @@ export default function Profile({
       <div className="p-5 md:p-7 flex flex-col md:flex-row h-full">
         <div className="flex flex-col flex-grow gap-2 justify-between">
           <div className="flex flex-col items-left">
-            <ProfileNav
-              user={user}
-              activeScreen={activeScreen}
-              setActiveScreen={setActiveScreen}
-            />
+            {user && (
+              <ProfileNav
+                user={user}
+                activeScreen={activeScreen}
+                setActiveScreen={setActiveScreen}
+              />
+            )}
           </div>
         </div>
 
-        {status != "loading" ? (
+        {status != "loading" && user ? (
           <div className="bg-transparent w-full h-full">
             {activeScreen == "enrolled" ? (
               <ActivitiesSubscribed id={id} />
             ) : activeScreen == "qrcode" ? (
               <Code user={user} id={id} />
+            ) : activeScreen == "info" ? (
+              <ProfileInfo user={user} id={id} />
             ) : (
               <></>
             )}
@@ -110,6 +115,10 @@ const ProfileNav = ({
       key: "qrcode",
       label: "QR Code",
     },
+    {
+      key: "info",
+      label: "Info",
+    },
   ];
 
   return (
@@ -132,7 +141,7 @@ const ProfileNav = ({
                 />
                 <div className="flex flex-1 flex-col items-start whitespace-break-spaces text-left">
                   <p className="text-xl uppercase font-extrabold">
-                    {items.find((v) => v.key == activeScreen).label}
+                    {items.find((v) => v.key == activeScreen)?.label || "Unknown"}
                   </p>
                   <p className="">{user?.name}</p>
                 </div>
@@ -156,6 +165,21 @@ const ProfileNav = ({
         </Dropdown>
       </div>
       <div className="hidden md:block">
+      <div className="flex flex-row items-center">
+          <Button
+            disableRipple={true}
+            radius={"none"}
+            onClick={() => setSelectedKeys(new Set(["info"]))}
+            className={
+              activeScreen != "info"
+                ? "pl-3 flex flex-col text-white bg-transparent py-7"
+                : "pl-3 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold border-l-2"
+            }
+          >
+            {activeScreen == "info" && <LineDots />}
+            <p className="text-2xl leading-5">INFO</p>
+          </Button>
+        </div>
         <div className="flex flex-row items-center">
           <Button
             disableRipple={true}
@@ -187,26 +211,27 @@ const ProfileNav = ({
           </Button>
         </div>
       </div>
-      <div className="flex flex-row items-center">
-        <div className="flex flex-col text-white bg-transparent py-7 pl-3">
-          <p className="text-2xl leading-5"> POINTS: {user?.points} </p>
-        </div>
-      </div>
     </>
   );
 };
 
 const ActivitiesSubscribed = ({ id }: { id: string }) => {
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [activities, setActivities] = useState([]);
-  const [type, setType] = useState(null);
+  const [selectedDay, setSelectedDay] = useState("");
+  const [activities, setActivities] = useState<[string, Array<ActivityI & {
+    attended: boolean;
+  }>][]>([]);
+  const [type, setType] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   // console.log(id);
 
   // TODO: Move this to a helper function
-  const groupAndSortActivitiesByDay = (activities) => {
+  const groupAndSortActivitiesByDay = (activities: Array<ActivityI & {
+    attended: boolean;
+  }>) => {
     // Group activities by date
-    const groups = activities.reduce((groups, activity) => {
+    const groups = activities.reduce((groups: {[key: string]: Array<ActivityI & {
+      attended: boolean;
+    }>}, activity) => {
       const date = new Date(activity.date);
       const day = date.getUTCDate();
       const month = date.getUTCMonth() + 1; // Months are 0-based
@@ -241,11 +266,11 @@ const ActivitiesSubscribed = ({ id }: { id: string }) => {
     );
   };
 
-  const getDays = (activities) => {
-    return activities.map(([day, _]) => day);
+  const getDays = (activities: any) => {
+    return activities.map(([day , _]: any) => day);
   };
 
-  const getActivitiesOfDayAndType = (selectedDay, type) => {
+  const getActivitiesOfDayAndType = (selectedDay: string, type: string | null) => {
     const activitiesOfDay = activities.find(([date]) => date === selectedDay);
     if (activitiesOfDay) {
       if (type) {
@@ -288,19 +313,19 @@ const ActivitiesSubscribed = ({ id }: { id: string }) => {
               <div className="mt-1 -mb-3 flex flex-row h-8">
                 <ButtonGroup>
                   <Button
-                    className={type == null && "bg-white text-black"}
+                    className={!type ? "bg-white text-black" : ""}
                     onClick={() => setType(null)}
                   >
                     All
                   </Button>
                   <Button
-                    className={type == "WORKSHOP" && "bg-white text-black"}
+                    className={type == "WORKSHOP" ? "bg-white text-black" : ""}
                     onClick={() => setType("WORKSHOP")}
                   >
                     Workshops: {getWorkshopCount()}
                   </Button>
                   <Button
-                    className={type == "OTHER" && "bg-white text-black"}
+                    className={type == "OTHER" ? "bg-white text-black" : ""}
                     onClick={() => setType("OTHER")}
                   >
                     Others: {getOtherCount()}
@@ -365,10 +390,6 @@ const Code = ({ user, id }: {
   return (
     <div className="dark:bg-black/40 h-full md:ml-8 mt-8">
       <div className="px-5 md:px-1 gap-3 flex flex-col h-full">
-        <h2 className="text-white font-normal text-2xl md:text-lg leading-5">
-          {" "}
-          Points: {user?.points}{" "}
-        </h2>
         <div className="flex flex-wrap content-center justify-center h-full">
           <div
             className="-mt-56 md:-mt-28 border-[12px] rounded-md border-white"
@@ -379,3 +400,28 @@ const Code = ({ user, id }: {
     </div>
   );
 };
+
+
+const ProfileInfo = ({ user, id }: {
+  user: UserGetResponse["user"];
+  id: string;
+}) => {
+  return (
+    <div>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-row items-center gap-2">
+          <p className="text-white">Name:</p>
+          <p className="text-white">{user.name}</p>
+        </div>
+        <div className="flex flex-row items-center gap-2">
+          <p className="text-white">Email:</p>
+          <p className="text-white">{user.email}</p>
+        </div>
+        <div className="flex flex-row items-center gap-2">
+          <p className="text-white">Course:</p>
+          <p className="text-white">{user.graduation}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
