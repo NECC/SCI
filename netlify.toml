@@ -2,7 +2,7 @@
 command = "npx prisma generate && npm run build"
 
 [context.deploy-preview]
-command = "npx prisma generate && npm run build"
+command = "npm run build"
 
 [build]
    publish = ".next"
