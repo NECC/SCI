@@ -32,7 +32,7 @@ import { UserGetResponse } from "@app/api/users/[id]/route";
 
 interface ActivityProps {
   item: ActivityI & {
-    enrollments: {userId: string, activityId: number}[];
+    enrollments: Enrollments[];
     enrollable: boolean;
     alreadyEnrolled: boolean;
     attended: boolean;
