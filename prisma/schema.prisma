@@ -50,15 +50,15 @@ model DailyRanking {
 model Activity {
   id          Int           @id @default(autoincrement())
   title       String
-  description String
+  description String?
   date        DateTime
   location    String
-  capacity    Int
-  speakers    String
+  capacity    Int?
+  speakers    String?
   type        Type
   endTime     String
   startTime   String
-  picUrl      String
+  picUrl      String?
   points      Int
   enrollments Enrollments[]
 }

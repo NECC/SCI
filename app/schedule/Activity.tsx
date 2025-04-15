@@ -66,6 +66,7 @@ export default function Activity({ item, userId }: ActivityProps) {
       item.enrollments.push({ userId: userId, activityId: activityId });
       setEnrolled(true);
     }
+    else console.log(data.error);
     setLoading(false);
   };
 
@@ -91,7 +92,7 @@ export default function Activity({ item, userId }: ActivityProps) {
     <>
       <Card className="min-w-[18rem] max-w-[300px]" shadow="sm">
         <CardBody className="gap-2 p-5 rounded-2xl">
-          {item.speakers && item.type !== "OTHER" && (
+          {item.speakers && item.type === "WORKSHOP" && (
             <div className="text-tiny text-black/60 dark:text-white/60 uppercase font-bold mb-1">
               {item.type}
 
@@ -143,9 +144,7 @@ export default function Activity({ item, userId }: ActivityProps) {
               </p>
             </div>
           )}
-          {item.type == "WORKSHOP" &&
-            item.enrollments?.length != 0 &&
-            item.enrollments?.length && (
+          {item.type == "WORKSHOP" &&(
               <div className="flex flex-row mr-auto items-center">
                 <MdOutlineEventSeat className="inline mr-2" />
                 <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
@@ -155,13 +154,13 @@ export default function Activity({ item, userId }: ActivityProps) {
               </div>
             )}
         </CardBody>
-        {item.speakers && item.type !== "OTHER" && (
+        {item.speakers && item.type === "WORKSHOP" && (
           <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
             <Image src={item.picUrl} alt="logo" width={30} height={30} />
             <p className="text-tiny dark:text-white/60 font-medium">
               {item.speakers}
             </p>
-            {item.enrollable && !item.alreadyEnrolled && (
+            {!item.alreadyEnrolled && (
               <div className="ml-auto">
                 <Button
                   isLoading={loading}
@@ -223,6 +222,49 @@ export default function Activity({ item, userId }: ActivityProps) {
             )}
           </CardFooter>
         )}
+        {item.type !== "WORKSHOP" && (<CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
+          <Image src={item.picUrl} alt="logo" width={30} height={30} />
+          <p className="text-tiny dark:text-white/60 font-medium">
+            {item.speakers ? item.speakers : ""}
+          </p>
+
+          {userId && !item.attended && (
+            <div className="ml-auto">
+              <Button
+                size="sm"
+                radius="full"
+                variant="faded"
+                color="primary"
+                className="text-tiny"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onOpen();
+                  e.stopPropagation();
+                }}
+              >
+                <BsQrCode className="text-medium" />
+              </Button>
+            </div>
+          )}
+          {item.attended && dados?.name && (
+            <div className="flex flex-row ml-auto">
+              <PDFDownloadLink
+                document={<Pdf data={{name: dados.name, title: item.title}} user={{name: dados.name, title: item.title}} />}
+                fileName="certificate.pdf"
+              >
+                <Button
+                  isLoading={loading}
+                  size="sm"
+                  radius="full"
+                  color="success"
+                  className="text-tiny text-white"
+                >
+                  Certificate <TbFileDownload />
+                </Button>
+              </PDFDownloadLink>
+            </div>
+          )}
+        </CardFooter>)}
       </Card>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
