@@ -103,10 +103,6 @@ const ProfileNav = ({
     new Set([activeScreen])
   );
 
-  useEffect(() => {
-    setActiveScreen(Array.from(selectedKeys).join(""));
-  }, [selectedKeys, setActiveScreen]);
-
   const items = [
     {
       key: "enrolled",
@@ -159,7 +155,7 @@ const ProfileNav = ({
             disallowEmptySelection
             selectionMode="single"
             selectedKeys={selectedKeys}
-            onSelectionChange={() => setSelectedKeys(new Set(["enrolled"]))}
+            onAction={(key) => {setActiveScreen(key as string); setSelectedKeys(new Set([key as string]));}}
           >
             {(item) => <DropdownItem key={item.key}>{item.label}</DropdownItem>}
           </DropdownMenu>
@@ -170,7 +166,7 @@ const ProfileNav = ({
           <Button
             disableRipple={true}
             radius={"none"}
-            onClick={() => setSelectedKeys(new Set(["info"]))}
+            onClick={() => {setSelectedKeys(new Set(["info"])); setActiveScreen("info")}}
             className={
               activeScreen != "info"
                 ? "pl-3 flex flex-col text-white bg-transparent py-7"
@@ -185,7 +181,7 @@ const ProfileNav = ({
           <Button
             disableRipple={true}
             radius={"none"}
-            onClick={() => setSelectedKeys(new Set(["enrolled"]))}
+            onClick={() => {setSelectedKeys(new Set(["enrolled"])); setActiveScreen("enrolled")}}
             className={
               activeScreen != "enrolled"
                 ? "pl-3 flex flex-col text-white bg-transparent py-7"
@@ -200,7 +196,7 @@ const ProfileNav = ({
           <Button
             disableRipple={true}
             radius={"none"}
-            onClick={() => setSelectedKeys(new Set(["qrcode"]))}
+            onClick={() => {setSelectedKeys(new Set(["qrcode"])); setActiveScreen("qrcode")}}
             className={
               activeScreen != "qrcode"
                 ? "pl-3 flex flex-col text-white bg-transparent py-7"
@@ -434,7 +430,7 @@ const ProfileInfo = ({ id }: {
     <div className="flex flex-col gap-16 w-full">
       {user ? (
         <div className="flex flex-col gap-16 w-full">
-          <div className="flex flex-row">
+          <div className="flex md:flex-row flex-col pt-5 md:pt-0 md:gap-0 gap-16">
             <div className="flex flex-col w-1/2 justify-start items-start gap-5">
               <p className="justify-start overflow-visible text-white font-extrabold text-4xl leading-5">Name</p>
               <p className="text-white text-xl leading-5">{user.name}</p>
@@ -457,7 +453,7 @@ const ProfileInfo = ({ id }: {
             )}
           </div>
           <div>
-            <Button onClick={handleClick} className="w-[12.5%] bg-white text-black">
+            <Button onClick={handleClick} className="md:w-[12.5%] w-1/2 bg-white text-black">
               <RxColorWheel className="text-black" />
               <p> Roulette </p>
             </Button>
