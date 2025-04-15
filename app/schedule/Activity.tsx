@@ -144,7 +144,7 @@ export default function Activity({ item, userId }: ActivityProps) {
               </p>
             </div>
           )}
-          {item.type == "WORKSHOP" &&(
+          {item.type == "WORKSHOP" && item.capacity != 0 &&(
               <div className="flex flex-row mr-auto items-center">
                 <MdOutlineEventSeat className="inline mr-2" />
                 <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
@@ -154,12 +154,16 @@ export default function Activity({ item, userId }: ActivityProps) {
               </div>
             )}
         </CardBody>
-        {item.speakers && item.type === "WORKSHOP" && (
+        {item.capacity != 0 && item.speakers && item.type === "WORKSHOP" && (
           <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
             <Image src={item.picUrl} alt="logo" width={30} height={30} />
-            <p className="text-tiny dark:text-white/60 font-medium">
-              {item.speakers}
-            </p>
+            <div className="flex flex-col gap-2">
+              {item.speakers.split(',').map(str => 
+                <p className="text-tiny dark:text-white/60 font-medium">
+                  {str}
+                </p>
+              )}
+            </div>
             {!item.alreadyEnrolled && (
               <div className="ml-auto">
                 <Button
@@ -224,9 +228,15 @@ export default function Activity({ item, userId }: ActivityProps) {
         )}
         {( item.capacity == 0 || item.type !== "WORKSHOP") && (<CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
           <Image src={item.picUrl} alt="logo" width={30} height={30} />
-          <p className="text-tiny dark:text-white/60 font-medium">
-            {item.speakers ? item.speakers : ""}
-          </p>
+          {item.speakers ? (
+            <div className="flex flex-col gap-2">
+              {item.speakers.split(',').map(str => 
+                <p className="text-tiny dark:text-white/60 font-medium">
+                  {str}
+                </p>
+              )}
+            </div>) : ""
+            }
 
           {userId && !item.attended && (
             <div className="ml-auto">
