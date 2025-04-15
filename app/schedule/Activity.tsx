@@ -91,7 +91,7 @@ export default function Activity({ item, userId }: ActivityProps) {
   return (
     <>
       <Card className="min-w-[18rem] max-w-[300px]" shadow="sm">
-        <CardBody className="gap-2 p-5 rounded-2xl">
+        <CardBody className="gap-2 pt-5 rounded-2xl">
           {item.speakers && item.type === "WORKSHOP" && (
             <div className="text-tiny text-black/60 dark:text-white/60 uppercase font-bold mb-1">
               {item.type}
@@ -139,7 +139,7 @@ export default function Activity({ item, userId }: ActivityProps) {
           {item.location && (
             <div className="flex flex-row mr-auto items-center">
               <CiMapPin className="inline mr-2" />
-              <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
+              <p className="text-tiny dark:text-white/50 font-tiny">
                 {item.location}
               </p>
             </div>
@@ -222,7 +222,7 @@ export default function Activity({ item, userId }: ActivityProps) {
             )}
           </CardFooter>
         )}
-        {item.type !== "WORKSHOP" && (<CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
+        {( item.capacity == 0 || item.type !== "WORKSHOP") && (<CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
           <Image src={item.picUrl} alt="logo" width={30} height={30} />
           <p className="text-tiny dark:text-white/60 font-medium">
             {item.speakers ? item.speakers : ""}

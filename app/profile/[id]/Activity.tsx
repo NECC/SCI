@@ -82,7 +82,7 @@ export default function Activity({ item, userId }: ActivityProps) {
           {item.location && (
             <div className="flex flex-row mr-auto items-center">
               <CiMapPin className="inline mr-2" />
-              <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
+              <p className="text-tiny dark:text-white/50 font-tiny">
                 {item.location}
               </p>
             </div>

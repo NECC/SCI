@@ -64,8 +64,8 @@ export default function Admin() {
         setBackupData(data.users);
       }
       else{
-        data.users.map((user) => {setRows([...rows,user])});
-        data.users.map((user) => {setBackupData([...backupData,user])});
+        setRows(rows => [...rows,...data.users]);
+        setBackupData(backupData => [...backupData,...data.users]);
       }
     }
     setLoading(false);
@@ -104,10 +104,11 @@ export default function Admin() {
         setBackupData(data.activities);
       }
       else{
-        data.activities.map((activity) => {setRows([...rows,activity])});
-        data.activities.map((activity) => {setBackupData([...rows,activity])});
+        setRows(rows => [...rows,...data.activities]);
+        setBackupData(backupData => [...backupData,...data.activities]);
       }
     }
+    console.log("activities",data.activities);
     setLoading(false);
   };
 
@@ -122,34 +123,12 @@ export default function Admin() {
       // console.log(data.enrollments);
       setMore(true);
       if (page == 0 || prev != "enrollments"){
-        setRows(
-          data.enrollments.map((enrollment) => {
-            return {
-              activityId: enrollment.activity.id,
-              activityName: enrollment.activity.title,
-              userId: enrollment.user.id,
-              userName: enrollment.user.name,
-              id: enrollment.id,
-            };
-          })
-        );
+        setRows(data.enrollments);
         setBackupData(data.enrollments);
       }
       else{
-        data.enrollments.map((enrollment) => {setRows([...rows,{
-          activityId: enrollment.activity.id,
-          activityName: enrollment.activity.title,
-          userId: enrollment.user.id,
-          userName: enrollment.user.name,
-          id: enrollment.id,
-        }])});
-        data.enrollments.map((enrollment) => {setBackupData([...rows,{
-          activityId: enrollment.activity.id,
-          activityName: enrollment.activity.title,
-          userId: enrollment.user.id,
-          userName: enrollment.user.name,
-          id: enrollment.id,
-        }])});
+        setRows(rows => [...rows,...data.enrollments]);
+        setBackupData(backupData => [...backupData,...data.enrollments]);
       }
     }
     setLoading(false);
