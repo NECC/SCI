@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
-export interface UserPostAccreditationResponse {
+export interface UserPutRouletteResponse {
   response: "success" | "error";
   update?: {
     email: string;
@@ -17,19 +17,19 @@ export interface UserPostAccreditationResponse {
 
 /**
  * Update user accreditation by ID
- * @method POST
+ * @method PUT
  * @param {string} id User id to get
  * @returns
  */
-export async function POST(request: Request, context: { params: { id: string } }) {
+export async function PUT(request: Request, context: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   
-  if (session?.user.role != "ADMIN") {
+  if (session?.user.role != "STAFF") {
     prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({
         response: "error",
-        error: "You don't have permission to update an user accreditation!",
+        error: "You don't have permission to spend a ticket!",
       })
     );
   }
@@ -73,7 +73,7 @@ export async function POST(request: Request, context: { params: { id: string } }
         email: true,
         id: true,
         name: true,
-        accredited: true,
+        rewarded: true,
       },
     });
 

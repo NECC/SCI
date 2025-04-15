@@ -75,7 +75,7 @@ export default function Profile({
             {activeScreen == "enrolled" ? (
               <ActivitiesSubscribed id={id} />
             ) : activeScreen == "qrcode" ? (
-              <Code user={user} id={id} />
+              <Code id={id} />
             ) : activeScreen == "info" ? (
               <ProfileInfo id={id} />
             ) : (
@@ -114,7 +114,7 @@ const ProfileNav = ({
     },
     {
       key: "qrcode",
-      label: "QR Code",
+      label: "Roulette QR Code",
     },
     {
       key: "info",
@@ -361,15 +361,14 @@ const ActivitiesSubscribed = ({ id }: { id: string }) => {
   );
 };
 
-const Code = ({ user, id }: {
-  user: UserGetResponse["user"];
+const Code = ({ id }: {
   id: string;
 }) => {
   const qrcode = useRef(null);
   const currentUrl =
     process.env.NEXT_PUBLIC_MODE == "development"
-      ? process.env.NEXT_PUBLIC_BACKOFFICE_URL_DEVELOPMENT
-      : process.env.NEXT_PUBLIC_BACKOFFICE_URL_PRODUCTION;
+      ? process.env.BASE_URL
+      : process.env.PRODUCTION_URL;
 
   // console.log(currentUrl);
 
@@ -384,7 +383,7 @@ const Code = ({ user, id }: {
     };
 
     const code = new QRCode(qrcode.current, options);
-    code.makeCode(`${currentUrl}admin/ranking/${id}`);
+    code.makeCode(`${currentUrl}staff/roulette/${id}`);
     return () => code.clear();
   }, [qrcode, currentUrl, id]);
 
