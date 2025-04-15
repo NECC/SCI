@@ -158,8 +158,8 @@ export default function Activity({ item, userId }: ActivityProps) {
           <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
             <Image src={item.picUrl} alt="logo" width={30} height={30} />
             <div className="flex flex-col gap-2">
-              {item.speakers.split(',').map(str => 
-                <p className="text-tiny dark:text-white/60 font-medium">
+              {item.speakers.split(',').map((str,key) => 
+                <p key={key} className="text-tiny dark:text-white/60 font-medium">
                   {str}
                 </p>
               )}
@@ -230,8 +230,8 @@ export default function Activity({ item, userId }: ActivityProps) {
           <Image src={item.picUrl} alt="logo" width={30} height={30} />
           {item.speakers ? (
             <div className="flex flex-col gap-2">
-              {item.speakers.split(',').map(str => 
-                <p className="text-tiny dark:text-white/60 font-medium">
+              {item.speakers.split(',').map((str,key) => 
+                <p key={key} className="text-tiny dark:text-white/60 font-medium">
                   {str}
                 </p>
               )}
