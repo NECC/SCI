@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { CgSearch } from "react-icons/cg";
 
 const choices = [
-  { active: "users", select: ["EMAIL", "NAME", "ID", "COURSE"] },
+  { active: "users", select: ["EMAIL", "NAME", "ID", "COURSE","POINTS"] },
   { active: "activities", select: ["TITLE", "ID"] },
   { active: "enrollments", select: ["ENROLLMENTID", "USERID", "ACTIVITYID"] },
 ];
@@ -48,6 +48,11 @@ export default function TableFilter(props: {
       } else if (filter == "COURSE") {
         const filteredData = data.filter((row: any) => {
           return (search != "") ? row.graduation?.toString().includes(search) : true;
+        });
+        setData(filteredData);
+      } else if (filter == "POINTS") {
+        const filteredData = data.sort((row: any, nextRow: any) => {
+          return -(row.points - nextRow.points);
         });
         setData(filteredData);
       } else if (filter == "TITLE") {

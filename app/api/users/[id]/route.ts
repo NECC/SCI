@@ -1,4 +1,6 @@
+import { authOptions } from "@lib/auth";
 import { PrismaClient } from "@prisma/client";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
@@ -14,7 +16,10 @@ export interface UserGetResponse {
         name: string;
         email: string;
         role: string;
-        graduation: string;
+        points: number,
+        graduation: string,
+        courseYear: number,
+        academicNumber: number,
         enrollments: {
             id: string;
             activity: {
@@ -24,6 +29,11 @@ export interface UserGetResponse {
             }
         }[];
     };
+    error?: string;
+}
+
+export interface UserUpdateResponse {
+    response: "success" | "error";
     error?: string;
 }
 
@@ -46,6 +56,10 @@ export async function GET(request: Request, props: Props) {
             name: true,
             email: true,
             role: true,
+            points: true,
+            graduation: true,
+            courseYear: true,
+            academicNumber: true,
             enrollments: {
                 select: {
                     id: true,
@@ -67,4 +81,35 @@ export async function GET(request: Request, props: Props) {
     );
 }
 
+export async function PUT(request: Request, props: Props) {
+    const id = props.params.id;
+    const data = await request.json();
 
+    const session = await getServerSession(authOptions);
+          
+          if (session?.user.role != "ADMIN") {
+            prisma.$disconnect();
+            return new NextResponse(
+              JSON.stringify({
+                response: "error",
+                error: "You don't have permission to update an user's points!",
+              })
+            );
+          }
+
+    const user = await prisma.user.update({
+        where: {
+            id: id,
+        },
+        data: {
+            points: {
+                increment: parseInt(data.points) ?? 0,
+            }
+        },
+    });
+    // console.log(user);
+    prisma.$disconnect();
+    return new NextResponse(
+        JSON.stringify({ response: "success", user: user })
+    );
+}

@@ -49,6 +49,11 @@ export default function SignUpPage() {
     unregister,
     formState: { errors, isLoading, isSubmitting, },
   } = useForm<FormData>({
+    defaultValues: {
+        academicNumber: null,
+        graduation: null,
+        courseYear: null,
+    },
     resolver: zodResolver(UserSchema),
     shouldUnregister: false,
   });

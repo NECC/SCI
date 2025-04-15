@@ -20,11 +20,12 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { LineDots } from "@components/LineDots";
 import ActivityDayFilter from "@components/ActivityDayFilter";
-import { ArrowRight } from "@components/ArrowRight";
+import { RxColorWheel } from "react-icons/rx";
 import MinimalArrowDown from "@components/MinimalArrowDown";
 import { UserGetResponse } from "@app/api/users/[id]/route";
 import { EnrollmentGetByUserIdResponse } from "@app/api/enrollments/getById/[userId]/route";
 import { Activity as ActivityI } from "@prisma/generated/zod";
+import { UserPutRouletteResponse } from "@app/api/users/roulette/[id]/route";
 
 export default function Profile({
   params: { id },
@@ -76,7 +77,7 @@ export default function Profile({
             ) : activeScreen == "qrcode" ? (
               <Code user={user} id={id} />
             ) : activeScreen == "info" ? (
-              <ProfileInfo user={user} id={id} />
+              <ProfileInfo id={id} />
             ) : (
               <></>
             )}
@@ -402,26 +403,70 @@ const Code = ({ user, id }: {
 };
 
 
-const ProfileInfo = ({ user, id }: {
-  user: UserGetResponse["user"];
+const ProfileInfo = ({ id }: {
   id: string;
 }) => {
+
+  const [error, setError] = useState<string | undefined>(null);
+  const [user, setUser] = useState<UserGetResponse["user"]>();
+
+  const getUser = async () => {
+    const { data } = await axios.get<UserGetResponse>(`/api/users/${id}`);
+    // console.log(data);
+    setUser(data.user);
+  };
+
+  // get profile user
+  useEffect(() => {
+    getUser();
+  }, [id,error]);
+
+  const handleClick = async () => {
+    const { data } = await axios.put<UserPutRouletteResponse>(`/api/users/roulette/${id}`);
+
+    if (data.response == "error") {
+      setError(data.error);
+    }
+    else setError(null);
+    getUser();
+  }
+
   return (
-    <div>
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-row items-center gap-2">
-          <p className="text-white">Name:</p>
-          <p className="text-white">{user.name}</p>
-        </div>
-        <div className="flex flex-row items-center gap-2">
-          <p className="text-white">Email:</p>
-          <p className="text-white">{user.email}</p>
-        </div>
-        <div className="flex flex-row items-center gap-2">
-          <p className="text-white">Course:</p>
-          <p className="text-white">{user.graduation}</p>
-        </div>
-      </div>
+    <div className="flex flex-col gap-16 w-full">
+      {user ? (
+        <div className="flex flex-col gap-16 w-full">
+          <div className="flex flex-row">
+            <div className="flex flex-col w-1/2 justify-start items-start gap-5">
+              <p className="justify-start overflow-visible text-white font-extrabold text-4xl leading-5">Name</p>
+              <p className="text-white text-xl leading-5">{user.name}</p>
+            </div>
+            <div className="flex flex-col w-1/2 justify-start items-start gap-5">
+              <p className="justify-start overflow-visible text-white font-extrabold text-4xl leading-5">Email</p>
+              <p className="text-white text-xl leading-5">{user.email}</p>
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className="flex flex-col w-1/2 justify-start items-start gap-5">
+              <p className="justify-start overflow-visible text-white font-extrabold text-4xl leading-5">Points</p>
+              <p className="text-white text-xl leading-5">{user.points}</p>
+            </div>
+            {user.graduation && (
+              <div className="flex flex-col w-1/2 justify-start items-start gap-5">
+                <p className="justify-start overflow-visible text-white font-extrabold text-4xl leading-5">Course</p>
+                <p className="text-white text-xl leading-5">{user.graduation}</p>
+              </div>
+            )}
+          </div>
+          <div>
+            <Button onClick={handleClick} className="w-[12.5%] bg-white text-black">
+              <RxColorWheel className="text-black" />
+              <p> Roulette </p>
+            </Button>
+          {error && <div className="w-[12.5%] bg-red-500 p-2 text-white mt-3 rounded"> {error} </div>}
+          </div>
+        </div>) 
+        : <Spinner color="white" size="lg" />
+      }
     </div>
   )
 }

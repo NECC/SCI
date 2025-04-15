@@ -102,6 +102,15 @@ export async function POST(request: Request) {
     );
   }
 
+  if (session.user.role != "USER") {
+    return new NextResponse(
+      JSON.stringify({
+        response: "error",
+        error: "Only users can enroll in activities",
+      })
+    );
+  }
+  
   try {
     // Get activity enrollments and check if it's full
     const activityEnrollments = await prisma.activity.findUnique({

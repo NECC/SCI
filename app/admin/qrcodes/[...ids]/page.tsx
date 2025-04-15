@@ -7,6 +7,8 @@ import { useSession } from "next-auth/react";
 import { Button } from "@nextui-org/react";
 import { RankingPostResponse } from "@app/api/ranking/route";
 import { EnrollmentAttendQRCodePostResponse } from "@app/api/enrollments/attend/qrcode/route";
+import { UserUpdateResponse } from "@app/api/users/[id]/route";
+import { ActivityPointsResponse } from "@app/api/activities/[id]/points/route";
 
 export default function QRCodesAdmin({
   params: { ids },
@@ -36,7 +38,7 @@ export default function QRCodesAdmin({
     }
   }, [session]);
 
-  const updateUserAttendance = async () => {
+  const updateUserAttendanceAndPoints = async () => {
     setLoading(true);
     const res = await axios.post<EnrollmentAttendQRCodePostResponse>(
       `/api/enrollments/attend/qrcode`,
@@ -49,6 +51,13 @@ export default function QRCodesAdmin({
     const res2 = await axios.post<RankingPostResponse>("/api/ranking", {
       id: ids[1],
     });
+
+    const res3 = await axios.put<ActivityPointsResponse>(`api/activities/${ids[0]}`);
+
+    if (res3.data.response !== "error"){
+      const res4 = await axios.put<UserUpdateResponse>(
+        `/api/users/${ids[1]}`,{points: res3.data.points})
+      }
 
     if (res.data.response === "error")
       setError(res.data.error || "An error occurred") ??
@@ -83,7 +92,7 @@ export default function QRCodesAdmin({
 
       {!loading && !success && !error && (
         <Button
-          onClick={updateUserAttendance}
+          onClick={updateUserAttendanceAndPoints}
           color="primary"
           size="lg"
         >

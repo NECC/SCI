@@ -72,6 +72,7 @@ export async function GET(req: Request) {
 export async function POST(request: Request) {
   const data = await request.json();
   const response = ActivitySchema.safeParse(data);
+  console.log(data);
 
   const session = await getServerSession(authOptions);
 
@@ -105,6 +106,7 @@ export async function POST(request: Request) {
       startTime: data.startTime,
       type: data.type,
       picUrl: "", // TODO: Add a default picture
+      points: data.points,
     },
   });
   prisma.$disconnect();

@@ -16,7 +16,7 @@ export const UserScalarFieldEnumSchema = z.enum(['id','email','password','name',
 
 export const DailyRankingScalarFieldEnumSchema = z.enum(['id','date','userId','points']);
 
-export const ActivityScalarFieldEnumSchema = z.enum(['id','title','description','date','location','capacity','speakers','type','endTime','startTime','picUrl']);
+export const ActivityScalarFieldEnumSchema = z.enum(['id','title','description','date','location','capacity','speakers','type','endTime','startTime','picUrl','points']);
 
 export const EnrollmentsScalarFieldEnumSchema = z.enum(['id','userId','activityId','attended']);
 
@@ -95,6 +95,7 @@ export const ActivitySchema = z.object({
   endTime: z.string(),
   startTime: z.string(),
   picUrl: z.string(),
+  points: z.number().int(),
 })
 
 export type Activity = z.infer<typeof ActivitySchema>

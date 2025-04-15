@@ -7,7 +7,7 @@ export default function Accordion() {
   const participate = "Of course! SCI is open to everyone, regardless if you’re a student or not. Everyone is welcome to participate in our workshops and our talks.";
   const register = "You can participate by registering in this year’s edition through the link below.";
   const contact = " You can email us at sci.uminho@gmail.com or send us a message through our social media accounts.";
-  const points = "In SCI every activity you are part of gives you 1 point! At the end of every activity, reach someone from the Staff so they can scan the QR Code on your profile and give you the point."
+  const points = "In SCI every activity has a number of points assigned! At the end of every activity, reach someone from the Staff so they can scan the QR Code on your profile and give you the points. Points can be used to roll a wheel of fortune and win prizes! At the end of the week the 3 participants with more points will win one of this prizes:\n 1º- Smartwach\n2º- fones Bluetooth\n3º- PowerBank";
 
   const [active, setActive] = useState(false);
   const [active2, setActive2] = useState(false);
@@ -77,7 +77,10 @@ export default function Accordion() {
           <IoArrowDownCircleOutline size={30} color="white" className={`ease-in-out duration-300 ${active6 ? 'rotate-180' : 'rotate-0'}`} />
         </div>
         <div className={`bg-white bg-opacity-25 text-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active6 ? 'max-h-[500px]' : 'max-h-0'}`}>
-          <p className="p-3">{points}</p>
+          <p className="p-3">{
+          points.split('\n').map((line, index) => (
+            <p key={index}>{line}</p>
+          ))}</p>
         </div>
       </div>
     </div>

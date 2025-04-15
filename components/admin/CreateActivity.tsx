@@ -18,7 +18,7 @@ import { Types, ActivitySchema } from "@prisma/zod";
 export default function CreateActivity() {
   const router = useRouter();
   const onSubmit = (formData: any) => {
-    // console.log(formData)
+    // console.log(errors);
     axios
       .post("/api/activities", formData)
       .then((res) => {
@@ -116,7 +116,7 @@ export default function CreateActivity() {
               className="max-w-[220px]"
               isInvalid={!!errors.capacity}
               errorMessage={errors.capacity?.message as string}
-              {...register('capacity')}
+              {...register('capacity',{valueAsNumber: true})}
             />
             <Input
               color="default"
@@ -126,6 +126,15 @@ export default function CreateActivity() {
               isInvalid={!!errors.speakers}
               errorMessage={errors.speakers?.message as string}
               {...register('speakers')}
+            />
+            <Input
+              color="default"
+              type="number"
+              label="Points"
+              className="max-w-[220px]"
+              isInvalid={!!errors.points}
+              errorMessage={errors.points?.message as string}
+              {...register('points', {valueAsNumber: true})}
             />
             <Select
               label="Type"

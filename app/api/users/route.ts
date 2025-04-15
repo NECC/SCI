@@ -15,6 +15,7 @@ export interface UsersGetResponse {
     graduation: string;
     courseYear: number;
     accredited: boolean;
+    points: number;
     enrollments: {
       id: string;
       activity: {
@@ -57,6 +58,7 @@ export async function GET(req : Request) {
       graduation: true,
       courseYear: true,
       accredited: true,
+      points: true,
       enrollments: {
         select: {
           id: true,

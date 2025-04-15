@@ -59,6 +59,7 @@ model Activity {
   endTime     String
   startTime   String
   picUrl      String
+  points      Int
   enrollments Enrollments[]
 }
 

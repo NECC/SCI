@@ -94,6 +94,7 @@ export default function CreateUser() {
             >
               <option value="USER">USER</option>
               <option value="ADMIN">ADMIN</option>
+              <option value="STAFF">STAFF</option>
             </select>
           </CardBody>
           <button

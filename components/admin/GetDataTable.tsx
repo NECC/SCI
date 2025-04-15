@@ -39,6 +39,10 @@ const columnsUsers = [
     label: "COURSE",
   },
   {
+    key: "points",
+    label: "POINTS",
+  },
+  {
     key: "actions",
     label: "ACTIONS",
   },
