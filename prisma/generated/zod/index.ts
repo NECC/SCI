@@ -14,8 +14,6 @@ export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCo
 
 export const UserScalarFieldEnumSchema = z.enum(['id','email','password','name','role','accredited','points','rewarded','academicNumber','graduation','courseYear']);
 
-export const DailyRankingScalarFieldEnumSchema = z.enum(['id','date','userId','points']);
-
 export const ActivityScalarFieldEnumSchema = z.enum(['id','title','description','date','location','capacity','speakers','type','endTime','startTime','picUrl','points']);
 
 export const EnrollmentsScalarFieldEnumSchema = z.enum(['id','userId','activityId','attended']);
@@ -67,19 +65,6 @@ export const UserSchema = z.object({
 export type User = z.infer<typeof UserSchema>
 
 /////////////////////////////////////////
-// DAILY RANKING SCHEMA
-/////////////////////////////////////////
-
-export const DailyRankingSchema = z.object({
-  id: z.number().int(),
-  date: z.coerce.date(),
-  userId: z.string(),
-  points: z.number().int(),
-})
-
-export type DailyRanking = z.infer<typeof DailyRankingSchema>
-
-/////////////////////////////////////////
 // ACTIVITY SCHEMA
 /////////////////////////////////////////
 
@@ -87,14 +72,14 @@ export const ActivitySchema = z.object({
   type: TypeSchema,
   id: z.number().int(),
   title: z.string(),
-  description: z.string(),
+  description: z.string().nullable(),
   date: z.coerce.date(),
   location: z.string(),
-  capacity: z.number().int(),
-  speakers: z.string(),
+  capacity: z.number().int().nullable(),
+  speakers: z.string().nullable(),
   endTime: z.string(),
   startTime: z.string(),
-  picUrl: z.string(),
+  picUrl: z.string().nullable(),
   points: z.number().int(),
 })
 

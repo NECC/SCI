@@ -29,6 +29,7 @@ export interface UserPostRegisterResponse {
  *
  */
 export async function POST(request: Request) {
+  console.log("Registering user");
   const userData = await request.json();
   const response = UserSchema.safeParse(userData);
   if (!response.success) {

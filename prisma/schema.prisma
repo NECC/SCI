@@ -25,7 +25,6 @@ model User {
   // Ranking Attributes
   points         Int           @default(0) // total points of user
   rewarded       Boolean       @default(false) // if the user has been rewarded in the daily ranking
-  DailyRanking   DailyRanking[]
 
 
   // Presences Control
@@ -37,14 +36,6 @@ model User {
 
   accounts       Account[]
   sessions       Session[]
-}
-
-model DailyRanking {
-  id        Int     @id @default(autoincrement())
-  date      DateTime
-  userId    String
-  points    Int
-  user      User    @relation(fields: [userId], references: [id])
 }
 
 model Activity {

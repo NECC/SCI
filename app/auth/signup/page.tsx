@@ -53,6 +53,7 @@ export default function SignUpPage() {
         academicNumber: null,
         graduation: null,
         courseYear: null,
+        points: 0,
     },
     resolver: zodResolver(UserSchema),
     shouldUnregister: false,
@@ -70,6 +71,7 @@ export default function SignUpPage() {
     academicNumber?: number;
     graduation?: string;
     courseYear?: number;
+    points?: number;
   }
 
   const onSubmit = (formData: FormData): void => {
