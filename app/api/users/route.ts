@@ -38,16 +38,6 @@ export async function GET(req : Request) {
   const params = new URL(req.url);
   const takeParam = params.searchParams.get("take");
   const all = (takeParam !== null && +takeParam === -1) || takeParam === null;
-  
-  if (session?.user.role != "ADMIN") {
-    prisma.$disconnect();
-    return new NextResponse(
-      JSON.stringify({
-        response: "error",
-        error: "You don't have permission to get all users",
-      })
-    );
-  }
 
   const users = await prisma.user.findMany({
     select: {

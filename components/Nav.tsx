@@ -50,6 +50,10 @@ const Nav = () => {
           Schedule
         </Link>
         <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
+        <Link href="/leaderboard" className="nav_btn text-base">
+          Leaderboard
+        </Link>
+        <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
         <Link href="/faqs" className="nav_btn text-base">
           FAQs
         </Link>
@@ -136,6 +140,14 @@ const Nav = () => {
               onClick={() => setToggleDropdown(false)}
             >
               Schedule
+            </Link>
+
+            <Link
+              href="/leaderboard"
+              className="nav_btn text-2xl"
+              onClick={() => setToggleDropdown(false)}
+            >
+              Leaderboard
             </Link>
 
             <Link
