@@ -45,6 +45,7 @@ export async function POST(request: Request, context: { params: { id: string } }
       select: {
         name: true,
         accredited: true,
+        points: true,
       }
     });
 
@@ -55,11 +56,15 @@ export async function POST(request: Request, context: { params: { id: string } }
       );
     }
 
+    const date = new Date();
+    const day = date.getUTCDay();
+
     const update = await prisma.user.update({
       where: {
         id: id,
       },
       data: {
+        ...((day == 22) ? {points: user.accredited ? user.points - 200 : user.points + 200,} : {}),  
         accredited: user.accredited ? false : true,
       },
       select: {

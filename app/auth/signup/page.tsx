@@ -427,11 +427,13 @@ export default function SignUpPage() {
                   </Select>
                   <Input
                     type="number"
-                    placeholder="123456"
-                    defaultValue={watch("academicNumber") ? String(watch("academicNumber")) : "0"}
-                    labelPlacement="outside"
+                    label="Academic Number"
+                    labelPlacement="inside"
+                    placeholder="Your academic number"
+                    defaultValue={watch("academicNumber") ? String(watch("academicNumber")) : ""}
                     className="w-[350px] mt-2 text-white"
                     classNames={{
+                      label: ["text-white/60"],
                       input: [
                         "border-none",
                         "border-b-2",
@@ -444,7 +446,7 @@ export default function SignUpPage() {
                         "font-normal",
                         "text-xl",
                         "placeholder:text-white/60",
-                        "bg-none"
+                        "bg-none",
                       ],
                       innerWrapper: ["bg-transparent"],
                       inputWrapper: [
@@ -471,11 +473,13 @@ export default function SignUpPage() {
                   />
                   <Input
                     type="number"
-                    placeholder="2"
+                    label="Current Course Year"
+                    labelPlacement="inside"
+                    placeholder="Current Course Year"
                     defaultValue={watch("courseYear") ? String(watch("courseYear")) : ""}
-                    labelPlacement="outside"
                     className="w-[350px] mt-2 text-white"
                     classNames={{
+                      label: ["text-white/60"],
                       input: [
                         "border-none",
                         "border-b-2",
@@ -506,9 +510,6 @@ export default function SignUpPage() {
                     color="primary"
                     variant="bordered"
                     size="lg"
-                    endContent={
-                      <AiOutlineFieldNumber className="text-2xl text-white pointer-events-none flex-shrink-0" />
-                    }
                     isInvalid={!!errors.courseYear}
                     errorMessage={errors.courseYear?.message as string}
                     {...register("courseYear", {valueAsNumber: true})}

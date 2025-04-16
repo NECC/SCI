@@ -34,7 +34,7 @@ export default function LeaderBoard() {
         setLoading(true);
         const { data } = await axios.get<UsersGetResponse>(`/api/users`);
         if (data.users){
-            setUsers(data.users.map((user) => {
+            setUsers(data.users.filter((user) => user.role == "USER").map((user) => {
                 return {
                     name: user.name,
                     points: user.points,
@@ -65,10 +65,9 @@ export default function LeaderBoard() {
                 <p className="md:text-5xl text-4xl leading-5">LEADERBOARD</p>
             </div>
             <div className="m-12 flex justify-center items-end">
-                {users.length >= 2 && 
                 <div
-                className="w-32 h-32 z-10 bg-zinc-400 rounded-2xl shadow-lg -mt-0 -mr-2 -ml-2
-                hover:bg-yellow-200 hover:shadow-xl transition-all duration-300 ease-in-out"
+                className={`w-32 h-32 z-10 bg-zinc-400 rounded-2xl shadow-lg -mt-0 -mr-2 -ml-2
+                hover:bg-yellow-200 hover:shadow-xl transition-all duration-300 ease-in-out ${users.length < 2 ? "hidden" : ""}`}
                 >
                     <div className="relative -top-6 flex justify-center">
                         <div className="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center text-xl font-bold border-2 border-yellow-400">
@@ -76,13 +75,13 @@ export default function LeaderBoard() {
                         </div>
                     </div>
                     <div className="text-center -mt-2">
-                        <h2 className="font-bold text-lg">{users[1].name}</h2>
-                        <p className="text-gray-500">{users[0].points}</p>
+                        <h2 className="font-bold text-lg">{users.length >= 2 ? users[1].name : ""}</h2>
+                        <p className="text-gray-500">{users.length >= 2 ? users[1].points : ""}</p>
                     </div>
-                </div>}
-            {users.length >= 1 && <div
-            className="w-32 h-44 z-20 bg-yellow-300 rounded-t-2xl shadow-lg -mt-4 relative
-            hover:bg-yellow-400 hover:shadow-xl transition-all duration-300 ease-in-out"
+                </div>
+            <div
+            className={`w-32 h-44 z-20 bg-yellow-300 rounded-t-2xl shadow-lg -mt-4 relative
+            hover:bg-yellow-400 hover:shadow-xl transition-all duration-300 ease-in-out ${users.length < 1 ? "hidden" : ""}`}
             >
                 <div className="relative -top-6 flex justify-center">
                     <div className="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center textxl font-bold border-2 border-yellow-400">
@@ -90,13 +89,13 @@ export default function LeaderBoard() {
                     </div>
                 </div>
                 <div className="text-center -mt-2">
-                    <h2 className="font-bold text-lg">{users[0].name}</h2>
-                    <p className="text-gray-500">{users[0].points}</p>
+                    <h2 className="font-bold text-lg">{users[0] ? users[0].name : ""}</h2>
+                    <p className="text-gray-500">{users[0] ? users[0].points : ""}</p>
                 </div>
-            </div>}
-            {users.length >= 3 && <div
-            className="w-32 h-38 z-10 bg-gray-300 rounded-2xl shadow-lg -mt-0 -mr-2 -ml-2
-            hover:bg-yellow-200 hover:shadow-xl transition-all duration-300 ease-in-out"
+            </div>
+            <div
+            className={`w-32 h-38 z-10 bg-gray-300 rounded-2xl shadow-lg -mt-0 -mr-2 -ml-2
+            hover:bg-yellow-200 hover:shadow-xl transition-all duration-300 ease-in-out ${users.length < 3 ? "hidden" : ""}`}
             >
                 <div className="relative -top-6 flex justify-center">
                     <div className="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center text-xl font-bold border-2 border-yellow-400">
@@ -104,10 +103,10 @@ export default function LeaderBoard() {
                     </div>
                 </div>
                 <div className="text-center -mt-2">
-                    <h2 className="font-bold text-lg">{users[2].name}</h2>
-                    <p className="text-gray-500">{users[0].points}</p>
+                    <h2 className="font-bold text-lg">{users[2] ? users[2].name : ""}</h2>
+                    <p className="text-gray-500">{users[2] ? users[2].points : ""}</p>
                 </div>
-            </div>}
+            </div>
         </div>
         
 
