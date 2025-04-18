@@ -163,7 +163,7 @@ export default function Activity({ item, userId }: ActivityProps) {
             <div className="flex flex-col gap-2">
               {item.speakers.map((speaker, key) => (
                 <div key={key} className="flex flex-row gap-2">
-                  {speaker.picUrl && <Image src={speaker.picUrl} alt="logo" width={30} height={30} />}
+                  <Image src={speaker.picUrl} alt="logo" width={30} height={30} />
                   <p className="text-tiny dark:text-white/60 font-medium items-center">
                         {speaker.name}
                   </p>
@@ -234,15 +234,16 @@ export default function Activity({ item, userId }: ActivityProps) {
         )}
         {( item.capacity == 0 || item.type !== "WORKSHOP") && (
           <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
-            {item.speakers.map((speaker, key) => (
-              <div key={key} className="flex flex-col gap-2">
-                <Image src={speaker.picUrl} alt="logo" width={30} height={30} />
-                <p className="text-tiny dark:text-white/60 font-medium">
-                      {speaker.name}
-                </p>
-              </div>
-            ))}
-
+            <div className="flex flex-col gap-2">
+              {item.speakers.map((speaker, key) => (
+                <div key={key} className="flex flex-row gap-2">
+                  <Image src={speaker.picUrl} alt="logo" width={30} height={30} />
+                  <p className="text-tiny dark:text-white/60 font-medium items-center">
+                        {speaker.name}
+                  </p>
+                </div>
+              ))}
+            </div>
             {userId && !item.attended && (
               <div className="ml-auto">
                 <Button
