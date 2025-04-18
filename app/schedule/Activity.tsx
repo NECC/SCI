@@ -28,6 +28,7 @@ import { Spinner } from "@nextui-org/react";
 import { Activity as ActivityI, Enrollments, Speaker } from "@prisma/generated/zod";
 import { EnrollmentPostResponse } from "@app/api/enrollments/route";
 import { UserGetResponse } from "@app/api/users/[id]/route";
+import { DeleteEnrrolmentResponse } from "@app/api/enrollments/deleteByUuid/route";
 // TODO: Loading state for the button
 
 interface ActivityProps {
@@ -45,6 +46,7 @@ export default function Activity({ item, userId }: ActivityProps) {
   const [loading, setLoading] = useState(false);
   const [enrolled, setEnrolled] = useState(false);
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
+  const { isOpen: isOpen2, onOpenChange: onOpenChange2, onOpen: onOpen2 } = useDisclosure();
   const [dados, setDados] = useState<UserGetResponse["user"]>();
   const router = useRouter();
 
@@ -69,6 +71,17 @@ export default function Activity({ item, userId }: ActivityProps) {
     }
     else console.log(data.error);
     setLoading(false);
+  };
+
+  const deleteEnrollment = async (activityId: number, userId: string) => {
+    const { data } = await axios.delete<DeleteEnrrolmentResponse>(`/api/enrollments/deleteByUuid?userId=${userId}&activityId=${activityId}`);
+    if (data.response === "success") {
+      item.alreadyEnrolled = false;
+      item.enrollments = item.enrollments.filter((enrollment) => enrollment.userId !== userId);
+      setEnrolled(false);
+    } else {
+      console.log(data.error);
+    }
   };
 
   useEffect(() => {
@@ -195,7 +208,7 @@ export default function Activity({ item, userId }: ActivityProps) {
             )}
 
             {item.alreadyEnrolled && userId && !item.attended && (
-              <div className="ml-auto">
+              <div className="ml-auto flex flex-col">
                 <Button
                   size="sm"
                   radius="full"
@@ -209,6 +222,20 @@ export default function Activity({ item, userId }: ActivityProps) {
                   }}
                 >
                   <BsQrCode className="text-medium" />
+                </Button>
+                <Button
+                  size="sm"
+                  radius="full"
+                  variant="solid"
+                  color="danger"
+                  className="text-tiny"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onOpen2();
+                    e.stopPropagation();
+                  }}
+                >
+                  Cancel Enroll
                 </Button>
               </div>
             )}
@@ -300,6 +327,34 @@ export default function Activity({ item, userId }: ActivityProps) {
               <ModalFooter className="flex justify-center">
                 <Button color="danger" variant="solid" onPress={onClose}>
                   Close
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpen2} onOpenChange={onOpenChange2}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Delete enrrolment
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  Are you sure you want to cancel your enrrolment in this activity?
+                </p>
+              </ModalBody>
+              <ModalFooter className="flex flex-row justify-center">
+                <Button color="success" className="text-white" variant="solid" onPress={() => {
+                  onClose();
+                  deleteEnrollment(item.id, userId);
+                }
+                  }>
+                  Yes
+                </Button>
+                <Button color="danger" variant="solid" onPress={onClose}>
+                  No
                 </Button>
               </ModalFooter>
             </>
