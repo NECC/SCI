@@ -7,7 +7,7 @@ import {
   Image,
   Button,
   Chip,
-  user,
+  Link,
   Modal,
   ModalContent,
   ModalHeader,
@@ -25,13 +25,14 @@ import { useRouter } from "next/navigation";
 import Pdf from "@/components/Pdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Spinner } from "@nextui-org/react";
-import { Activity as ActivityI, Enrollments } from "@prisma/generated/zod";
+import { Activity as ActivityI, Enrollments, Speaker } from "@prisma/generated/zod";
 import { EnrollmentPostResponse } from "@app/api/enrollments/route";
 import { UserGetResponse } from "@app/api/users/[id]/route";
 // TODO: Loading state for the button
 
 interface ActivityProps {
   item: ActivityI & {
+    speakers: Speaker[];
     enrollments: Enrollments[];
     enrollable: boolean;
     alreadyEnrolled: boolean;
@@ -96,7 +97,7 @@ export default function Activity({ item, userId }: ActivityProps) {
             <div className="text-tiny text-black/60 dark:text-white/60 uppercase font-bold mb-1">
               {item.type}
 
-              {item.enrollments && item.capacity == item.enrollments.length && (
+              {item.enrollments && item.capacity == item.enrollments.length && item.capacity != 0 && (
                 <Chip
                   color="danger"
                   variant="bordered"
@@ -117,7 +118,7 @@ export default function Activity({ item, userId }: ActivityProps) {
                 </Chip>
               )}
 
-              {item.capacity == item.enrollments?.length && (
+              {item.capacity == item.enrollments?.length && item.capacity != 0 && (
                 <Chip color="danger" size="sm" className="ml-2 text-white">
                   Full
                 </Chip>
@@ -129,6 +130,9 @@ export default function Activity({ item, userId }: ActivityProps) {
             <p className="text-small dark:text-white/60 font-medium mb-2">
               {item.description}
             </p>
+          )}
+          {item.url && (
+            <Link href={item.url} target="_blank"> Enrrolment Form </Link>
           )}
           <div className="flex flex-row mr-auto items-center">
             <CiClock2 className="inline mr-2" />
@@ -155,14 +159,16 @@ export default function Activity({ item, userId }: ActivityProps) {
             )}
         </CardBody>
         {item.capacity != 0 && item.speakers && item.type === "WORKSHOP" && (
-          <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
-            <Image src={item.picUrl} alt="logo" width={30} height={30} />
+          <CardFooter className="flex flex-row gap-2 dark:bg-gray-700/50 mt-1">
             <div className="flex flex-col gap-2">
-              {item.speakers.split(',').map((str,key) => 
-                <p key={key} className="text-tiny dark:text-white/60 font-medium">
-                  {str}
-                </p>
-              )}
+              {item.speakers.map((speaker, key) => (
+                <div key={key} className="flex flex-row gap-2">
+                  {speaker.picUrl && <Image src={speaker.picUrl} alt="logo" width={30} height={30} />}
+                  <p className="text-tiny dark:text-white/60 font-medium items-center">
+                        {speaker.name}
+                  </p>
+                </div>
+              ))}
             </div>
             {!item.alreadyEnrolled && (
               <div className="ml-auto">
@@ -226,55 +232,55 @@ export default function Activity({ item, userId }: ActivityProps) {
             )}
           </CardFooter>
         )}
-        {( item.capacity == 0 || item.type !== "WORKSHOP") && (<CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
-          <Image src={item.picUrl} alt="logo" width={30} height={30} />
-          {item.speakers ? (
-            <div className="flex flex-col gap-2">
-              {item.speakers.split(',').map((str,key) => 
-                <p key={key} className="text-tiny dark:text-white/60 font-medium">
-                  {str}
+        {( item.capacity == 0 || item.type !== "WORKSHOP") && (
+          <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
+            {item.speakers.map((speaker, key) => (
+              <div key={key} className="flex flex-col gap-2">
+                <Image src={speaker.picUrl} alt="logo" width={30} height={30} />
+                <p className="text-tiny dark:text-white/60 font-medium">
+                      {speaker.name}
                 </p>
-              )}
-            </div>) : ""
-            }
+              </div>
+            ))}
 
-          {userId && !item.attended && (
-            <div className="ml-auto">
-              <Button
-                size="sm"
-                radius="full"
-                variant="faded"
-                color="primary"
-                className="text-tiny"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onOpen();
-                  e.stopPropagation();
-                }}
-              >
-                <BsQrCode className="text-medium" />
-              </Button>
-            </div>
-          )}
-          {item.attended && dados?.name && (
-            <div className="flex flex-row ml-auto">
-              <PDFDownloadLink
-                document={<Pdf data={{name: dados.name, title: item.title}} user={{name: dados.name, title: item.title}} />}
-                fileName="certificate.pdf"
-              >
+            {userId && !item.attended && (
+              <div className="ml-auto">
                 <Button
-                  isLoading={loading}
                   size="sm"
                   radius="full"
-                  color="success"
-                  className="text-tiny text-white"
+                  variant="faded"
+                  color="primary"
+                  className="text-tiny"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onOpen();
+                    e.stopPropagation();
+                  }}
                 >
-                  Certificate <TbFileDownload />
+                  <BsQrCode className="text-medium" />
                 </Button>
-              </PDFDownloadLink>
-            </div>
-          )}
-        </CardFooter>)}
+              </div>
+            )}
+            {item.attended && dados?.name && (
+              <div className="flex flex-row ml-auto">
+                <PDFDownloadLink
+                  document={<Pdf data={{name: dados.name, title: item.title}} user={{name: dados.name, title: item.title}} />}
+                  fileName="certificate.pdf"
+                >
+                  <Button
+                    isLoading={loading}
+                    size="sm"
+                    radius="full"
+                    color="success"
+                    className="text-tiny text-white"
+                  >
+                    Certificate <TbFileDownload />
+                  </Button>
+                </PDFDownloadLink>
+              </div>
+            )}
+          </CardFooter>
+        )}
       </Card>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>

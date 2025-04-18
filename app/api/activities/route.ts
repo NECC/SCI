@@ -3,12 +3,12 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { ActivitySchema } from "@prisma/zod";
 import { authOptions } from "@lib/auth";
-import { Activity, Enrollments } from "@prisma/generated/zod";
+import { Activity, Enrollments, Speaker } from "@prisma/generated/zod";
 const prisma = new PrismaClient();
 
 export interface ActivityGetResponse {
   response: "success" | "error";
-  activities: (Activity & { enrollments: Enrollments[]})[]
+  activities: (Activity & { enrollments: Enrollments[]} & {speakers: Speaker[]})[]
   error?: string;
 }
 
@@ -35,7 +35,8 @@ export async function GET(req: Request) {
         enrollments: true,
         startTime: true,
         endTime: true,
-        picUrl: true,
+        url: true,
+        points: true,
       },
 
       ...(all
@@ -98,14 +99,13 @@ export async function POST(request: Request) {
     data: {
       title: data.title,
       description: data.description,
-      speakers: data.speakers,
       location: data.location,
       capacity: data.capacity,
       date: new Date(data.date),
       endTime: data.endTime,
       startTime: data.startTime,
       type: data.type,
-      picUrl: "", // TODO: Add a default picture
+      url: null,
       points: data.points,
     },
   });

@@ -10,29 +10,19 @@ export interface UserPutRouletteResponse {
     email: string;
     id: string;
     name: string;
-    rewarded: boolean;
+    hasTicket: boolean;
   };
   error?: string;
 }
 
 /**
- * Update user accreditation by ID
+ * Update user reward by ID
  * @method PUT
  * @param {string} id User id to get
  * @returns
  */
 export async function PUT(request: Request, context: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
-  
-  if (session?.user.role != "STAFF") {
-    prisma.$disconnect();
-    return new NextResponse(
-      JSON.stringify({
-        response: "error",
-        error: "You don't have permission to spend a ticket!",
-      })
-    );
-  }
   
   const id = context.params.id;
   // console.log(id);
@@ -45,6 +35,8 @@ export async function PUT(request: Request, context: { params: { id: string } })
       select: {
         name: true,
         rewarded: true,
+        points: true,
+        hasTicket: true,
       }
     });
 
@@ -55,11 +47,11 @@ export async function PUT(request: Request, context: { params: { id: string } })
       );
     }
 
-    if(!user.rewarded) {
-        prisma.$disconnect();
-        return new NextResponse(
-            JSON.stringify({ response: "error", error: "You don't have a roulette ticket!" })
-        );
+    if (!user.hasTicket) {
+      prisma.$disconnect();
+      return new NextResponse(
+        JSON.stringify({ response: "error", error: "You don't have a roulette ticket!" })
+      );
     }
 
     const update = await prisma.user.update({
@@ -67,7 +59,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
         id: id,
       },
       data: {
-        rewarded: false,
+        hasTicket: false,
       },
       select: {
         email: true,

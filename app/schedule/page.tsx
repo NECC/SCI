@@ -8,9 +8,10 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { set } from "zod";
 import { ActivityGetResponse } from "@app/api/activities/route";
-import { Activity as ActivityI, Enrollments } from "@prisma/generated/zod";
+import { Activity as ActivityI, Enrollments, Speaker } from "@prisma/generated/zod";
 
 type ScheduleActivity = ActivityI & {
+  speakers: Speaker[];
   enrollments: Enrollments[];
   enrollable: boolean;
   alreadyEnrolled: boolean;
@@ -31,6 +32,7 @@ export default function Schedule() {
     const { data } = await axios.get<ActivityGetResponse>(`/api/activities?skip=0&take=-1`);
 
     const activities = data.activities;
+    console.log(data);
 
     return groupAndSortActivitiesByDay(
       activities.map((activity) => {
@@ -131,14 +133,14 @@ export default function Schedule() {
   return (
     <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 dark:bg-black dark:bg-[url('/rectangle.png')] min-h-screen bg-no-repeat bg-top bg-cover">
       <div className="pb-10 h-full">
-        <div className="p-5 md:p-7 w-full h-full">
+        <div className="p-5 md:p-7 w-full h-full" id="h">
           <ActivityDayFilter
             selectedDay={selectedDay}
             setSelectedDay={setSelectedDay}
             days={getDays(activities)}
           >
             {!loading ? (
-              <div className="flex flex-col md:flex-row mt-5">
+              <div className="flex flex-col md:flex-row mt-5 overflow-x-scroll">
                 <div className="flex flex-col md:flex-row">
                   {getActivitiesOfDay(selectedDay).map(
                     ([startTime, activities]) => (

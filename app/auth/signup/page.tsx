@@ -15,7 +15,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CourseSchema, UserSchema } from "@prisma/zod";
+import { CourseSchema, CreateUserSchema } from "@prisma/zod";
 import { UserPostRegisterResponse } from "@app/api/users/register/route";
 
 const Courses = CourseSchema.options;
@@ -55,7 +55,7 @@ export default function SignUpPage() {
         courseYear: null,
         points: 0,
     },
-    resolver: zodResolver(UserSchema),
+    resolver: zodResolver(CreateUserSchema),
     shouldUnregister: false,
   });
 
@@ -80,6 +80,7 @@ export default function SignUpPage() {
       if (res.status == 200) {
         if (res.data.error && res.data.response == "error") {
           setError(res.data.error);
+          console.log(res);
           setLoading(false);
         } else {
           signIn("credentials", {
@@ -550,6 +551,7 @@ export default function SignUpPage() {
                   size="lg"
                   color="primary"
                   variant="shadow"
+                  onClick={() => {console.log(errors)}}
                 >
                   {
                     (isLoading || loading || isSubmitting) ? <Spinner color="primary" size="md" /> : "Sign Up"

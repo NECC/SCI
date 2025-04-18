@@ -10,7 +10,7 @@ export interface UserPutRouletteResponse {
     email: string;
     id: string;
     name: string;
-    rewarded: boolean;
+    rewarded: number;
   };
   error?: string;
 }
@@ -36,6 +36,7 @@ export async function PUT(request: Request, context: { params: { id: string } })
         name: true,
         rewarded: true,
         points: true,
+        hasTicket: true,
       }
     });
 
@@ -46,17 +47,17 @@ export async function PUT(request: Request, context: { params: { id: string } })
       );
     }
 
-    if (user.rewarded) {
-        prisma.$disconnect();
-        return new NextResponse(
-            JSON.stringify({ response: "error", error: "You still have a roulette ticket!" })
-        );
+    if (user.hasTicket) {
+      prisma.$disconnect();
+      return new NextResponse(
+        JSON.stringify({ response: "error", error: "You still have a unspent roulette ticket!" })
+      );
     }
 
-    if (user.points < 50) {
+    if (user.points < (user.rewarded+1)*1000) {
         prisma.$disconnect();
         return new NextResponse(
-            JSON.stringify({ response: "error", error: "You don't have enough points!" })
+            JSON.stringify({ response: "error", error: `You need at least ${(user.rewarded+1)*1000} points to spin the wheel!` })
         );
     }
 
@@ -65,10 +66,10 @@ export async function PUT(request: Request, context: { params: { id: string } })
         id: id,
       },
       data: {
-        rewarded: true,
-        points: {
-            decrement: 50,
-        }
+        rewarded: {
+          increment: 1,
+        },
+        hasTicket: true,
       },
       select: {
         email: true,

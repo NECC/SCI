@@ -27,6 +27,12 @@ export async function DELETE(req, { params: { uuid }}) {
 
 
   try {
+    const enrollments = await prisma.enrollments.deleteMany({
+      where: {
+        userId: uuid
+      }
+    });
+
     const user = await prisma.user.delete({
       where: {
         id: uuid

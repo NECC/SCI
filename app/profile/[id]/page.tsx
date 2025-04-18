@@ -1,6 +1,7 @@
 "use client";
 
 import Activity from "@app/profile/[id]/Activity";
+import { RxCross1, RxColorWheel } from "react-icons/rx";
 import QRCode from "easyqrcodejs";
 import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
@@ -20,11 +21,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { LineDots } from "@components/LineDots";
 import ActivityDayFilter from "@components/ActivityDayFilter";
-import { RxColorWheel } from "react-icons/rx";
 import MinimalArrowDown from "@components/MinimalArrowDown";
+import { ActivitySpeakersResponse } from "@app/api/activities/[id]/speakers/route";
 import { UserGetResponse } from "@app/api/users/[id]/route";
 import { EnrollmentGetByUserIdResponse } from "@app/api/enrollments/getById/[userId]/route";
-import { Activity as ActivityI } from "@prisma/generated/zod";
+import { Activity as ActivityI, Speaker } from "@prisma/generated/zod";
 import { UserPutRouletteResponse } from "@app/api/users/roulette/[id]/route";
 
 export default function Profile({
@@ -74,8 +75,6 @@ export default function Profile({
           <div className="bg-transparent w-full h-full">
             {activeScreen == "enrolled" ? (
               <ActivitiesSubscribed id={id} />
-            ) : activeScreen == "qrcode" ? (
-              <Code id={id} />
             ) : activeScreen == "info" ? (
               <ProfileInfo id={id} />
             ) : (
@@ -107,10 +106,6 @@ const ProfileNav = ({
     {
       key: "enrolled",
       label: "Enrolled Activities",
-    },
-    {
-      key: "qrcode",
-      label: "Roulette QR Code",
     },
     {
       key: "info",
@@ -190,21 +185,6 @@ const ProfileNav = ({
           >
             {activeScreen == "enrolled" && <LineDots />}
             <p className="text-2xl leading-5">ENROLLED ACTIVITIES</p>
-          </Button>
-        </div>
-        <div className="flex flex-row items-center">
-          <Button
-            disableRipple={true}
-            radius={"none"}
-            onClick={() => {setSelectedKeys(new Set(["qrcode"])); setActiveScreen("qrcode")}}
-            className={
-              activeScreen != "qrcode"
-                ? "pl-3 flex flex-col text-white bg-transparent py-7"
-                : "pl-3 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold border-l-2"
-            }
-          >
-            {activeScreen == "qrcode" && <LineDots />}
-            <p className="text-2xl leading-5">QRCODE</p>
           </Button>
         </div>
       </div>
@@ -357,47 +337,6 @@ const ActivitiesSubscribed = ({ id }: { id: string }) => {
   );
 };
 
-const Code = ({ id }: {
-  id: string;
-}) => {
-  const qrcode = useRef(null);
-  const currentUrl =
-    process.env.NEXT_PUBLIC_MODE == "development"
-      ? process.env.BASE_URL
-      : process.env.PRODUCTION_URL;
-
-  // console.log(currentUrl);
-
-  useEffect(() => {
-    var options = {
-      text: "Bem-vindo ao evento",
-      width: 300,
-      height: 300,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H,
-    };
-
-    const code = new QRCode(qrcode.current, options);
-    code.makeCode(`${currentUrl}staff/roulette/${id}`);
-    return () => code.clear();
-  }, [qrcode, currentUrl, id]);
-
-  return (
-    <div className="dark:bg-black/40 h-full md:ml-8 mt-8">
-      <div className="px-5 md:px-1 gap-3 flex flex-col h-full">
-        <div className="flex flex-wrap content-center justify-center h-full">
-          <div
-            className="-mt-56 md:-mt-28 border-[12px] rounded-md border-white"
-            ref={qrcode}
-          ></div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
 const ProfileInfo = ({ id }: {
   id: string;
 }) => {
@@ -422,8 +361,10 @@ const ProfileInfo = ({ id }: {
     if (data.response == "error") {
       setError(data.error);
     }
-    else setError(null);
-    getUser();
+    else {
+      setError(null);
+      getUser();
+    }
   }
 
   return (
@@ -452,12 +393,13 @@ const ProfileInfo = ({ id }: {
               </div>
             )}
           </div>
-          <div>
+          <div className="flex flex-col gap-5 items-center">
             <Button onClick={handleClick} className="md:w-[12.5%] w-1/2 bg-white text-black">
               <RxColorWheel className="text-black" />
-              <p> Roulette </p>
+              <p> Spin Roulette </p>
             </Button>
-          {error && <div className="w-[12.5%] bg-red-500 p-2 text-white mt-3 rounded"> {error} </div>}
+            {error && <div className="w-[12.5%] bg-red-500 p-2 text-white mt-3 rounded"> {error} </div>}
+            <Code id={id} />
           </div>
         </div>) 
         : <Spinner color="white" size="lg" />
@@ -465,3 +407,45 @@ const ProfileInfo = ({ id }: {
     </div>
   )
 }
+
+const Code = ({ id }: {
+  id: string;
+}) => {
+  const qrcode = useRef(null);
+  const currentUrl =
+    process.env.NEXT_PUBLIC_MODE == "development"
+      ? process.env.BASE_URL
+      : process.env.PRODUCTION_URL;
+
+  // console.log(currentUrl);
+
+  useEffect(() => {
+    var options = {
+      text: "Bem-vindo ao evento",
+      width: 100,
+      height: 100,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H,
+    };
+
+    const code = new QRCode(qrcode.current, options);
+    code.makeCode(`${currentUrl}staff/roulette/${id}/spend`);
+    return () => code.clear();
+  }, [qrcode, currentUrl, id]);
+
+  return (
+    <div className="dark:bg-black/40 h-full mt-8">
+      <div className="gap-3 flex flex-col h-full">
+        <div className="flex flex-wrap content-start justify-center h-full">
+          <div
+            className="border-[12px] rounded-md border-white"
+            ref={qrcode}
+          ></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+

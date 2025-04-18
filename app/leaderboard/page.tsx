@@ -6,14 +6,15 @@ import { useEffect, useState } from "react"
 import { UsersGetResponse } from "@app/api/users/route"
 import { Spinner } from "@nextui-org/react"
 import { useSession } from "next-auth/react";
+import { RoleType as Role } from "@prisma/zod/index";
 import axios from "axios";
 
 export default function LeaderBoard() {
    const [userY, setUserY] = useState<{
-       user: { id: string, name: string} | null;
+       user: { id: string, name: string, role: Role;} | null;
        loaded: boolean;
        rank: number;
-       points: number; 
+       points: number;
      }>({ user: null, loaded: false , rank: 0, points: 0});
     const [users,setUsers] = useState([]);
     const [loading,setLoading] = useState(false);
@@ -122,7 +123,7 @@ export default function LeaderBoard() {
             </div>
         </div>
         <div className="fixed bottom-0 w-full"></div>
-        {userY && <div className="relative sticky-bottom-0 w-full bg-gradient-to-l rounded-t-2xl to-custom-blue-2 from-custom-blue-2 pt-4 pb-8 hover:shadow-md hover:scale-[1.02] transition-all duration-200 border-rounded">
+        {userY && userY.user.role == "USER" && <div className="relative sticky-bottom-0 w-full bg-gradient-to-l rounded-t-2xl to-custom-blue-2 from-custom-blue-2 pt-4 pb-8 hover:shadow-md hover:scale-[1.02] transition-all duration-200 border-rounded">
             <div className="max-w-md mx-auto px-4 space-y-4">
             <div
                 className="bg-white rounded-xl py-2 cursor-pointer px-6 flex justify-between items-center

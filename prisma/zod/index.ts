@@ -13,7 +13,7 @@ import { AnyAaaaRecord } from 'dns';
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const UserScalarFieldEnumSchema = z.enum(['id','email','password','name','role','points']);
+export const UserScalarFieldEnumSchema = z.enum(['id','email','password','name','role','accredited','points','rewarded','academicNumber','graduation','courseYear']);
 
 export const ActivityScalarFieldEnumSchema = z.enum(['id','title','description','date','startTime','endTime','location','capacity','speakers','type','picUrl','points']);
 
@@ -53,13 +53,17 @@ export const CourseSchema = z.enum(Courses);
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
+  role: RoleSchema,
   graduation: CourseSchema.nullable(),
+  id: z.string().uuid(),
   email: z.string(),
   password: z.string(),
   name: z.string(),
+  accredited: z.boolean(),
+  points: z.number().int(),
+  rewarded: z.number().int(),
   academicNumber: z.number().min(1).nullable(),
   courseYear: z.number().min(1).max(3).nullable(),
-  points: z.number().int(),
 })
 
 export type User = z.infer<typeof UserSchema>
@@ -129,3 +133,21 @@ export const SessionSchema = z.object({
 })
 
 export type Session = z.infer<typeof SessionSchema>
+
+/////////////////////////////////////////
+// CREATE USER SCHEMA
+/////////////////////////////////////////
+
+export const CreateUserSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+  name: z.string(),
+  role: RoleSchema.optional(),
+  accredited: z.boolean().optional(),
+  points: z.number().optional(),
+  rewarded: z.number().optional(),
+  hasTicket: z.boolean().optional(),
+  academicNumber: z.number().int().min(1).optional().nullable(),
+  graduation: CourseSchema.optional().nullable(),
+  courseYear: z.number().int().min(1).max(3).optional().nullable(),
+})

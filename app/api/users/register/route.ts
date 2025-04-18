@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { Course, PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { signIn } from "next-auth/react";
-import { UserSchema } from "@prisma/zod";
+import { CreateUserSchema } from "@prisma/zod";
 
 const prisma = new PrismaClient();
 
@@ -31,7 +31,7 @@ export interface UserPostRegisterResponse {
 export async function POST(request: Request) {
   console.log("Registering user");
   const userData = await request.json();
-  const response = UserSchema.safeParse(userData);
+  const response = CreateUserSchema.safeParse(userData);
   if (!response.success) {
     console.error("Form validation error");
     prisma.$disconnect();

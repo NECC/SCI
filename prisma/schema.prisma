@@ -24,8 +24,8 @@ model User {
 
   // Ranking Attributes
   points         Int           @default(0) // total points of user
-  rewarded       Boolean       @default(false) // if the user has been rewarded in the daily ranking
-
+  rewarded       Int           @default(0) // number of times the user spinned the roulette
+  hasTicket      Boolean       @default(false) // if the user has a roulette ticket
 
   // Presences Control
   academicNumber Int?          @unique /// @zod.number.min(1)
@@ -45,13 +45,20 @@ model Activity {
   date        DateTime
   location    String
   capacity    Int?
-  speakers    String?
+  speakers    Speaker[]
   type        Type
   endTime     String
   startTime   String
-  picUrl      String?
+  url         String?     // if activity has enrollment form
   points      Int
   enrollments Enrollments[]
+}
+
+model Speaker {
+  id          Int           @id @default(autoincrement())
+  name        String
+  picUrl      String?
+  activities  Activity[]
 }
 
 model Enrollments {
