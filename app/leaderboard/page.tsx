@@ -57,7 +57,7 @@ export default function LeaderBoard() {
         getUsers();
     },[])
 
-    if (loading || !userY.loaded) return <div className="h-screen bg-gradient-to-l from-custom-blue-3 to-custom-blue-1"><Spinner color="default"/></div>;
+    if (loading) return <div className="h-screen bg-gradient-to-l from-custom-blue-3 to-custom-blue-1"><Spinner color="default"/></div>;
 
     return (
         <div className="h-[96vh] flex flex-col bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">
@@ -118,12 +118,12 @@ export default function LeaderBoard() {
             <div className="flex-1">
                 <LeaderBoardCards
                     players={users}
-                    userId={userY ? userY.user.id : "" }
+                    userId={userY.loaded ? userY.user.id : "" }
                 />
             </div>
         </div>
         <div className="fixed bottom-0 w-full"></div>
-        {userY && userY.user.role == "USER" && <div className="relative sticky-bottom-0 w-full bg-gradient-to-l rounded-t-2xl to-custom-blue-2 from-custom-blue-2 pt-4 pb-8 hover:shadow-md hover:scale-[1.02] transition-all duration-200 border-rounded">
+        {userY.loaded && userY.user.role == "USER" && <div className="relative sticky-bottom-0 w-full bg-gradient-to-l rounded-t-2xl to-custom-blue-2 from-custom-blue-2 pt-4 pb-8 hover:shadow-md hover:scale-[1.02] transition-all duration-200 border-rounded">
             <div className="max-w-md mx-auto px-4 space-y-4">
             <div
                 className="bg-white rounded-xl py-2 cursor-pointer px-6 flex justify-between items-center
