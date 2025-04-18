@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { UserPutRouletteResponse } from "@app/api/users/reward/[id]/route";
+import { UserPutRouletteResponse } from "@app/api/users/roulette/[id]/spend/route";
 
 export default function RouletteId({
   params: { id },
@@ -34,7 +34,7 @@ export default function RouletteId({
   }, [session]);
 
   const spend = async () => {
-    const res = await axios.post<UserPutRouletteResponse>(`/api/users/reward/${id}`);
+    const res = await axios.post<UserPutRouletteResponse>(`/api/users/roulette/${id}/spend`);
 
     if (res.data.response == "success") {
       setHasTicket(true);
@@ -44,11 +44,11 @@ export default function RouletteId({
   };
 
   if (status == "loading") return <p>Loading...</p>;
-  if (user.user?.role != "STAFF" && user.loaded) router.push("/");
+  if ((user.user?.role == "USER") && user.loaded) router.push("/");
 
   return (
     <div className="flex justify-center items-center w-full h-screen">
-      {hasTicket ? (
+      {!hasTicket ? (
         <div className="bg-green-500 p-4 rounded-md">
           <p className="text-white">Ticket Spent</p>
         </div>

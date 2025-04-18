@@ -25,7 +25,7 @@ import { useRouter } from "next/navigation";
 import Pdf from "@/components/Pdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Spinner } from "@nextui-org/react";
-import { Activity as ActivityI, Enrollments } from "@prisma/generated/zod";
+import { Activity as ActivityI, Enrollments} from "@prisma/generated/zod";
 import { EnrollmentPostResponse } from "@app/api/enrollments/route";
 import { UserGetResponse } from "@app/api/users/[id]/route";
 // TODO: Loading state for the button
@@ -39,10 +39,8 @@ interface ActivityProps {
 
 export default function Activity({ item, userId }: ActivityProps) {
   const [loading, setLoading] = useState(false);
-  const [enrolled, setEnrolled] = useState(false);
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
   const [dados, setDados] = useState<UserGetResponse["user"]>();
-  const router = useRouter();
 
   useEffect(() => {
     if (item.attended) {
@@ -62,7 +60,7 @@ export default function Activity({ item, userId }: ActivityProps) {
     <>
       <Card className="min-w-[18rem] max-w-[300px]" shadow="sm">
         <CardBody className="gap-2 p-5 rounded-2xl">
-          {item.speakers && item.type !== "OTHER" && (
+          {item.type !== "OTHER" && (
             <div className="text-tiny text-black/60 dark:text-white/60 uppercase font-bold mb-1">
               {item.type}
             </div>
@@ -88,13 +86,8 @@ export default function Activity({ item, userId }: ActivityProps) {
             </div>
           )}
         </CardBody>
-        {item.speakers && item.type !== "OTHER" && (
+        {item.type !== "OTHER" && (
           <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
-            <Image src={item.picUrl} alt="logo" width={30} height={30} />
-            <p className="text-tiny dark:text-white/60 font-medium">
-              {item.speakers}
-            </p>
-    
             {userId && !item.attended && (
               <div className="ml-auto">
                 <Button

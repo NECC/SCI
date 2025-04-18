@@ -12,9 +12,11 @@ import type { Prisma } from '@prisma/client';
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const UserScalarFieldEnumSchema = z.enum(['id','email','password','name','role','accredited','points','rewarded','academicNumber','graduation','courseYear']);
+export const UserScalarFieldEnumSchema = z.enum(['id','email','password','name','role','accredited','points','rewarded','hasTicket','academicNumber','graduation','courseYear']);
 
-export const ActivityScalarFieldEnumSchema = z.enum(['id','title','description','date','location','capacity','speakers','type','endTime','startTime','picUrl','points']);
+export const ActivityScalarFieldEnumSchema = z.enum(['id','title','description','date','location','capacity','type','endTime','startTime','url','points']);
+
+export const SpeakerScalarFieldEnumSchema = z.enum(['id','name','picUrl']);
 
 export const EnrollmentsScalarFieldEnumSchema = z.enum(['id','userId','activityId','attended']);
 
@@ -57,7 +59,8 @@ export const UserSchema = z.object({
   name: z.string(),
   accredited: z.boolean(),
   points: z.number().int(),
-  rewarded: z.boolean(),
+  rewarded: z.number().int(),
+  hasTicket: z.boolean(),
   academicNumber: z.number().min(1).nullable(),
   courseYear: z.number().min(1).max(3).nullable(),
 })
@@ -76,14 +79,25 @@ export const ActivitySchema = z.object({
   date: z.coerce.date(),
   location: z.string(),
   capacity: z.number().int().nullable(),
-  speakers: z.string().nullable(),
   endTime: z.string(),
   startTime: z.string(),
-  picUrl: z.string().nullable(),
+  url: z.string().nullable(),
   points: z.number().int(),
 })
 
 export type Activity = z.infer<typeof ActivitySchema>
+
+/////////////////////////////////////////
+// SPEAKER SCHEMA
+/////////////////////////////////////////
+
+export const SpeakerSchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  picUrl: z.string().nullable(),
+})
+
+export type Speaker = z.infer<typeof SpeakerSchema>
 
 /////////////////////////////////////////
 // ENROLLMENTS SCHEMA
