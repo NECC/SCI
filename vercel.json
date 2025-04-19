@@ -1,5 +1,5 @@
 {
-  "buildCommand": "next build",
+  "buildCommand": "prisma generate && next build",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "devCommand": "next dev"
