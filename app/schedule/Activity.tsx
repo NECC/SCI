@@ -40,13 +40,16 @@ interface ActivityProps {
     attended: boolean;
   };
   userId: string | null;
+  userRole: string | null;
 }
 
-export default function Activity({ item, userId }: ActivityProps) {
-  const [loading, setLoading] = useState(false);
-  const [enrolled, setEnrolled] = useState(false);
+export default function Activity({ item, userId, userRole }: ActivityProps) {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [enrolled, setEnrolled] = useState<boolean>(false);
+  const [enrollees, setEnrollees] = useState<string[]>([]);
   const { isOpen, onOpenChange, onOpen } = useDisclosure();
   const { isOpen: isOpen2, onOpenChange: onOpenChange2, onOpen: onOpen2 } = useDisclosure();
+  const { isOpen: isOpen3, onOpenChange: onOpenChange3, onOpen: onOpen3 } = useDisclosure();
   const [dados, setDados] = useState<UserGetResponse["user"]>();
   const router = useRouter();
 
@@ -73,6 +76,16 @@ export default function Activity({ item, userId }: ActivityProps) {
     setLoading(false);
   };
 
+  const getEnrollees = async (userId: string) => {
+    const { data } = await axios.get<UserGetResponse>(`/api/users/${userId}`);
+    if (data.response === "success") {
+      setEnrollees((prev) => [...prev, data.user.name]);
+    }
+    else {
+      console.log(data.error);
+    }
+  };
+
   const deleteEnrollment = async (activityId: number, userId: string) => {
     const { data } = await axios.delete<DeleteEnrrolmentResponse>(`/api/enrollments/deleteByUuid?userId=${userId}&activityId=${activityId}`);
     if (data.response === "success") {
@@ -86,6 +99,9 @@ export default function Activity({ item, userId }: ActivityProps) {
 
   useEffect(() => {
     setEnrolled(item.alreadyEnrolled);
+    item.enrollments.forEach((enrollment) => {
+      getEnrollees(enrollment.userId);
+    });
   }, [item.alreadyEnrolled]);
 
   useEffect(() => {
@@ -183,7 +199,7 @@ export default function Activity({ item, userId }: ActivityProps) {
                 </div>
               ))}
             </div>
-            {!item.alreadyEnrolled && (
+            {!item.alreadyEnrolled && userRole == "USER" && (
               <div className="ml-auto">
                 <Button
                   isLoading={loading}
@@ -206,8 +222,26 @@ export default function Activity({ item, userId }: ActivityProps) {
                 </Button>
               </div>
             )}
+            {userRole != "USER" && (
+              <div className="ml-auto flex flex-col">
+                <Button
+                  size="sm"
+                  radius="full"
+                  variant="faded"
+                  color="primary"
+                  className="text-tiny"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onOpen3();
+                    e.stopPropagation();
+                  }}
+                >
+                  Enrollees
+                </Button>
+              </div>
+            )}
 
-            {item.alreadyEnrolled && userId && !item.attended && (
+            {item.alreadyEnrolled && userRole == "USER" && userId && !item.attended && (
               <div className="ml-auto flex flex-col">
                 <Button
                   size="sm"
@@ -239,7 +273,7 @@ export default function Activity({ item, userId }: ActivityProps) {
                 </Button>
               </div>
             )}
-            {item.attended && dados?.name && (
+            {item.attended && userRole == "USER" && dados?.name && (
               <div className="flex flex-row ml-auto">
                 <PDFDownloadLink
                   document={<Pdf data={{name: dados.name, title: item.title}} user={{name: dados.name, title: item.title}} />}
@@ -271,7 +305,7 @@ export default function Activity({ item, userId }: ActivityProps) {
                 </div>
               ))}
             </div>
-            {userId && !item.attended && (
+            {userId && userRole == "USER" && !item.attended && (
               <div className="ml-auto">
                 <Button
                   size="sm"
@@ -289,7 +323,7 @@ export default function Activity({ item, userId }: ActivityProps) {
                 </Button>
               </div>
             )}
-            {item.attended && dados?.name && (
+            {item.attended && userRole == "USER" && dados?.name && (
               <div className="flex flex-row ml-auto">
                 <PDFDownloadLink
                   document={<Pdf data={{name: dados.name, title: item.title}} user={{name: dados.name, title: item.title}} />}
@@ -355,6 +389,29 @@ export default function Activity({ item, userId }: ActivityProps) {
                 </Button>
                 <Button color="danger" variant="solid" onPress={onClose}>
                   No
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpen3} onOpenChange={onOpenChange3} className="overflow-y-scroll h-[50vh]">
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                All Enrolled in this activity
+              </ModalHeader>
+              <ModalBody>
+                {enrollees.sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase())).map((enrollee, key) => (
+                  <p key={key} className="text-tiny dark:text-white/60 font-medium mb-2">
+                    {enrollee}
+                  </p>
+                ))}
+              </ModalBody>
+              <ModalFooter className="flex flex-row justify-center">
+                <Button color="danger" variant="solid" onPress={onClose}>
+                  Close
                 </Button>
               </ModalFooter>
             </>

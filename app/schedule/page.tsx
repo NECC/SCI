@@ -153,7 +153,7 @@ export default function Schedule() {
                           <div className="flex flex-row md:flex-col p-2 overflow-scroll hide-scroll gap-3 -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
                             {activities.map((item, index) => (
                               <div key={index}>
-                                <Activity item={item} userId={userId} />
+                                <Activity item={item} userId={userId} userRole={session?.user.role}/>
                               </div>
                             ))}
                           </div>
