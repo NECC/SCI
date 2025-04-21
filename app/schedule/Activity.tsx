@@ -110,7 +110,7 @@ export default function Activity({ item, userId }: ActivityProps) {
             <div className="text-tiny text-black/60 dark:text-white/60 uppercase font-bold mb-1">
               {item.type}
 
-              {item.enrollments && item.capacity == item.enrollments.length && item.capacity != 0 && (
+              {item.enrollments && item.capacity == item.enrollments.length && item.capacity > 0 && (
                 <Chip
                   color="danger"
                   variant="bordered"
@@ -131,7 +131,7 @@ export default function Activity({ item, userId }: ActivityProps) {
                 </Chip>
               )}
 
-              {item.capacity == item.enrollments?.length && item.capacity != 0 && (
+              {((item.capacity == item.enrollments?.length && item.capacity > 0) || item.capacity == -1) && (
                 <Chip color="danger" size="sm" className="ml-2 text-white">
                   Full
                 </Chip>
@@ -145,7 +145,7 @@ export default function Activity({ item, userId }: ActivityProps) {
             </p>
           )}
           {item.url && (
-            <Link href={item.url} target="_blank"> Enrrolment Form </Link>
+            <Link href={item.url} target="_blank"> Enrollment Form </Link>
           )}
           <div className="flex flex-row mr-auto items-center">
             <CiClock2 className="inline mr-2" />
@@ -161,7 +161,7 @@ export default function Activity({ item, userId }: ActivityProps) {
               </p>
             </div>
           )}
-          {item.type == "WORKSHOP" && item.capacity != 0 &&(
+          {item.type == "WORKSHOP" && item.capacity > 0 &&(
               <div className="flex flex-row mr-auto items-center">
                 <MdOutlineEventSeat className="inline mr-2" />
                 <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
@@ -171,7 +171,7 @@ export default function Activity({ item, userId }: ActivityProps) {
               </div>
             )}
         </CardBody>
-        {item.capacity != 0 && item.speakers && item.type === "WORKSHOP" && (
+        {item.capacity > 0 && item.speakers && item.type === "WORKSHOP" && (
           <CardFooter className="flex flex-row gap-2 dark:bg-gray-700/50 mt-1">
             <div className="flex flex-col gap-2">
               {item.speakers.map((speaker, key) => (
@@ -338,11 +338,11 @@ export default function Activity({ item, userId }: ActivityProps) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Delete enrrolment
+                Delete enrollment
               </ModalHeader>
               <ModalBody>
                 <p>
-                  Are you sure you want to cancel your enrrolment in this activity?
+                  Are you sure you want to cancel your enrollment in this activity?
                 </p>
               </ModalBody>
               <ModalFooter className="flex flex-row justify-center">
