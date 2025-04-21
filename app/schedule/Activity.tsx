@@ -144,7 +144,7 @@ export default function Activity({ item, userId }: ActivityProps) {
               {item.description}
             </p>
           )}
-          {item.url && (
+          {item.url && item.capacity > 0 && (
             <Link href={item.url} target="_blank"> Enrollment Form </Link>
           )}
           <div className="flex flex-row mr-auto items-center">
