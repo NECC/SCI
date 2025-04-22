@@ -37,7 +37,6 @@ const [success, setSuccess] = useState(false);
 const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
   const [tracker, setTracker] = useState<string | undefined>("centerText");
   const [pause, setPause] = useState(false);
-  const [error, setError] = useState<string | undefined>("");
 
   const devices = useDevices();
 
@@ -86,8 +85,6 @@ const handleScan = async (data: string) => {
         `/api/activities/points/${parseInt(activityId)}`
         );
 
-        setError(res3.data.response);
-
         if (res3.data.response !== "error") {
         const res4 = await axios.put<UserUpdateResponse>(
             `/api/users/${userId}`,
@@ -96,8 +93,6 @@ const handleScan = async (data: string) => {
         //setError(res4.data.response);
         }
 
-
-        router.push("/");
     }
     else if (action == "spend"){
         setPause(true);
@@ -182,9 +177,9 @@ return (
         scanDelay={2000}
         paused={pause}
         />
-    {(success || pause) && (
+    {(success && pause) && (
         <div className="bg-green-500 p-4 rounded-md mt-4">
-        <h1 className="text-white">Success; {error}</h1>
+        <h1 className="text-white">Success</h1>
         </div>)}
     </div>
 );
