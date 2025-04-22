@@ -68,7 +68,7 @@ export default function QRCodesAdmin({
   };
 
   if (status == "loading") return <p>Loading...</p>;
-  if (user.user?.role != "ADMIN" && user.loaded) router.push("/");
+  if (user.user?.role == "USER" && user.loaded) router.push("/");
 
   return (
     <div className="flex justify-center flex-col items-center w-full h-screen">
