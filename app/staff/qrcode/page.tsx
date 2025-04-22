@@ -15,6 +15,7 @@ import { RankingPostResponse } from "@app/api/ranking/route";
 import { EnrollmentAttendQRCodePostResponse } from "@app/api/enrollments/attend/qrcode/route";
 import { UserUpdateResponse } from "@app/api/users/[id]/route";
 import { ActivityPointsResponse } from "@app/api/activities/[id]/points/route";
+import { RxDragHandleDots1 } from "@node_modules/react-icons/rx";
 
 const styles = {
     container: {
@@ -70,7 +71,6 @@ useEffect(() => {
 }, [session]);
 
 const handleScan = async (data: string) => {
-    setError(data);
     const [action, userId, acticityId] = data.split(";");
     if (action == "attend") {
         setPause(true);
@@ -85,6 +85,8 @@ const handleScan = async (data: string) => {
         const res2 = await axios.post<RankingPostResponse>("/api/ranking", {
         id: userId,
         });
+
+        setError(res.data.response);
 
         const res3 = await axios.put<ActivityPointsResponse>(
         `api/activities/${acticityId}`
