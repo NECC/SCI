@@ -130,6 +130,11 @@ return (
           <option value={undefined}>No Tracker</option>
         </select>
       </div>
+        {(success && pause) && (
+            <div className="bg-green-500 p-4 rounded-md mt-4">
+                <h1 className="text-white">Success</h1>
+            </div>
+        )}
         <Scanner
         formats={[
             "qr_code",
@@ -177,10 +182,6 @@ return (
         scanDelay={2000}
         paused={pause}
         />
-    {(success && pause) && (
-        <div className="bg-green-500 p-4 rounded-md mt-4">
-        <h1 className="text-white">Success</h1>
-        </div>)}
     </div>
 );
 }
