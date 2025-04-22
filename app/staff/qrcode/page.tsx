@@ -35,6 +35,7 @@ useEffect(() => {
 }, [session]);
 
 const handleScan = async (data: string) => {
+    setPause(true);
     const [action, userId, acticityId] = data.split(";");
     if (action == "attend") {
         setPause(true);
@@ -71,6 +72,7 @@ const handleScan = async (data: string) => {
         setSuccess(true);
         }
     }
+    setPause(false);
 };
 
 if (status == "loading") return <p>Loading...</p>;

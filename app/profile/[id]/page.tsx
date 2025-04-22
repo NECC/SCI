@@ -430,7 +430,7 @@ const Code = ({ id }: {
     };
 
     const code = new QRCode(qrcode.current, options);
-    code.makeCode(`${currentUrl}staff/roulette/${id}/spend`);
+    code.makeCode(`spend;${id}`);
     return () => code.clear();
   }, [qrcode, currentUrl, id]);
 
