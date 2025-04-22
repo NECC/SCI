@@ -82,7 +82,7 @@ const handleScan = async (data: string) => {
         }
         );  
 
-        const res3 = await axios.put<ActivityPointsResponse>(
+        const res3 = await axios.get<ActivityPointsResponse>(
         `/api/activities/points/${parseInt(activityId)}`
         );
 
