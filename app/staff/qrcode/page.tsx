@@ -38,7 +38,6 @@ const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
   const [tracker, setTracker] = useState<string | undefined>("centerText");
   const [pause, setPause] = useState(false);
   const [error, setError] = useState<string | undefined>("");
-  const [r, setR] = useState({response: "", points: 0, error: ""});
 
   const devices = useDevices();
 
@@ -84,10 +83,10 @@ const handleScan = async (data: string) => {
         );  
 
         const res3 = await axios.put<ActivityPointsResponse>(
-        `api/activities/${activityId}/points`
+        `/api/activities/${activityId}/points`
         );
 
-        setR({response: res3.data.response,points: res3.data.points,error: res3.data.error});
+        setError(res3.data.response);
 
         if (res3.data.response !== "error") {
         const res4 = await axios.put<UserUpdateResponse>(
@@ -184,7 +183,7 @@ return (
         />
     {(success || pause) && (
         <div className="bg-green-500 p-4 rounded-md mt-4">
-        <h1 className="text-white">Success; {r.error}; {r.response}; {r.points}</h1>
+        <h1 className="text-white">Success; {error}</h1>
         </div>)}
     </div>
 );
