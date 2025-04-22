@@ -174,7 +174,7 @@ const Code = ({ userId, activityId }: {userId: string, activityId: number}) => {
     };
 
     const code = new QRCode(qrcode.current, options);
-    code.makeCode(`${currentUrl}/admin/qrcodes/${activityId}/${userId}`);
+    code.makeCode(`${currentUrl}/admin/qrcodes?userId=${userId}&activityId=${activityId}`);
     return () => code.clear();
   }, [qrcode, currentUrl, userId, activityId]);
 

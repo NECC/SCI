@@ -10,11 +10,10 @@ import { EnrollmentAttendQRCodePostResponse } from "@app/api/enrollments/attend/
 import { UserUpdateResponse } from "@app/api/users/[id]/route";
 import { ActivityPointsResponse } from "@app/api/activities/[id]/points/route";
 
-export default function QRCodesAdmin({
-  params: { ids },
-}: {
-  params: { ids: string[] };
-}) {
+export default function QRCodesAdmin(req: Request) {
+  const params = new URL(req.url);
+  const userParam = params.searchParams.get("userId");
+  const activityParam = params.searchParams.get("activityId");
   const [user, setUser] = useState<{
     user: { email: string; role: string } | null;
     loaded: boolean;
@@ -43,20 +42,20 @@ export default function QRCodesAdmin({
     const res = await axios.post<EnrollmentAttendQRCodePostResponse>(
       `/api/enrollments/attend/qrcode`,
       {
-        userId: ids[1],
-        activityId: parseInt(ids[0]),
+        userId: userParam,
+        activityId: parseInt(activityParam),
       }
     );
 
     const res2 = await axios.post<RankingPostResponse>("/api/ranking", {
-      id: ids[1],
+      id: userParam,
     });
 
-    const res3 = await axios.put<ActivityPointsResponse>(`api/activities/${ids[0]}`);
+    const res3 = await axios.put<ActivityPointsResponse>(`api/activities/${activityParam}`);
 
     if (res3.data.response !== "error"){
       const res4 = await axios.put<UserUpdateResponse>(
-        `/api/users/${ids[1]}`,{points: res3.data.points})
+        `/api/users/${activityParam}`,{points: res3.data.points})
       }
 
     if (res.data.response === "error")
