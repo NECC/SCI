@@ -156,6 +156,9 @@ return (
             "upc_a",
             "upc_e",
         ]}
+        constraints={{
+            deviceId: deviceId,
+          }}
         onScan={(detectedCodes) => {
             handleScan(detectedCodes[0].rawValue);
         }}
@@ -169,6 +172,7 @@ return (
             torch: true,
             zoom: true,
             finder: true,
+            tracker: getTracker(),
         }}
         allowMultiple={true}
         scanDelay={2000}
