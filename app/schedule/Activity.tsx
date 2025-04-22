@@ -29,6 +29,7 @@ import { Activity as ActivityI, Enrollments, Speaker } from "@prisma/generated/z
 import { EnrollmentPostResponse } from "@app/api/enrollments/route";
 import { UserGetResponse } from "@app/api/users/[id]/route";
 import { DeleteEnrrolmentResponse } from "@app/api/enrollments/deleteByUuid/route";
+import { ActivityEnrolleesResponse } from "@app/api/activities/[id]/enrolled/route";
 // TODO: Loading state for the button
 
 interface ActivityProps {
@@ -76,16 +77,6 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
     setLoading(false);
   };
 
-  const getEnrollees = async (userId: string) => {
-    const { data } = await axios.get<UserGetResponse>(`/api/users/${userId}`);
-    if (data.response === "success") {
-      setEnrollees((prev) => [...prev, data.user.name]);
-    }
-    else {
-      console.log(data.error);
-    }
-  };
-
   const deleteEnrollment = async (activityId: number, userId: string) => {
     const { data } = await axios.delete<DeleteEnrrolmentResponse>(`/api/enrollments/deleteByUuid?userId=${userId}&activityId=${activityId}`);
     if (data.response === "success") {
@@ -97,11 +88,20 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
     }
   };
 
+  const getEnrolled = async () => {
+    const { data } = await axios.get<ActivityEnrolleesResponse>(`/api/activities/${item.id}/enrolled`);
+    if (data.response === "success") {
+      console.log(data.userNames);
+      setEnrollees(data.userNames.sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase())));
+    } else {
+      console.log(data.error);
+    }
+  }; 
+
   useEffect(() => {
     setEnrolled(item.alreadyEnrolled);
-    item.enrollments.forEach((enrollment) => {
-      getEnrollees(enrollment.userId);
-    });
+    getEnrolled();
+    console.log(enrollees);
   }, [item.alreadyEnrolled]);
 
   useEffect(() => {
@@ -403,7 +403,7 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
                 All Enrolled in this activity
               </ModalHeader>
               <ModalBody>
-                {enrollees.sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase())).map((enrollee, key) => (
+                { enrollees && enrollees.map((enrollee, key) => (
                   <p key={key} className="text-tiny dark:text-white/60 font-medium mb-2">
                     {enrollee}
                   </p>

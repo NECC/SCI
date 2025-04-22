@@ -23,6 +23,7 @@ export default function Schedule() {
   const [activities, setActivities] = useState<[string, ScheduleActivity[]][]>([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [error, setError] = useState(false);
 
   const { data: session, status } = useSession({
     required: false,
@@ -30,9 +31,12 @@ export default function Schedule() {
 
   const getActivitiesGroupedByDay = async () => {
     const { data } = await axios.get<ActivityGetResponse>(`/api/activities?skip=0&take=-1`);
-
+    if (data.response === "error") {
+      setError(true);
+      return [];
+    }
     const activities = data.activities;
-    console.log(data);
+    console.log("Huh?",data);
 
     return groupAndSortActivitiesByDay(
       activities.map((activity) => {
@@ -90,8 +94,9 @@ export default function Schedule() {
   useEffect(() => {
     const fetchActivities = async () => {
       const data = await getActivitiesGroupedByDay();
-      setActivities(data);
+      if (!error) {setActivities(data);
       setSelectedDay(getDays(data)[0]);
+    }
       setLoading(false);
       if (session?.user.id) {
         setUserId(session.user.id);
