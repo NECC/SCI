@@ -84,7 +84,7 @@ const handleScan = async (data: string) => {
         );  
 
         const res3 = await axios.put<ActivityPointsResponse>(
-        `api/activities/${activityId}`
+        `api/activities/${activityId}/points`
         );
 
         setR({response: res3.data.response,points: res3.data.points,error: res3.data.error});
