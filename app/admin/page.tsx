@@ -52,7 +52,7 @@ export default function Admin() {
   const getUsers = async () => {
     if (prev != "users") setPage(0);
     setLoading(true);
-    const { data } = await axios.get<UsersGetResponse>(`/api/users?skip=${page}&take=10`);
+    const { data } = await axios.get<UsersGetResponse>(`/api/users?skip=${page}&take=50`);
     if (data.users.length == 0){
       setMore(false);
     }
