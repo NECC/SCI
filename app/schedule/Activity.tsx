@@ -91,7 +91,6 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
   const getEnrolled = async () => {
     const { data } = await axios.get<ActivityEnrolleesResponse>(`/api/activities/${item.id}/enrolled`);
     if (data.response === "success") {
-      console.log(data.userNames);
       setEnrollees(data.userNames.sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase())));
     } else {
       console.log(data.error);
@@ -101,7 +100,6 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
   useEffect(() => {
     setEnrolled(item.alreadyEnrolled);
     getEnrolled();
-    console.log(enrollees);
   }, [item.alreadyEnrolled]);
 
   useEffect(() => {
