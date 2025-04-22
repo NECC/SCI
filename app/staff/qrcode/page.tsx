@@ -36,6 +36,7 @@ const [success, setSuccess] = useState(false);
 const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
   const [tracker, setTracker] = useState<string | undefined>("centerText");
   const [pause, setPause] = useState(false);
+  const [error, setError] = useState<string | undefined>("");
 
   const devices = useDevices();
 
@@ -69,6 +70,7 @@ useEffect(() => {
 }, [session]);
 
 const handleScan = async (data: string) => {
+    setError(data);
     const [action, userId, acticityId] = data.split(";");
     if (action == "attend") {
         setPause(true);
