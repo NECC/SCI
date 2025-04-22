@@ -27,7 +27,7 @@ export async function GET(req: Request, props: { params: { id: string }}) {
 
     prisma.$disconnect();
     return new NextResponse(
-      JSON.stringify({ response: "success", points: activity })
+      JSON.stringify({ response: "success", points: activity.points })
     );
   } catch (error) {
     prisma.$disconnect();
