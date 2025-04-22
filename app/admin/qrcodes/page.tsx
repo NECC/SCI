@@ -8,7 +8,7 @@ import { Button } from "@nextui-org/react";
 import { RankingPostResponse } from "@app/api/ranking/route";
 import { EnrollmentAttendQRCodePostResponse } from "@app/api/enrollments/attend/qrcode/route";
 import { UserUpdateResponse } from "@app/api/users/[id]/route";
-import { ActivityPointsResponse } from "@app/api/activities/[id]/points/route";
+import { ActivityPointsResponse } from "@app/api/activities/points/[id]/route";
 import { useSearchParams } from 'next/navigation';
 
 export default function QRCodesAdmin() {

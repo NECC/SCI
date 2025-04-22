@@ -14,7 +14,7 @@ import { UserPutRouletteResponse } from "@app/api/users/roulette/[id]/spend/rout
 import { RankingPostResponse } from "@app/api/ranking/route";
 import { EnrollmentAttendQRCodePostResponse } from "@app/api/enrollments/attend/qrcode/route";
 import { UserUpdateResponse } from "@app/api/users/[id]/route";
-import { ActivityPointsResponse } from "@app/api/activities/[id]/points/route";
+import { ActivityPointsResponse } from "@app/api/activities/points/[id]/route";
 import { RxDragHandleDots1 } from "@node_modules/react-icons/rx";
 
 const styles = {
@@ -83,7 +83,7 @@ const handleScan = async (data: string) => {
         );  
 
         const res3 = await axios.put<ActivityPointsResponse>(
-        `/api/activities/${activityId}/points`
+        `/api/activities/points/${activityId}`
         );
 
         setError(res3.data.response);
