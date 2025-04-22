@@ -83,7 +83,7 @@ const handleScan = async (data: string) => {
         );  
 
         const res3 = await axios.put<ActivityPointsResponse>(
-        `/api/activities/points/${activityId}`
+        `/api/activities/points/${parseInt(activityId)}`
         );
 
         setError(res3.data.response);
@@ -108,6 +108,7 @@ const handleScan = async (data: string) => {
         }
     }
     setPause(false);
+    return;
 };
 
 if (status == "loading") return <p>Loading...</p>;
