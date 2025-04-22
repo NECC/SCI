@@ -35,7 +35,6 @@ useEffect(() => {
 }, [session]);
 
 const handleScan = async (data: string) => {
-    setPause(true);
     const [action, userId, acticityId] = data.split(";");
     if (action == "attend") {
         setPause(true);
@@ -65,7 +64,7 @@ const handleScan = async (data: string) => {
         router.push("/");
     }
     else if (action == "spend"){
-
+        setPause(true);
         const res = await axios.post<UserPutRouletteResponse>(`/api/users/roulette/${userId}/spend`);
 
         if (res.data.response == "success") {
@@ -122,6 +121,10 @@ return (
     scanDelay={2000}
     paused={pause}
     />
+    {success && (
+        <div className="bg-green-500 p-4 rounded-md mt-4">
+        <h1 className="text-white">Success</h1>
+        </div>)}
     </div>
 );
 }
