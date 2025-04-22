@@ -9,11 +9,12 @@ import { RankingPostResponse } from "@app/api/ranking/route";
 import { EnrollmentAttendQRCodePostResponse } from "@app/api/enrollments/attend/qrcode/route";
 import { UserUpdateResponse } from "@app/api/users/[id]/route";
 import { ActivityPointsResponse } from "@app/api/activities/[id]/points/route";
+import { useSearchParams } from 'next/navigation';
 
-export default function QRCodesAdmin(req: Request) {
-  const params = new URL(req.url);
-  const userParam = params.searchParams.get("userId");
-  const activityParam = params.searchParams.get("activityId");
+export default function QRCodesAdmin() {
+  const searchParams = useSearchParams();
+  const userParam = searchParams.get("userId");
+  const activityParam = searchParams.get("activityId");
   const [user, setUser] = useState<{
     user: { email: string; role: string } | null;
     loaded: boolean;
