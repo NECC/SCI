@@ -82,10 +82,6 @@ const handleScan = async (data: string) => {
         }
         );  
 
-        const res2 = await axios.post<RankingPostResponse>("/api/ranking", {
-        id: userId,
-        });
-
         const res3 = await axios.put<ActivityPointsResponse>(
         `api/activities/${activityId}`
         );
