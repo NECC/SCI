@@ -71,14 +71,14 @@ useEffect(() => {
 }, [session]);
 
 const handleScan = async (data: string) => {
-    const [action, userId, acticityId] = data.split(";");
+    const [action, userId, activityId] = data.split(";");
     if (action == "attend") {
         setPause(true);
         const res = await axios.post<EnrollmentAttendQRCodePostResponse>(
         `/api/enrollments/attend/qrcode`,
         {
             userId: userId,
-            activityId: parseInt(acticityId),
+            activityId: parseInt(activityId),
         }
         );  
 
@@ -86,10 +86,10 @@ const handleScan = async (data: string) => {
         id: userId,
         });
 
-        setError(res2.data.response);
+        setError(res2.data.error);
 
         const res3 = await axios.put<ActivityPointsResponse>(
-        `api/activities/${acticityId}`
+        `api/activities/${activityId}`
         );
 
         if (res3.data.response !== "error") {
