@@ -78,7 +78,7 @@ const handleScan = async (data: string) => {
             userId: userId,
             activityId: parseInt(acticityId),
         }
-        );
+        );  
 
         const res2 = await axios.post<RankingPostResponse>("/api/ranking", {
         id: userId,
@@ -178,7 +178,7 @@ return (
         scanDelay={2000}
         paused={pause}
         />
-    {success && (
+    {(success || pause) && (
         <div className="bg-green-500 p-4 rounded-md mt-4">
         <h1 className="text-white">Success</h1>
         </div>)}
