@@ -183,7 +183,7 @@ return (
         />
     {(success || pause) && (
         <div className="bg-green-500 p-4 rounded-md mt-4">
-        <h1 className="text-white">Success</h1>
+        <h1 className="text-white">Success {error}</h1>
         </div>)}
     </div>
 );
