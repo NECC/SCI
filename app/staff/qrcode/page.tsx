@@ -90,14 +90,14 @@ const handleScan = async (data: string) => {
         `api/activities/${activityId}`
         );
 
-        setError(res3.data.points.toString());
-
         if (res3.data.response !== "error") {
         const res4 = await axios.put<UserUpdateResponse>(
             `/api/users/${userId}`,
             { points: res3.data.points }
         );
+        setError(res4.data.response);
         }
+
 
         router.push("/");
     }
