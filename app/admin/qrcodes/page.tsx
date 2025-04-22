@@ -12,7 +12,6 @@ import { ActivityPointsResponse } from "@app/api/activities/[id]/points/route";
 import { useSearchParams } from 'next/navigation';
 
 export default function QRCodesAdmin() {
-  console.log("working");
   const searchParams = useSearchParams();
   const userParam = searchParams.get("userId");
   const activityParam = searchParams.get("activityId");

@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   const data = await request.json();
   const session = await getServerSession(authOptions);
 
-  if (session?.user.role != "ADMIN") {
+  if (session?.user.role == "USER") {
     prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({
