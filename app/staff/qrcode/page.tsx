@@ -160,6 +160,7 @@ return (
             deviceId: deviceId,
           }}
         onScan={(detectedCodes) => {
+            setPause(true);
             handleScan(detectedCodes[0].rawValue);
         }}
         onError={(error) => {
