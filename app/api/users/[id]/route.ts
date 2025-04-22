@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 interface Props {
     params: { id: string };

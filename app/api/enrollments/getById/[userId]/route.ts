@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { Activity as ActivityS } from "@prisma/generated/zod";
 
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 
 export interface EnrollmentGetByUserIdResponse {

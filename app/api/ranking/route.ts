@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@lib/auth";
 
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export interface RankingPostResponse {
   response: "success" | "error";

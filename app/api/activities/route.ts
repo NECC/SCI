@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { ActivitySchema } from "@prisma/zod";
 import { authOptions } from "@lib/auth";
 import { Activity, Enrollments, Speaker } from "@prisma/generated/zod";
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export interface ActivityGetResponse {
   response: "success" | "error";

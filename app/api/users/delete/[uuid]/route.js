@@ -1,7 +1,7 @@
 import { authOptions } from "@lib/auth";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 /**
  * Deletes an User by ID

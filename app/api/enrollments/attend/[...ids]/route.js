@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@app/api/auth/[...nextauth]/route";
 
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 /**
  * Get an enrollment attended status

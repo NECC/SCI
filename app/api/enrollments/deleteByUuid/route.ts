@@ -2,7 +2,7 @@ import { authOptions } from "@lib/auth";
 import { NextResponse } from "@node_modules/next/server";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export interface DeleteEnrrolmentResponse {
   response: string;

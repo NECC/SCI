@@ -3,8 +3,7 @@ import { Course, PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { signIn } from "next-auth/react";
 import { CreateUserSchema } from "@prisma/zod";
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export interface UserPostRegisterResponse {
   response: "success" | "error";

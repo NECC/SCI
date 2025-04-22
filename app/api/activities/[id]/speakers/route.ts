@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Speaker } from "@prisma/generated/zod";
 import { NextResponse } from "next/server";
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export interface ActivitySpeakersResponse {
     response: "success" | "error";
