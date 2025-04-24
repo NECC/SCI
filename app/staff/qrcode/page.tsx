@@ -96,7 +96,7 @@ const handleScan = async (data: string) => {
     }
     else if (action == "spend"){
         setPause(true);
-        const res = await axios.post<UserPutRouletteResponse>(`/api/users/roulette/${userId}/spend`);
+        const res = await axios.put<UserPutRouletteResponse>(`/api/users/roulette/${userId}/spend`);
 
         if (res.data.response == "success") {
         setSuccess(true);
