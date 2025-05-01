@@ -79,7 +79,7 @@ const Nav = () => {
           </>
         )}
 
-        {user?.role != "USER" && (
+        {(user?.role == "ADMIN" || user?.role == "STAFF") && (
           <>
             <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
             <Link href="/staff/qrcode" className="nav_btn text-base">
@@ -166,7 +166,7 @@ const Nav = () => {
             >
               FAQs
             </Link>
-            {user?.role != "USER" && (
+            {(user?.role == "ADMIN" || user?.role == "STAFF") && (
               <Link
                 href="/staff/qrcode"
                 className="nav_btn text-2xl"
