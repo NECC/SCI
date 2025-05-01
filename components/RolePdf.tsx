@@ -91,7 +91,7 @@ const RolePdf = (props: {
                     color: 'white',
                     textAlign: 'center',
                     fontFamily: 'Helvetica-Bold',
-                }}> {days} de Maio</ Text>
+                }}> {days} de Abril</ Text>
                 <View style={{
                     marginTop: 35,
                     display: 'flex',
