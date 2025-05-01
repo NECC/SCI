@@ -23,7 +23,7 @@
     "easyqrcodejs": "^4.6.1",
     "framer-motion": "^10.18.0",
     "jspdf": "^2.5.1",
-    "next": "14.0.3",
+    "next": "^14.0.3",
     "next-auth": "^4.24.5",
     "next-themes": "^0.2.1",
     "pdfjs-dist": "^3.4.120",
