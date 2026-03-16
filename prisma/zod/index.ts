@@ -44,6 +44,8 @@ export const Courses = ["BIOLOGIA_APLICADA", "BIOLOGIA_E_GEOLOGIA", "BIOQUIMICA"
 
 export const CourseSchema = z.enum(Courses);
 
+export type CourseType = `${z.infer<typeof CourseSchema>}`
+
 /////////////////////////////////////////
 // MODELS
 /////////////////////////////////////////

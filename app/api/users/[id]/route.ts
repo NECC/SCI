@@ -16,6 +16,7 @@ export interface UserGetResponse {
         name: string;
         email: string;
         role: string;
+        picture?: string;
         points: number,
         graduation: string,
         courseYear: number,
@@ -45,8 +46,8 @@ export interface UserUpdateResponse {
  * @param {string} id User id to get
  * @returns 
  */
-export async function GET(request: Request, props: Props) {
-    const id = props.params.id;
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const user = await prisma.user.findUnique({
         where: {
             id: id,
@@ -56,6 +57,7 @@ export async function GET(request: Request, props: Props) {
             name: true,
             email: true,
             role: true,
+            picture: true,
             points: true,
             graduation: true,
             courseYear: true,
@@ -81,35 +83,70 @@ export async function GET(request: Request, props: Props) {
     );
 }
 
-export async function PUT(request: Request, props: Props) {
-    const id = props.params.id;
+export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
+    const { id } = await props.params;
     const data = await request.json();
 
     const session = await getServerSession(authOptions);
-          
-          if (session?.user.role == "USER") {
+    
+    // admin-only updates: points (absolute or increment), role, accreditation
+    if (data.points !== undefined || data.role !== undefined || data.accredited !== undefined) {
+          if (session?.user.role !== "ADMIN") {
             prisma.$disconnect();
             return new NextResponse(
               JSON.stringify({
                 response: "error",
-                error: "You don't have permission to update an user's points!",
+                error: "You don't have permission to update users!",
               })
             );
           }
 
+          const updateData: any = {};
+          
+          if (data.pointsAbsolute !== undefined) {
+            // Set points to an absolute value
+            updateData.points = data.pointsAbsolute;
+          } else if (data.points !== undefined) {
+            // Increment points by this amount
+            updateData.points = { increment: parseInt(data.points) ?? 0 };
+          }
+          
+          if (data.role !== undefined) {
+            updateData.role = data.role;
+          }
+          
+          if (data.accredited !== undefined) {
+            updateData.accredited = data.accredited;
+          }
+
+          const user = await prisma.user.update({
+              where: { id },
+              data: updateData,
+          });
+          prisma.$disconnect();
+          return new NextResponse(
+              JSON.stringify({ response: "success", user: user })
+          );
+    }
+
+    // otherwise treat as profile edit (name/picture)
+    if (session?.user.id !== id && session?.user.role !== "ADMIN") {
+      prisma.$disconnect();
+      return new NextResponse(
+        JSON.stringify({ response: "error", error: "Not authorized" })
+      );
+    }
+
+    const updateData: any = {};
+    if (data.name) updateData.name = data.name;
+    if (data.picture) updateData.picture = data.picture;
+
     const user = await prisma.user.update({
-        where: {
-            id: id,
-        },
-        data: {
-            points: {
-                increment: parseInt(data.points) ?? 0,
-            }
-        },
+      where: { id },
+      data: updateData,
     });
-    // console.log(user);
     prisma.$disconnect();
     return new NextResponse(
-        JSON.stringify({ response: "success", user: user })
+      JSON.stringify({ response: "success", user: user })
     );
 }

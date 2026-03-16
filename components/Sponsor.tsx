@@ -8,14 +8,8 @@ const Sponsor = (data: {
 }) => {
     return (
         <div className='py-8 w-[40%] flex justify-start items-center' >
-            <a href={data.link} target="blank">
-                <Image
-                    src={data.path}
-                    alt={data.name}
-                    width={data.size}
-                    height={150}
-                    className={`hover:scale-105 lg:ml-[40px]`}
-                />  
+            <a href={data.link} target="blank" className="hover:opacity-80 transition-opacity lg:ml-[40px]">
+                <span className="text-2xl font-bold text-white">{data.name}</span>
             </a>
         </div>
     )

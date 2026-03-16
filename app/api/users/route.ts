@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import bcrypt from "bcrypt";
 import { authOptions } from "@lib/auth";
 import { prisma } from '@/lib/prisma';
+import { createClient } from '@/lib/supabase-server';
 
 export interface UsersGetResponse {
   response: "success" | "error";
@@ -136,14 +137,39 @@ export async function POST(req: Request) {
       );
     }
 
+
+    // Create auth user in Supabase and then create local user with that id
+    const supabase = await createClient();
+    const signUpResult: any = await supabase.auth.signUp({
+      email: userData.email,
+      password: userData.password,
+      options: { data: { name: userData.name } },
+    });
+
+    if (signUpResult.error) {
+      console.error('Supabase signUp error', signUpResult.error);
+      return new NextResponse(
+        JSON.stringify({ response: 'error', error: signUpResult.error.message || 'Failed to create auth user' })
+      );
+    }
+
+    const authUser = signUpResult.data?.user || signUpResult.user;
+    if (!authUser || !authUser.id) {
+      return new NextResponse(
+        JSON.stringify({ response: 'error', error: 'Failed to create auth user' })
+      );
+    }
+
+    const authId = String(authUser.id);
+
     const hashPassword = await bcrypt.hash(userData.password, 10);
-    userData.password = hashPassword;
 
     const user = await prisma.user.create({
       data: {
+        id: authId,
         name: userData.name,
         email: userData.email,
-        password: userData.password,
+        password: hashPassword,
         role: userData.role,
         academicNumber: userData.academicNumber,
       },
@@ -152,6 +178,15 @@ export async function POST(req: Request) {
         name: true,
         email: true,
         role: true,
+      },
+    });
+
+    await prisma.account.create({
+      data: {
+        userId: authId,
+        type: 'oauth',
+        provider: 'supabase',
+        providerAccountId: authId,
       },
     });
 

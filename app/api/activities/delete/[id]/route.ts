@@ -33,7 +33,8 @@ export interface ActivityDeleteResponse {
  * @param {string} id Activity id to delete
  * @returns {response: "success", activityDeleted: { id, title, description, speakers, location, capacity, date, type, enrollments } | {response: "error", error: error}}
 **/
-export async function DELETE(req: Request, { params: { id } }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
 
   if (session?.user.role != "ADMIN") {
@@ -48,7 +49,7 @@ export async function DELETE(req: Request, { params: { id } }: { params: { id: s
 
 
   try {
-    
+
     // first we must delete the enrollments that have the activity
     await prisma.enrollments.deleteMany({
       where: {

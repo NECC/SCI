@@ -1,5 +1,5 @@
 import { Speaker } from "@prisma/generated/zod";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from '@/lib/prisma';
 
 export interface ActivityEnrolleesResponse {
@@ -13,11 +13,12 @@ export interface ActivityEnrolleesResponse {
  * @method GET
  * @returns [{ id, title, description, speakers, location, capacity, date, type, enrollments }]
  */
-export async function GET(req: Request, props: { params: { id: string }}) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
-    const enrollees = await prisma.enrollments.findMany({
+    const enrollees: any = await prisma.enrollments.findMany({
       where: {
-        activityId: parseInt(props.params.id),
+        activityId: parseInt(id),
       },
       select: {
         user: {
@@ -30,7 +31,7 @@ export async function GET(req: Request, props: { params: { id: string }}) {
 
     prisma.$disconnect();
     return new NextResponse(
-      JSON.stringify({ response: "success", userNames: enrollees.map((enrollee) => enrollee.user.name) })
+      JSON.stringify({ response: "success", userNames: enrollees.map((enrollee: { user: { name: string } }) => enrollee.user.name) })
     );
   } catch (error) {
     prisma.$disconnect();

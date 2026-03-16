@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 import { prisma } from '@/lib/prisma';
 
 interface Props {
-    params: { id: string };
+  params: any;
 }
 
 
@@ -17,7 +17,7 @@ interface Props {
  * @returns 
  */
 export async function PUT(req: Request, props: Props){
-    const id = props.params.id;
+  const id = (await props.params)?.id ?? props.params.id;
     const userData = await req.json();
 
     if (userData.name == ""){

@@ -16,11 +16,17 @@ export interface DeleteEnrrolmentResponse {
  * @param {string} id - Enrollment ID
  * @returns {response: "success", enrrolmentDeleted: enrollment.count | {response: "error", error: error}}
  */
-export async function DELETE(req) {
+export async function DELETE(req: Request) {
   const session = await getServerSession(authOptions);
   const params = new URL(req.url);
   const userId = params.searchParams.get("userId");
   const activityId = params.searchParams.get("activityId");
+
+  if (!userId || !activityId) {
+    return new NextResponse(
+      JSON.stringify({ response: "error", error: "Missing userId or activityId" })
+    );
+  }
 
   try {
     const enrollment = await prisma.enrollments.deleteMany({

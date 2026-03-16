@@ -6,7 +6,7 @@ import { Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { UserPostResponse } from "@app/api/users/route";
 
-export default function CreateUser() {
+export default function CreateUser(props?: { onUserCreated?: () => void }) {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
@@ -17,7 +17,6 @@ export default function CreateUser() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    // console.log(formData);
     const value = e.target.value;
     const name = e.target.name;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
@@ -30,7 +29,14 @@ export default function CreateUser() {
       .post<UserPostResponse>("/api/users", formData)
       .then((res) => {
         if (res.status == 200) {
-          router.push("/admin");
+          // Reset form
+          setFormData({ name: "", email: "", password: "", role: "USER" });
+          // Call callback if provided, otherwise redirect
+          if (props?.onUserCreated) {
+            props.onUserCreated();
+          } else {
+            router.push("/admin");
+          }
         } else {
           setErrorMessage(res.data.error || "");
         }

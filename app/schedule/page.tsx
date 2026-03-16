@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Chip, Spinner } from "@nextui-org/react";
 import Activity from "./Activity";
 import ActivityDayFilter from "@components/ActivityDayFilter";
@@ -29,7 +29,7 @@ export default function Schedule() {
     required: false,
   });
 
-  const getActivitiesGroupedByDay = async () => {
+  const getActivitiesGroupedByDay = useCallback(async () => {
     const { data } = await axios.get<ActivityGetResponse>(`/api/activities?skip=0&take=-1`);
     if (data.response === "error") {
       setError(true);
@@ -43,7 +43,7 @@ export default function Schedule() {
         return {
           ...activity,
           enrollable:
-            activity.capacity > activity.enrollments.length &&
+            activity.capacity !== null && activity.capacity > activity.enrollments.length &&
             activity.type === "WORKSHOP",
           alreadyEnrolled: activity.enrollments.some(
             (enrollment) => enrollment.userId === session?.user.id
@@ -56,7 +56,7 @@ export default function Schedule() {
         };
       })
     );
-  };
+  }, [session?.user.id]);
 
   const getDays = (activities: any) => {
     return activities.map(([day, _]: any) => day);
@@ -104,7 +104,7 @@ export default function Schedule() {
       // console.log("Data: ", data)
     };
     fetchActivities();
-  }, [status]);
+  }, [error, getActivitiesGroupedByDay, session?.user.id]);
 
   // TODO: Move this to a helper function
   const groupAndSortActivitiesByDay = (activities: ScheduleActivity[]) => {
@@ -158,7 +158,7 @@ export default function Schedule() {
                           <div className="flex flex-row md:flex-col p-2 overflow-scroll hide-scroll gap-3 -translate-y-4 md:translate-y-0 md:-translate-x-10 md:-mr-5">
                             {activities.map((item, index) => (
                               <div key={index}>
-                                <Activity item={item} userId={userId} userRole={session?.user.role}/>
+                                <Activity item={item} userId={userId} userRole={session?.user.role as string | null}/>
                               </div>
                             ))}
                           </div>

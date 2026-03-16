@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import {
   Card,
@@ -70,7 +70,11 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
     );
     if (data.response === "success" || data.response === "already_enrolled") {
       item.alreadyEnrolled = true;
-      item.enrollments.push({ userId: userId, activityId: activityId });
+      item.enrollments.push({
+        userId: userId, activityId: activityId,
+        id: 0,
+        attended: false
+      });
       setEnrolled(true);
     }
     else console.log(data.error);
@@ -88,19 +92,19 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
     }
   };
 
-  const getEnrolled = async () => {
+  const getEnrolled = useCallback(async () => {
     const { data } = await axios.get<ActivityEnrolleesResponse>(`/api/activities/${item.id}/enrolled`);
     if (data.response === "success") {
       setEnrollees(data.userNames.sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase())));
     } else {
       console.log(data.error);
     }
-  }; 
+  }, [item.id]);
 
   useEffect(() => {
     setEnrolled(item.alreadyEnrolled);
     getEnrolled();
-  }, [item.alreadyEnrolled]);
+  }, [item.alreadyEnrolled, getEnrolled, item.id]);
 
   useEffect(() => {
     if (item.attended) {
@@ -158,7 +162,7 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
               {item.description}
             </p>
           )}
-          {item.url && item.capacity > 0 && (
+          {item.url && item.capacity && item.capacity > 0 && (
             <Link href={item.url} target="_blank"> Enrollment Form </Link>
           )}
           <div className="flex flex-row mr-auto items-center">
@@ -175,7 +179,7 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
               </p>
             </div>
           )}
-          {item.type == "WORKSHOP" && item.capacity > 0 &&(
+          {item.type == "WORKSHOP" && item.capacity && item.capacity > 0 &&(
               <div className="flex flex-row mr-auto items-center">
                 <MdOutlineEventSeat className="inline mr-2" />
                 <p className="text-tiny dark:text-white/50 font-tiny whitespace-nowrap">
@@ -185,12 +189,12 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
               </div>
             )}
         </CardBody>
-        {item.capacity > 0 && item.speakers && item.type === "WORKSHOP" && (
+        {item.capacity !== null && item.capacity > 0 && item.speakers && item.type === "WORKSHOP" && (
           <CardFooter className="flex flex-row gap-2 dark:bg-gray-700/50 mt-1">
             <div className="flex flex-col gap-2">
               {item.speakers.map((speaker, key) => (
                 <div key={key} className="flex flex-row gap-2">
-                  <Image src={speaker.picUrl} alt="logo" width={30} height={30} />
+                  <Image src={speaker.picUrl ?? undefined} alt="logo" width={30} height={30} />
                   <p className="text-tiny dark:text-white/60 font-medium items-center">
                         {speaker.name}
                   </p>
@@ -296,7 +300,7 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
             <div className="flex flex-col gap-2">
               {item.speakers.map((speaker, key) => (
                 <div key={key} className="flex flex-row gap-2">
-                  <Image src={speaker.picUrl} alt="logo" width={30} height={30} />
+                  <Image src={speaker.picUrl ?? undefined} alt="logo" width={30} height={30} />
                   <p className="text-tiny dark:text-white/60 font-medium items-center">
                         {speaker.name}
                   </p>
@@ -380,7 +384,7 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
               <ModalFooter className="flex flex-row justify-center">
                 <Button color="success" className="text-white" variant="solid" onPress={() => {
                   onClose();
-                  deleteEnrollment(item.id, userId);
+                  deleteEnrollment(item.id, userId!);
                 }
                   }>
                   Yes

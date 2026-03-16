@@ -7,7 +7,6 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { set } from "zod";
 import { useRouter } from "next/navigation";
 
 interface FormDataI {
@@ -25,28 +24,29 @@ export default function SignInPage() {
   const router = useRouter();
 
   const handleChange = (e: any) => {
-    // console.log(formData);
     const value = e.target.value;
     const name = e.target.name;
+    console.log(`input change ${name} -> ${value}`);
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleSubmit = async () => {
+    console.log("handleSubmit called", formData);
     setLoading(true);
-    signIn("credentials", {
+    const result = await signIn("credentials", {
       email: formData.email.toLowerCase(),
       password: formData.password,
       redirect: false,
-    }).then((res) => {
-      if (res && res.ok) {
-        router.push("/");
-        setLoading(false);
-        setError(false);
-      } else {
-        setLoading(false);
-        setError(true);
-      }
     });
+    console.log("signIn result:", result);
+    if (result?.error) {
+      setError(true);
+      setLoading(false);
+    } else {
+      router.push("/");
+      setLoading(false);
+      setError(false);
+    }
   };
 
   return (
@@ -157,18 +157,25 @@ export default function SignInPage() {
         </Link>
         {error && <div className="bg-red-500 p-2 text-white mt-3 rounded">Invalid credentials</div>}
         <Button
+          type="button"
           className="mt-3 w-[300px] font-normal text-lg text-black bg-white"
           size="lg"
           color="primary"
           variant="shadow"
-          onPress={() => {
-            setLoading(true);
-            handleSubmit();
+          // using onClick here ensures the event fires in all environments
+          onClick={async () => {
+            console.log('sign-in button clicked');
+            try {
+              setLoading(true);
+              await handleSubmit();
+            } catch (error) {
+              console.error("Sign in error:", error);
+              setError(true);
+              setLoading(false);
+            }
           }}
         >
-          {
-            loading ? <Spinner color="primary" size="md" /> : "Sign In"
-          }
+          {loading ? <Spinner color="primary" size="md" /> : "Sign In"}
         </Button>
       </div>
     </div>

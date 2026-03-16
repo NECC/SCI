@@ -1,19 +1,20 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { View, Image, Text, Page, Document } from '@react-pdf/renderer';
-import { Activity } from '@prisma/generated/zod';
 
 const Pdf = (props: {
     data: {
-        name: string;
-        title: string;
-    },
+        name?: string;
+        title?: string;
+    };
     user: {
-        name: string;
-        title: string;
+        name?: string;
+        title?: string;
     };
 }) => {
     const { data, user } = props;
-    const nome = user?.name;
+    const nome = user?.name || "";
+    const title = data?.title || "";
     
     return (
         <Document>
@@ -77,7 +78,7 @@ const Pdf = (props: {
                     textAlign: 'center',
                     marginTop: 5,
                     fontFamily: 'Helvetica-Oblique',
-                }}>{data.title}</Text>
+                }}>{title || '(Sem título)' }</Text>
 
                 <View style={{
                     marginTop: 40,

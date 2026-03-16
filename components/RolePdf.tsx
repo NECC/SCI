@@ -1,19 +1,22 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { View, Image, Text, Page, Document } from '@react-pdf/renderer';
-import { Activity } from '@prisma/generated/zod';
 
 const RolePdf = (props: {
     data: {
-        name: string;
-        title: string;
-        role: string;
-        days: string;
-    }
+        name?: string;
+        title?: string;
+        role?: string;
+        days?: string | string[];
+    };
 }) => {
     const { data } = props;
-    const nome = data?.name;
-    const role = data?.role;
-    const days = data?.days;
+    const nome = data?.name || "";
+    const role = data?.role || "";
+    // formData.days is now an array when coming from the multi‑select control.
+    // join it into a readable string for the PDF.
+    const daysRaw = data?.days;
+    const days = Array.isArray(daysRaw) ? daysRaw.join(", ") : (daysRaw || "");
     
     return (
         <Document>

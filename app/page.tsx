@@ -6,7 +6,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Nucleos_logo from "../data/nucleos.json";
 import Hexa from "@components/Hexa";
-import { images } from "@next.config";
+
 import Image from "next/image";
 import Sponsor from "@components/Sponsor";
 import sponsorData from "../data/sponsor.json";
@@ -49,6 +49,10 @@ export default function Home() {
     triggerOnce: true,
   });
 
+  const [ref_5, inView_5] = useInView({
+    triggerOnce: true,
+  });
+
   return (
     <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 h-full">
       <div className="lg:relative ">
@@ -69,7 +73,7 @@ export default function Home() {
                 </Button>
               </Link>
 
-              <p className="text-white text-xl text-start cursor-default">22 - 24 APRIL</p>
+              <p className="text-white text-xl text-start cursor-default">27 - 30 APRIL</p>
             </div>
           </div>
         </div>
@@ -77,7 +81,7 @@ export default function Home() {
 
         <div className="bg-custom-blue-3 w-full">
           <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">
               WHAT IS IT?
             </h1>
             <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
@@ -109,7 +113,7 @@ export default function Home() {
           </motion.div>
 
           <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto mt-[70px] ">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">
               ORGANIZATION
             </h1>
             <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
@@ -142,7 +146,7 @@ export default function Home() {
           </motion.div>
 
           <div className="sm:w-[80%] w-[90%] lg:w-full relative m-auto mt-[70px]">
-            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:-inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">
               FIND US
             </h1>
             <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
@@ -183,6 +187,39 @@ export default function Home() {
                     Email: sci.uminho@gmail.com
                   </p>
                 </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <div className="sm:w-[80%] w-[90%]  lg:w-full  relative m-auto mt-[70px] ">
+            <h1 className="text-white md:text-5xl text-4xl font-extrabold leading-tight lg:text-right text-left lg:inline block lg:bg-gradient-to-l lg:from-blue-700/60 lg:to-custom-blue-3 to-60% bg-gradient-to-l  from-custom-blue-3 to-blue-700/60  lg:mr-[220px] lg:px-[150px] lg:border-l-0 border-l-4 p-3">
+              SPONSORS
+            </h1>
+            <div className="absolute w-4 h-4 top-0 left-0 -translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
+            <div className="absolute w-4 h-4 bottom-0 left-0 translate-y-2/4 -translate-x-1/3 rounded-full bg-yellow-300 lg:hidden block"></div>
+            <div className="w-[72px] h-[72px] border-4 -translate-y-2/4 top-1/2 right-[215px] absolute lg:block hidden">
+              <div className="w-full h-full relative">
+                <Bolas />
+              </div>
+            </div>
+          </div>
+
+          <motion.div
+            ref={ref_5}
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            initial="hidden"
+            animate={inView_5 ? "visible" : "hidden"}
+            transition={{ duration: 0.8, delay: 0.5, transition: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
+              <div className="lg:w-4/5 w-full mt-9 flex flex-wrap gap-12 justify-between sm:justify-start ">
+                {sponsor.map((s, index) => (
+                  <Sponsor {...s} key={index} />
+                ))}
               </div>
             </div>
           </motion.div>

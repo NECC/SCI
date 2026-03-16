@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  db:
+    image: supabase/postgres:15.1.0.147
+    container_name: supabase_db
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: /var/run/postgresql
+    volumes:
+      - ./volumes/db/data:/var/lib/postgresql/data
+      - ./volumes/db/init:/docker-entrypoint-initdb.d
+    ports:
+      - 5433:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rest:
+    image: postgrest/postgrest:v12.0.2
+    container_name: supabase_rest
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGRST_DB_URI: postgresql://postgres:postgres@db:5432/postgres
+      PGRST_DB_SCHEMA: public,graphql_public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: super-secret-jwt-token-with-at-least-32-characters-long
+      PGRST_DB_USE_LEGACY_GUCS: false
+    ports:
+      - 3002:3000
+
+  auth:
+    image: supabase/gotrue:v2.151.0
+    container_name: supabase_auth
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      GOTRUE_API_EXTERNAL_URL: http://localhost:9999
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
+      GOTRUE_SITE_URL: http://localhost:3002
+      GOTRUE_JWT_SECRET: super-secret-jwt-token-with-at-least-32-characters-long
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_DISABLE_SIGNUP: false
+    ports:
+      - 9999:9999
+
+  storage:
+    image: supabase/storage-api:v1.0.6
+    container_name: supabase_storage
+    depends_on:
+      db:
+        condition: service_healthy
+      rest:
+        condition: service_started
+    environment:
+      ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      SERVICE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      POSTGREST_URL: http://rest:3000
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
+      PGOPTIONS: -c search_path=storage
+      FILE_SIZE_LIMIT: 52428800
+      STORAGE_BACKEND: file
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      TENANT_ID: stub
+    volumes:
+      - ./volumes/storage:/var/lib/storage
+    ports:
+      - 8001:8000
+
+  meta:
+    image: supabase/postgres-meta:v0.80.0
+    container_name: supabase_meta
+    depends_on:
+      db:
+        condition: service_healthy
+      rest:
+        condition: service_started
+    environment:
+      PG_META_DB_HOST: db
+      PG_META_DB_PASSWORD: postgres
+      PG_META_DB_NAME: postgres
+      PG_META_DB_USER: postgres
+      PG_META_DB_PORT: 5432
+      PG_META_EXTERNAL_URL: http://localhost:8080
+    ports:
+      - 8080:8080
+
+  kong:
+    image: kong:2.8.1
+    container_name: supabase_kong
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: request-transformer,cors,key-auth,http-log
+      KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
+      KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
+    volumes:
+      - ./volumes/api/kong.yml:/var/lib/kong/kong.yml
+    ports:
+      - 8000:8000
+      - 8443:8443
+
+  realtime:
+    image: supabase/realtime:v2.28.32
+    container_name: supabase_realtime
+    depends_on:
+      db:
+        condition: service_healthy
+      rest:
+        condition: service_started
+    environment:
+      DB_HOST: db
+      DB_NAME: postgres
+      DB_PASSWORD: postgres
+      DB_USER: postgres
+      DB_PORT: 5432
+      JWT_SECRET: super-secret-jwt-token-with-at-least-32-characters-long
+      REALTIME_HOST: localhost
+      REALTIME_IP_VERSION: ipv4
+      SECURE_CHANNELS: true
+    ports:
+      - 4000:4000
+
+volumes:
+  db-data:
+  storage-data:

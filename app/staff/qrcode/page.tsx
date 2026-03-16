@@ -171,7 +171,6 @@ return (
         }}
         styles={{ container: { height: "400px", width: "350px" } }}
         components={{
-            audio: true,
             onOff: true,
             torch: true,
             zoom: true,

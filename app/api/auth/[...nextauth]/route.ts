@@ -1,5 +1,5 @@
 import NextAuth from "next-auth/next";
-import { NextRequest } from "@node_modules/next/server";
+import { NextRequest } from "next/server";
 import { authOptions } from "@lib/auth";
 
 const handler = async (req: NextRequest, context: any) => {

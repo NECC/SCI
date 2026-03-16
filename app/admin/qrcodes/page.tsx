@@ -9,12 +9,20 @@ import { RankingPostResponse } from "@app/api/ranking/route";
 import { EnrollmentAttendQRCodePostResponse } from "@app/api/enrollments/attend/qrcode/route";
 import { UserUpdateResponse } from "@app/api/users/[id]/route";
 import { ActivityPointsResponse } from "@app/api/activities/points/[id]/route";
-import { useSearchParams } from 'next/navigation';
+// search params are read from window in an effect to avoid CSR bailout warning
+// (useSearchParams triggers a suspense requirement during prerender)
 
 export default function QRCodesAdmin() {
-  const searchParams = useSearchParams();
-  const userParam = searchParams.get("userId");
-  const activityParam = searchParams.get("activityId");
+  const [userParam, setUserParam] = useState<string | null>(null);
+  const [activityParam, setActivityParam] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setUserParam(params.get("userId"));
+      setActivityParam(params.get("activityId"));
+    }
+  }, []);
   const [user, setUser] = useState<{
     user: { email: string; role: string } | null;
     loaded: boolean;
@@ -40,10 +48,15 @@ export default function QRCodesAdmin() {
 
   const updateUserAttendanceAndPoints = async () => {
     setLoading(true);
+    if (!activityParam) {
+      setError("Activity ID is missing");
+      setLoading(false);
+      return;
+    }
     const res = await axios.post<EnrollmentAttendQRCodePostResponse>(
       `/api/enrollments/attend/qrcode`,
       {
-        userId: userParam,
+        userId: userParam ?? undefined,
         activityId: parseInt(activityParam),
       }
     );

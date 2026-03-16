@@ -3,7 +3,7 @@
 import Activity from "@app/profile/[id]/Activity";
 import { RxCross1, RxColorWheel } from "react-icons/rx";
 import QRCode from "easyqrcodejs";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import {
   Button,
@@ -16,9 +16,10 @@ import {
   DropdownMenu,
   DropdownSection,
   DropdownItem,
+  Input,
 } from "@nextui-org/react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { LineDots } from "@components/LineDots";
 import ActivityDayFilter from "@components/ActivityDayFilter";
 import MinimalArrowDown from "@components/MinimalArrowDown";
@@ -28,11 +29,8 @@ import { EnrollmentGetByUserIdResponse } from "@app/api/enrollments/getById/[use
 import { Activity as ActivityI, Speaker } from "@prisma/generated/zod";
 import { UserPutRouletteResponse } from "@app/api/users/roulette/[id]/route";
 
-export default function Profile({
-  params: { id },
-}: {
-  params: { id: string };
-}) {
+export default function Profile() {
+  const { id } = useParams() as { id: string }; // dynamic segment
   const [user, setUser] = useState<UserGetResponse["user"]>();
   const [activeScreen, setActiveScreen] = useState("enrolled");
   let count = 1;
@@ -227,7 +225,7 @@ const ActivitiesSubscribed = ({ id }: { id: string }) => {
     );
   };
 
-  const getUserEnrolledActivitiesGroupedByDay = async () => {
+  const getUserEnrolledActivitiesGroupedByDay = useCallback(async () => {
     const { data } = await axios.get<EnrollmentGetByUserIdResponse>(
       `/api/enrollments/getById/${id}`
     );
@@ -241,7 +239,7 @@ const ActivitiesSubscribed = ({ id }: { id: string }) => {
         };
       })
     );
-  };
+  }, [id]);
 
   const getDays = (activities: any) => {
     return activities.map(([day , _]: any) => day);
@@ -275,7 +273,7 @@ const ActivitiesSubscribed = ({ id }: { id: string }) => {
     };
 
     fetchActivities();
-  }, []);
+  }, [getUserEnrolledActivitiesGroupedByDay, id]);
 
   return (
     <div className="dark:bg-black/40 flex flex-col">
@@ -341,19 +339,24 @@ const ProfileInfo = ({ id }: {
   id: string;
 }) => {
 
-  const [error, setError] = useState<string | undefined>(null);
+  const router = useRouter();
+  const [error, setError] = useState<string | undefined>(void 0);
   const [user, setUser] = useState<UserGetResponse["user"]>();
+  const [editMode, setEditMode] = useState(false);
+  const [name, setName] = useState("");
+  const [pictureUrl, setPictureUrl] = useState("");
 
-  const getUser = async () => {
+  const getUser = useCallback(async () => {
     const { data } = await axios.get<UserGetResponse>(`/api/users/${id}`);
-    // console.log(data);
     setUser(data.user);
-  };
+    setName(data.user.name || "");
+    setPictureUrl(data.user.picture || "");
+  }, [id]);
 
   // get profile user
   useEffect(() => {
     getUser();
-  }, [id,error]);
+  }, [getUser, error]);
 
   const handleClick = async () => {
     const { data } = await axios.put<UserPutRouletteResponse>(`/api/users/roulette/${id}`);
@@ -362,37 +365,104 @@ const ProfileInfo = ({ id }: {
       setError(data.error);
     }
     else {
-      setError(null);
+      setError(undefined);
       getUser();
     }
   }
+
+  const handleSave = async () => {
+    try {
+      const { data } = await axios.put<UserPutRouletteResponse>(`/api/users/${id}`, {
+        name,
+        picture: pictureUrl,
+      });
+      if (data.response === "error") {
+        setError(data.error);
+      } else {
+        setEditMode(false);
+        setError(undefined);
+        getUser();
+      }
+    } catch (e: any) {
+      setError(e?.response?.data?.error || "Failed to update profile");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-16 w-full">
       {user ? (
         <div className="flex flex-col gap-16 w-full">
-          <div className="flex md:flex-row flex-col pt-5 md:pt-0 md:gap-0 gap-16">
-            <div className="flex flex-col w-1/2 justify-start items-start gap-5">
-              <p className="justify-start overflow-visible text-white font-extrabold text-4xl leading-5">Name</p>
-              <p className="text-white text-xl leading-5">{user.name}</p>
-            </div>
-            <div className="flex flex-col w-1/2 justify-start items-start gap-5">
-              <p className="justify-start overflow-visible text-white font-extrabold text-4xl leading-5">Email</p>
-              <p className="text-white text-xl leading-5">{user.email}</p>
+          {/* header with avatar and basic info */}
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <Avatar
+              src={user.picture || pictureUrl || "/default-avatar.png"}
+              size="lg"
+            />
+            <div className="flex flex-col gap-2 w-full">
+              {editMode ? (
+                <Input
+                  label="Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full"
+                />
+              ) : (
+                <p className="text-white font-extrabold text-4xl">{user.name}</p>
+              )}
+              <p className="text-white text-sm">{user.email}</p>
             </div>
           </div>
-          <div className="flex flex-row">
-            <div className="flex flex-col w-1/2 justify-start items-start gap-5">
-              <p className="justify-start overflow-visible text-white font-extrabold text-4xl leading-5">Points</p>
-              <p className="text-white text-xl leading-5">{user.points}</p>
+
+          {/* additional profile details */}
+          <div className="flex flex-row flex-wrap gap-8">
+            <div className="flex flex-col w-1/2 min-w-[200px]">
+              <p className="text-white font-bold">Points</p>
+              <p className="text-white">{user.points}</p>
             </div>
             {user.graduation && (
-              <div className="flex flex-col w-1/2 justify-start items-start gap-5">
-                <p className="justify-start overflow-visible text-white font-extrabold text-4xl leading-5">Course</p>
-                <p className="text-white text-xl leading-5">{user.graduation}</p>
+              <div className="flex flex-col w-1/2 min-w-[200px]">
+                <p className="text-white font-bold">Course</p>
+                <p className="text-white">{user.graduation}</p>
               </div>
             )}
           </div>
+
+          {/* picture URL edit field */}
+          {editMode && (
+            <div className="flex flex-col gap-2">
+              <Input
+                label="Profile picture URL"
+                value={pictureUrl}
+                onChange={(e) => setPictureUrl(e.target.value)}
+                className="w-full"
+              />
+            </div>
+          )}
+
+          {/* actions */}
+          <div className="flex flex-row gap-4 items-center">
+            <Button
+              className="bg-white text-black"
+              onClick={() => setEditMode(!editMode)}
+            >
+              {editMode ? "Cancel" : "Edit Profile"}
+            </Button>
+            {editMode && (
+              <Button className="bg-green-500 text-white" onClick={handleSave}>
+                Save
+              </Button>
+            )}
+            {user.role === "ADMIN" && (
+              <Button
+                className="bg-blue-600 text-white"
+                onClick={() => router.push("/admin/users")}
+              >
+                Go to Admin
+              </Button>
+            )}
+          </div>
+
+          {/* roulette/spin and QRCode remain unchanged */}
           <div className="flex flex-col gap-5 items-center">
             <Button onClick={handleClick} className="md:w-[12.5%] w-1/2 bg-white text-black">
               <RxColorWheel className="text-black" />

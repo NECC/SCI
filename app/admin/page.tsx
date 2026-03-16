@@ -5,11 +5,11 @@ import { EnrollmentGetResponse } from "@app/api/enrollments/route";
 import { UsersGetResponse } from "@app/api/users/route";
 import GetDataTable from "@components/admin/GetDataTable";
 import TableFilter from "@components/admin/TableFilter";
-import { Role } from "@node_modules/.prisma/client";
+import { Role } from "@/lib/types";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { IoMdPerson } from "react-icons/io";
 import { MdLocalActivity, MdScreenRotationAlt } from "react-icons/md";
 import { Card, CardBody, CardHeader, Divider, Input, Spinner } from "@nextui-org/react";
@@ -49,7 +49,7 @@ export default function Admin() {
     }
   }, [session]);
 
-  const getUsers = async () => {
+  const getUsers = useCallback(async () => {
     if (prev != "users") setPage(0);
     setLoading(true);
     const { data } = await axios.get<UsersGetResponse>(`/api/users?skip=${page}&take=50`);
@@ -64,12 +64,12 @@ export default function Admin() {
         setBackupData(data.users);
       }
       else{
-        setRows(rows => [...rows,...data.users]);
-        setBackupData(backupData => [...backupData,...data.users]);
+        setRows((rows: any[]) => [...rows,...data.users]);
+        setBackupData((backupData: any) => [...backupData,...data.users]);
       }
     }
     setLoading(false);
-  };
+  }, [page, prev]);
 
   const deleteActivities = async (id: string) => {
     // console.log(id);
@@ -89,7 +89,7 @@ export default function Admin() {
     getEnrollments();
   };
 
-  const getActivities = async () => {
+  const getActivities = useCallback(async () => {
     if (prev != "activities") setPage(0);
     setLoading(true);
     const { data } = await axios.get<ActivityGetResponse>(`/api/activities?skip=${page}&take=10`);
@@ -104,15 +104,15 @@ export default function Admin() {
         setBackupData(data.activities);
       }
       else{
-        setRows(rows => [...rows,...data.activities]);
-        setBackupData(backupData => [...backupData,...data.activities]);
+        setRows((rows: any) => [...rows,...data.activities]);
+        setBackupData((backupData: any) => [...backupData,...data.activities]);
       }
     }
     console.log("activities",data.activities);
     setLoading(false);
-  };
+  }, [page, prev]);
 
-  const getEnrollments = async () => {
+  const getEnrollments = useCallback(async () => {
     if (prev != "enrollments") setPage(0);
     setLoading(true);
     const { data } = await axios.get<EnrollmentGetResponse>(`/api/enrollments?skip=${page}&take=20`);
@@ -127,12 +127,12 @@ export default function Admin() {
         setBackupData(data.enrollments);
       }
       else{
-        setRows(rows => [...rows,...data.enrollments]);
-        setBackupData(backupData => [...backupData,...data.enrollments]);
+        setRows((rows: any) => [...rows,...data.enrollments]);
+        setBackupData((backupData: any) => [...backupData,...data.enrollments]);
       }
     }
     setLoading(false);
-  };
+  }, [page, prev]);
 
   useEffect(() => {
     setEdit("");
@@ -158,7 +158,7 @@ export default function Admin() {
       }
       getEnrollments();
     }
-  }, [active,page]);
+  }, [active, page, getActivities, getEnrollments, getUsers, prev]);
 
   if (status == "loading") return <p>Loading...</p>;
   if (user.user?.role != "ADMIN" && user.loaded) router.push("/");

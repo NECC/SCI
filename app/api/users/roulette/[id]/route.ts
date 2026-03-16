@@ -21,10 +21,10 @@ export interface UserPutRouletteResponse {
  * @param {string} id User id to get
  * @returns
  */
-export async function PUT(request: Request, context: { params: { id: string } }) {
+export async function PUT(request: Request, context: { params: any }) {
   const session = await getServerSession(authOptions);
   
-  const id = context.params.id;
+  const id = (await context.params)?.id ?? context.params.id;
   // console.log(id);
 
   try {

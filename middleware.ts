@@ -34,8 +34,12 @@ export async function middleware(request: any) {
   // Admin paths
   // if signed in and doesn't have role SUPER_USER, can't access /super_user/**
   if (adminRoutes.some((path) => request.nextUrl.pathname.startsWith(path))) {
-    if (!token || token.role != "ADMIN")
+    console.log("Admin route attempt - Token:", token);
+    console.log("Admin route attempt - Token role:", token?.role);
+    if (!token || token.role != "ADMIN") {
+      console.log("Access denied - redirecting to home");
       return NextResponse.redirect(new URL("/", request.url));
+    }
   }
 
   // Protected paths

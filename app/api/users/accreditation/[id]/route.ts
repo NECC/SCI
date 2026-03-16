@@ -21,7 +21,7 @@ export interface UserPostAccreditationResponse {
  * @param {string} id User id to get
  * @returns
  */
-export async function POST(request: Request, context: { params: { id: string } }) {
+export async function POST(request: Request, context: { params: any }) {
   const session = await getServerSession(authOptions);
   
   if (session?.user.role != "ADMIN") {
@@ -34,7 +34,7 @@ export async function POST(request: Request, context: { params: { id: string } }
     );
   }
   
-  const id = context.params.id;
+  const id = (await context.params).id ?? context.params.id;
   // console.log(id);
 
   try {

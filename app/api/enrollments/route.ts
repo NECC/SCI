@@ -124,7 +124,7 @@ export async function POST(request: Request) {
     });
 
     // If it's full, return an error
-    if (activityEnrollments !== null && activityEnrollments.enrollments && activityEnrollments.enrollments.length >= activityEnrollments.capacity) {
+    if (activityEnrollments !== null && activityEnrollments.enrollments && activityEnrollments.capacity !== null && activityEnrollments.enrollments.length >= activityEnrollments.capacity) {
       return new NextResponse(
         JSON.stringify({
           response: "error",

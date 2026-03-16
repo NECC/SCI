@@ -3,7 +3,7 @@
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
 import Link from "next/link"
 import { MdArrowBackIosNew } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { ActivityGetResponseById } from "@app/api/activities/[id]/route";
 
@@ -11,14 +11,14 @@ export default function ActivityPage({ params }: { params: { id: string, activit
     // console.log(params)
     const [activity, setActivity] = useState<ActivityGetResponseById["activity"][0] | null>();
 
-    const getActivity = async () => {
+    const getActivity = useCallback(async () => {
         const { data } = await axios.get<ActivityGetResponseById>(`/api/activities/${params.activityid}`);
-        setActivity(data.activity[0]); 
-    }
+        setActivity(data.activity[0]);
+    }, [params.activityid]);
 
     useEffect (() => {
         getActivity()
-    },[])
+    },[getActivity])
     
     // console.log(activity)
     // console.log(activity.title)

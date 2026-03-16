@@ -26,7 +26,7 @@ export default function Activity({ params }: { params: { id: string } }) {
     };
     fetchActivity();
   }
-  , []);
+  , [params.id]);
 
   if (!activity) return null;
 

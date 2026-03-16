@@ -2,12 +2,18 @@
 
 import { LineDots } from "@components/LineDots"
 import LeaderBoardCards from "@components/LeaderBoardCards"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { UsersGetResponse } from "@app/api/users/route"
 import { Spinner } from "@nextui-org/react"
 import { useSession } from "next-auth/react";
 import { RoleType as Role } from "@prisma/zod/index";
 import axios from "axios";
+
+type User = {
+  id: string;
+  name: string;
+  points: number;
+};
 
 export default function LeaderBoard() {
    const [userY, setUserY] = useState<{
@@ -16,46 +22,50 @@ export default function LeaderBoard() {
        rank: number;
        points: number;
      }>({ user: null, loaded: false , rank: 0, points: 0});
-    const [users,setUsers] = useState([]);
+    const [users,setUsers] = useState<User[]>([]);
     const [loading,setLoading] = useState(false);
 
     const { data: session } = useSession({
         required: false,
     });
 
-    useEffect(() => {
-        console.log(session);
-        if (session) {
-          setUserY({ ...userY, user: session.user, loaded: true });
-        }
-        getCurrRank();
-      }, [session]);
-
-    const getUsers = async () => {
+    const getUsers = useCallback(async () => {
         setLoading(true);
         const { data } = await axios.get<UsersGetResponse>(`/api/users`);
         if (data.users){
-            setUsers(data.users.filter((user) => user.role == "USER").map((user) => {
-                return {
-                    name: user.name,
-                    points: user.points,
-                    id: user.id
-                }
-            }).sort((a,b) => {return -(a.points - b.points)}))
+            const filteredUsers = data.users.filter((user) => user.role === "USER").map((user) => ({
+                name: user.name,
+                points: user.points,
+                id: user.id
+            })).sort((a,b) => b.points - a.points);
+            setUsers(filteredUsers);
         }
         setLoading(false);
-    };
+    }, []);
 
-    const getCurrRank = async () => {
-        users.map((user,key) => {
-            if (userY.user && user.id == userY.user.id) setUserY({ ...userY, rank: key+1, points: user.points});
-            return;
-        });
-    }
-    
+    const getCurrRank = useCallback(() => {
+        if (userY.user) {
+            const index = users.findIndex(user => user.id === userY.user!.id);
+            if (index !== -1) {
+                setUserY(prev => ({ ...prev, rank: index + 1, points: users[index].points }));
+            }
+        }
+    }, [users, userY.user]);
+
+    useEffect(() => {
+        console.log(session);
+        if (session) {
+          setUserY(prev => ({ ...prev, user: session.user, loaded: true }));
+        }
+      }, [session]);
+
+    useEffect(() => {
+        getCurrRank();
+    }, [getCurrRank]);
+
     useEffect(() =>{
         getUsers();
-    },[])
+    }, [getUsers])
 
     if (loading) return <div className="h-screen bg-gradient-to-l from-custom-blue-3 to-custom-blue-1"><Spinner color="default"/></div>;
 
@@ -118,12 +128,12 @@ export default function LeaderBoard() {
             <div className="flex-1">
                 <LeaderBoardCards
                     players={users}
-                    userId={userY.loaded ? userY.user.id : "" }
+                    userId={userY.loaded && userY.user ? userY.user.id : "" }
                 />
             </div>
         </div>
         <div className="fixed bottom-0 w-full"></div>
-        {userY.loaded && userY.user.role == "USER" && <div className="relative sticky-bottom-0 w-full bg-gradient-to-l rounded-t-2xl to-custom-blue-2 from-custom-blue-2 pt-4 pb-8 hover:shadow-md hover:scale-[1.02] transition-all duration-200 border-rounded">
+        {userY.loaded && userY.user && userY.user.role == "USER" && <div className="relative sticky-bottom-0 w-full bg-gradient-to-l rounded-t-2xl to-custom-blue-2 from-custom-blue-2 pt-4 pb-8 hover:shadow-md hover:scale-[1.02] transition-all duration-200 border-rounded">
             <div className="max-w-md mx-auto px-4 space-y-4">
             <div
                 className="bg-white rounded-xl py-2 cursor-pointer px-6 flex justify-between items-center
@@ -131,7 +141,7 @@ export default function LeaderBoard() {
             >
                 <div className="flex items-center gap-2">
                 <span className="text-black font-semibold text-lg">{userY.rank}</span>
-                <span className="text-black font-semibold text-lg">{userY.user.name}</span>
+                <span className="text-black font-semibold text-lg">{userY.user!.name}</span>
                 </div>
                 <span className="text-black font-semibold text-lg">{userY.points}</span>
             </div>

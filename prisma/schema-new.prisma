@@ -1,0 +1,525 @@
+// =============================================================================
+// PRISMA SCHEMA FOR SCI EVENT MANAGEMENT SYSTEM
+// Compatible with the new database.sql schema
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum UserRole {
+  ADMIN
+  STAFF
+  USER
+}
+
+enum ActivityType {
+  LECTURE
+  WORKSHOP
+  LAB
+  EVENT
+  COMPETITION
+  NETWORKING
+  OTHER
+}
+
+enum ActivityStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
+}
+
+enum NotificationType {
+  ENROLLMENT_CONFIRMATION
+  ACTIVITY_REMINDER
+  ACTIVITY_CANCELLED
+  POINTS_AWARDED
+  CERTIFICATE_ISSUED
+  WAITLIST_UPDATE
+  GENERAL
+}
+
+enum CertificateStatus {
+  PENDING
+  GENERATED
+  VERIFIED
+}
+
+// =============================================================================
+// MODELS
+// =============================================================================
+
+model Speaker {
+  id            Int              @id @default(autoincrement())
+  name          String
+  bio           String?
+  picUrl        String?          @map("pic_url")
+  institution   String?
+  linkedinUrl   String?          @map("linkedin_url")
+  twitterUrl    String?          @map("twitter_url")
+  websiteUrl    String?          @map("website_url")
+  email         String?
+  isActive      Boolean          @default(true) @map("is_active")
+  displayOrder  Int              @default(0) @map("display_order")
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt     DateTime         @updatedAt @map("updated_at") @db.Timestamptz()
+
+  activities    ActivitySpeaker[]
+
+  @@map("speakers")
+}
+
+model Category {
+  id            Int              @id @default(autoincrement())
+  name          String          @unique
+  slug          String          @unique
+  description   String?
+  color         String?
+  icon          String?
+  parentId      Int?            @map("parent_id")
+  displayOrder  Int              @default(0) @map("display_order")
+  isActive      Boolean          @default(true) @map("is_active")
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt     DateTime         @updatedAt @map("updated_at") @db.Timestamptz()
+
+  parent        Category?        @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children      Category[]       @relation("CategoryHierarchy")
+  activities    Activity[]
+
+  @@map("categories")
+}
+
+model Activity {
+  id                    Int              @id @default(autoincrement())
+  title                 String
+  slug                  String           @unique
+  description           String?
+  fullDescription       String?          @map("full_description")
+  date                  DateTime         @db.Date
+  startTime             String           @map("start_time")
+  endTime               String           @map("end_time")
+  location              String
+  room                  String?
+  capacity              Int?
+  currentEnrollments    Int              @default(0) @map("current_enrollments")
+  points                Int              @default(0)
+  bonusPoints           Int              @default(0) @map("bonus_points")
+  type                  ActivityType     @default(LECTURE)
+  status                ActivityStatus   @default(DRAFT)
+  categoryId            Int?             @map("category_id")
+  url                   String?
+  meetingLink           String?          @map("meeting_link")
+  isOnline              Boolean          @default(false) @map("is_online")
+  isFeatured            Boolean          @default(false) @map("is_featured")
+  requiresTicket        Boolean          @default(false) @map("requires_ticket")
+  allowWaitlist         Boolean          @default(true) @map("allow_waitlist")
+  minYear               Int?             @map("min_year")
+  maxYear               Int?             @map("max_year")
+  createdBy             String?          @map("created_by")
+  createdAt             DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt             DateTime         @updatedAt @map("updated_at") @db.Timestamptz()
+
+  category              Category?        @relation(fields: [categoryId], references: [id])
+  speakers              ActivitySpeaker[]
+  sponsors              ActivitySponsor[]
+  enrollments           Enrollment[]
+  waitlist              Waitlist[]
+  qrCodes               QrCode[]
+  attendanceLogs        AttendanceLog[]
+
+  @@index([date])
+  @@index([status])
+  @@index([type])
+  @@index([categoryId])
+  @@index([slug])
+  @@index([isFeatured])
+  @@map("activities")
+}
+
+model ActivitySpeaker {
+  id            Int              @id @default(autoincrement())
+  activityId    Int              @map("activity_id")
+  speakerId     Int              @map("speaker_id")
+  role          String?
+  displayOrder  Int              @default(0) @map("display_order")
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+
+  activity      Activity         @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  speaker       Speaker         @relation(fields: [speakerId], references: [id], onDelete: Cascade)
+
+  @@unique([activityId, speakerId])
+  @@map("activity_speakers")
+}
+
+model Sponsor {
+  id            Int              @id @default(autoincrement())
+  name          String
+  slug          String           @unique
+  logoUrl       String?          @map("logo_url")
+  websiteUrl    String?          @map("website_url")
+  description   String?
+  tier          String           @default("BRONZE")
+  isActive      Boolean          @default(true) @map("is_active")
+  displayOrder  Int              @default(0) @map("display_order")
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt     DateTime         @updatedAt @map("updated_at") @db.Timestamptz()
+
+  activities    ActivitySponsor[]
+
+  @@map("sponsors")
+}
+
+model ActivitySponsor {
+  id            Int              @id @default(autoincrement())
+  activityId    Int              @map("activity_id")
+  sponsorId     Int              @map("sponsor_id")
+  displayOrder  Int              @default(0) @map("display_order")
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+
+  activity      Activity         @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  sponsor       Sponsor         @relation(fields: [sponsorId], references: [id], onDelete: Cascade)
+
+  @@unique([activityId, sponsorId])
+  @@map("activity_sponsors")
+}
+
+model AppUser {
+  id                   String         @id // UUID from auth.users
+  email                String         @unique
+  name                 String?
+  role                 UserRole       @default(USER)
+  avatarUrl            String?        @map("avatar_url")
+  
+  // Academic information
+  academicNumber       Int?           @unique @map("academic_number")
+  course               String?
+  graduation           String?
+  courseYear           Int?           @map("course_year")
+  
+  // Gamification
+  points               Int            @default(0)
+  totalPointsEarned    Int            @default(0) @map("total_points_earned")
+  streak               Int            @default(0)
+  longestStreak        Int            @default(0) @map("longest_streak")
+  level                Int            @default(1)
+  badges               Json           @default("[]")
+  
+  // Status
+  accredited           Boolean        @default(false) @map("accredited")
+  hasTicket            Boolean        @default(false) @map("has_ticket")
+  isActive             Boolean        @default(true) @map("is_active")
+  profileCompleted     Boolean        @default(false) @map("profile_completed")
+  
+  // Timestamps
+  lastActivityAt       DateTime?      @map("last_activity_at") @db.Timestamptz()
+  lastPointsEarnedAt   DateTime?      @map("last_points_earned_at") @db.Timestamptz()
+  createdAt            DateTime        @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt            DateTime        @updatedAt @map("updated_at") @db.Timestamptz()
+
+  enrollments          Enrollment[]
+  achievements         UserAchievement[]
+  certificates         Certificate[]
+  notifications        Notification[]
+  dailyRankings        DailyRanking[]
+  overallRanking       OverallRanking?
+  waitlist             Waitlist[]
+  pointsTransactions   PointsTransaction[]
+  qrCodeScans          QrCodeScan[]
+  attendanceLogs       AttendanceLog[]
+  accounts             Account[]
+  sessions             Session[]
+
+  @@map("app_users")
+}
+
+model Achievement {
+  id            Int              @id @default(autoincrement())
+  code          String           @unique
+  name          String
+  description   String?
+  icon          String?
+  pointsValue   Int              @default(0) @map("points_value")
+  criteria      Json?
+  isActive      Boolean          @default(true) @map("is_active")
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+
+  userAchievements UserAchievement[]
+
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id            Int              @id @default(autoincrement())
+  userId        String           @map("user_id")
+  achievementId Int              @map("achievement_id")
+  earnedAt      DateTime         @default(now()) @map("earned_at") @db.Timestamptz()
+
+  user          AppUser          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement      @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
+
+model Enrollment {
+  id                 Int              @id @default(autoincrement())
+  userId             String           @map("user_id")
+  activityId         Int              @map("activity_id")
+  attended           Boolean          @default(false)
+  attendedAt         DateTime?        @map("attended_at") @db.Timestamptz()
+  checkInTime        DateTime?        @map("check_in_time") @db.Timestamptz()
+  checkOutTime       DateTime?        @map("check_out_time") @db.Timestamptz()
+  pointsEarned       Int              @default(0) @map("points_earned")
+  bonusPointsEarned  Int              @default(0) @map("bonus_points_earned")
+  feedbackSubmitted  Boolean          @default(false) @map("feedback_submitted")
+  feedbackRating     Int?
+  feedbackComment    String?          @map("feedback_comment")
+  createdAt          DateTime          @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt          DateTime          @updatedAt @map("updated_at") @db.Timestamptz()
+
+  user               AppUser          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activity           Activity         @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  qrCodeScans        QrCodeScan[]
+  attendanceLogs    AttendanceLog[]
+
+  @@unique([userId, activityId])
+  @@index([userId])
+  @@index([activityId])
+  @@index([attended])
+  @@map("enrollments")
+}
+
+model Waitlist {
+  id                   Int              @id @default(autoincrement())
+  userId               String           @map("user_id")
+  activityId           Int              @map("activity_id")
+  position             Int
+  notified             Boolean          @default(false)
+  notifiedAt           DateTime?        @map("notified_at") @db.Timestamptz()
+  enrolledFromWaitlist Boolean          @default(false) @map("enrolled_from_waitlist")
+  createdAt            DateTime          @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt            DateTime          @updatedAt @map("updated_at") @db.Timestamptz()
+
+  user                 AppUser          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activity             Activity         @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, activityId])
+  @@map("waitlist")
+}
+
+model DailyRanking {
+  id                Int              @id @default(autoincrement())
+  userId            String           @map("user_id")
+  date              DateTime         @db.Date
+  pointsEarned      Int              @default(0) @map("points_earned")
+  activitiesAttended Int              @default(0) @map("activities_attended")
+  rank              Int?
+  createdAt         DateTime          @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt         DateTime          @updatedAt @map("updated_at") @db.Timestamptz()
+
+  user              AppUser          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("daily_rankings")
+}
+
+model OverallRanking {
+  id            Int              @id @default(autoincrement())
+  userId        String           @unique @map("user_id")
+  totalPoints   Int              @default(0) @map("total_points")
+  rank          Int?
+  streak        Int              @default(0)
+  calculatedAt DateTime         @default(now()) @map("calculated_at") @db.Timestamptz()
+
+  user          AppUser          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("overall_rankings")
+}
+
+model Certificate {
+  id                  Int               @id @default(autoincrement())
+  userId              String            @map("user_id")
+  certificateNumber   String            @unique @map("certificate_number")
+  type                String
+  title               String
+  description         String?
+  pointsEarned        Int               @default(0) @map("points_earned")
+  activitiesCompleted Int               @default(0) @map("activities_completed")
+  pdfUrl              String?           @map("pdf_url")
+  qrCode              String?           @map("qr_code")
+  status              CertificateStatus @default(PENDING)
+  issuedAt            DateTime?         @map("issued_at") @db.Timestamptz()
+  verifiedAt          DateTime?         @map("verified_at") @db.Timestamptz()
+  createdAt           DateTime           @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt           DateTime           @updatedAt @map("updated_at") @db.Timestamptz()
+
+  user                AppUser           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("certificates")
+}
+
+model Notification {
+  id          Int              @id @default(autoincrement())
+  userId      String           @map("user_id")
+  type        NotificationType
+  title       String
+  message     String
+  data        Json?
+  isRead      Boolean          @default(false) @map("is_read")
+  readAt      DateTime?        @map("read_at") @db.Timestamptz()
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+
+  user        AppUser          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+model QrCode {
+  id          Int              @id @default(autoincrement())
+  activityId  Int              @map("activity_id")
+  code        String           @unique
+  expiresAt   DateTime?        @map("expires_at") @db.Timestamptz()
+  maxUses     Int?             @map("max_uses")
+  currentUses Int              @default(0) @map("current_uses")
+  isActive    Boolean          @default(true) @map("is_active")
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt   DateTime         @updatedAt @map("updated_at") @db.Timestamptz()
+
+  activity    Activity         @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  scans       QrCodeScan[]
+
+  @@unique([activityId, code])
+  @@map("qr_codes")
+}
+
+model QrCodeScan {
+  id            Int              @id @default(autoincrement())
+  qrCodeId      Int              @map("qr_code_id")
+  userId        String           @map("user_id")
+  enrollmentId  Int?             @map("enrollment_id")
+  scannedAt     DateTime         @default(now()) @map("scanned_at") @db.Timestamptz()
+  ipAddress     String?          @map("ip_address")
+  success       Boolean          @default(true) @map("success")
+  errorMessage  String?          @map("error_message")
+
+  qrCode        QrCode           @relation(fields: [qrCodeId], references: [id], onDelete: Cascade)
+  user          AppUser          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enrollment    Enrollment?      @relation(fields: [enrollmentId], references: [id], onDelete: SetNull)
+
+  @@map("qr_code_scans")
+}
+
+model AttendanceLog {
+  id            Int              @id @default(autoincrement())
+  enrollmentId  Int              @map("enrollment_id")
+  activityId    Int              @map("activity_id")
+  userId        String           @map("user_id")
+  action        String           // CHECK_IN, CHECK_OUT
+  timestamp     DateTime         @default(now()) @db.Timestamptz()
+  method        String           @default("QR") // QR, MANUAL, ADMIN
+  adminId       String?          @map("admin_id")
+  notes         String?
+
+  enrollment    Enrollment       @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  activity      Activity         @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  user          AppUser          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  admin         AppUser?         @relation("AdminAttendanceLogs", fields: [adminId], references: [id])
+
+  @@map("attendance_log")
+}
+
+model PointsTransaction {
+  id            Int              @id @default(autoincrement())
+  userId        String           @map("user_id")
+  amount        Int
+  reason        String
+  referenceType String?          @map("reference_type")
+  referenceId   Int?             @map("reference_id")
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+
+  user          AppUser          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("points_transactions")
+}
+
+// NextAuth/Supabase models
+model Account {
+  id                String    @id @default(uuid()) @db.Uuid
+  userId            String    @db.Uuid @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String    @map("provider_account_id")
+  refreshToken      String?   @map("refresh_token") @db.Text
+  accessToken       String?   @map("access_token") @db.Text
+  expiresAt         Int?      @map("expires_at")
+  tokenType         String?   @map("token_type")
+  scope             String?   @map("scope")
+  idToken           String?   @map("id_token") @db.Text
+  sessionState      String?   @map("session_state")
+
+  user AppUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("app_accounts")
+}
+
+model Session {
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionToken String   @unique @map("session_token")
+  userId       String   @db.Uuid @map("user_id")
+  expires      DateTime @db.Timestamptz()
+  user         AppUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("app_sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime @db.Timestamptz()
+
+  @@unique([identifier, token])
+}
+
+model EventSetting {
+  id          Int       @id @default(autoincrement())
+  key         String    @unique
+  value       Json
+  description String?
+  isPublic    Boolean   @default(false) @map("is_public")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@map("event_settings")
+}
+
+model AuditLog {
+  id          Int       @id @default(autoincrement())
+  userId      String?   @map("user_id")
+  action      String
+  entityType  String    @map("entity_type")
+  entityId    Int?      @map("entity_id")
+  oldData     Json?     @map("old_data")
+  newData     Json?     @map("new_data")
+  ipAddress   String?   @map("ip_address")
+  userAgent   String?   @map("user_agent")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}

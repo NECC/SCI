@@ -35,7 +35,7 @@ const FormattedCourses = ["Biologia Aplicada",
                         ]
 
 export default function SignUpPage() {
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [isPart, setIsPart] = useState(false);
@@ -50,9 +50,9 @@ export default function SignUpPage() {
     formState: { errors, isLoading, isSubmitting, },
   } = useForm<FormData>({
     defaultValues: {
-        academicNumber: null,
-        graduation: null,
-        courseYear: null,
+        academicNumber: undefined,
+        graduation: undefined,
+        courseYear: undefined,
         points: 0,
     },
     resolver: zodResolver(CreateUserSchema),
@@ -74,32 +74,42 @@ export default function SignUpPage() {
     points?: number;
   }
 
-  const onSubmit = (formData: FormData): void => {
+  const onSubmit = async (formData: FormData): Promise<void> => {
     setLoading(true);
-    axios.post<UserPostRegisterResponse>("/api/users/register", formData).then((res) => {
-      if (res.status == 200) {
-        if (res.data.error && res.data.response == "error") {
-          setError(res.data.error);
-          console.log(res);
-          setLoading(false);
+
+    // Create user in local database
+    try {
+      const response = await axios.post<UserPostRegisterResponse>('/api/users/register', {
+        name: formData.name,
+        email: formData.email.toLowerCase(),
+        password: formData.password,
+        academicNumber: formData.academicNumber,
+        graduation: formData.graduation,
+        courseYear: formData.courseYear,
+      });
+
+      const apiData = response.data as UserPostRegisterResponse;
+      if (apiData.response === 'success') {
+        // Sign in with NextAuth
+        const result = await signIn("credentials", {
+          email: formData.email.toLowerCase(),
+          password: formData.password,
+          redirect: false,
+        });
+        if (result?.error) {
+          setError("Account created but sign in failed. Please try signing in manually.");
         } else {
-          signIn("credentials", {
-            email: formData.email.toLowerCase(),
-            password: formData.password,
-            redirect: false,
-          }).then((res) => {
-            console.log(res)
-            if (res && res.error) {
-              setError("An error occurred! Try again")
-              setLoading(false);
-            } else {
-              router.push("/");
-              setLoading(false);
-            }
-          });
+          router.push("/");
         }
+        setLoading(false);
+      } else {
+        setError(apiData.error || 'Failed to create user in database');
+        setLoading(false);
       }
-    });
+    } catch (apiError: any) {
+      setError(apiError.response?.data?.error || 'Failed to create user in database');
+      setLoading(false);
+    }
   };
 
   return (

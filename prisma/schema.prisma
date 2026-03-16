@@ -2,10 +2,9 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator zod {
-  provider = "zod-prisma-types"
-  createInputTypes = false
-}
+// generator zod {
+//   provider = "zod-prisma-types"
+// }
 
 datasource db {
   provider = "postgresql"
@@ -13,29 +12,31 @@ datasource db {
 }
 
 model User {
-  id             String        @id @default(uuid())
-
-  // Credentials
+  id             String        @id @default(uuid()) @db.Uuid @map("id")
   email          String        @unique
-  password       String
-  name           String
-  role           Role          @default(USER)
-  accredited     Boolean       @default(false) // if the user went to the event check-in
-
-  // Ranking Attributes
-  points         Int           @default(0) // total points of user
-  rewarded       Int           @default(0) // number of times the user spinned the roulette
-  hasTicket      Boolean       @default(false) // if the user has a roulette ticket
-
-  // Presences Control
-  academicNumber Int?          @unique /// @zod.number.min(1)
-  graduation     Course?
-  courseYear     Int?                  /// @zod.number.min(1).max(3)
-  enrollments    Enrollments[]
-
+  password       String?
+  name           String?
+  role           String        @default("USER")
+  picture        String?       // URL to profile picture
+  accredited     Boolean       @default(false)
+  points         Int           @default(0)
+  rewarded       Int           @default(0)
+  hasTicket      Boolean       @default(false) @map("has_ticket")
+  academicNumber Int?          @unique @map("academic_number")
+  graduation     String?
+  courseYear     Int?          @map("course_year")
+  level          Int           @default(1)
+  badges         String[]      @default([])
+  streak         Int           @default(0)
+  lastActivity   DateTime?
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz()
 
   accounts       Account[]
   sessions       Session[]
+  enrollments    Enrollments[]
+
+  @@map("app_users")
 }
 
 model Activity {
@@ -46,7 +47,7 @@ model Activity {
   location    String
   capacity    Int?
   speakers    Speaker[]
-  type        Type
+  type        String
   endTime     String
   startTime   String
   url         String?     // if activity has enrollment form
@@ -63,65 +64,51 @@ model Speaker {
 
 model Enrollments {
   id         Int      @id @default(autoincrement())
-  userId     String
-  activityId Int
-  attended   Boolean
+  userId     String   @db.Uuid @map("user_id")
+  activityId Int      @map("activity_id")
+  attended   Boolean  @default(false)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
   activity   Activity @relation(fields: [activityId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, activityId])
+  @@map("enrollments")
 }
 
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
+  id                String  @id @default(uuid()) @db.Uuid
+  userId            String  @db.Uuid @map("user_id")
   type              String
   provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
+  providerAccountId String  @map("provider_account_id")
+  refreshToken      String? @map("refresh_token")
+  accessToken       String? @map("access_token")
+  expiresAt         Int?    @map("expires_at")
+  tokenType         String? @map("token_type")
   scope             String?
-  id_token          String?
-  session_state     String?
+  idToken           String? @map("id_token")
+  sessionState      String? @map("session_state")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@map("app_accounts")
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionToken String   @unique @map("session_token")
+  userId       String   @db.Uuid @map("user_id")
+  expires      DateTime @db.Timestamptz()
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("app_sessions")
 }
 
-enum Type {
-  WORKSHOP
-  TALK
-  TERTULIA
-  OTHER
-}
 
-enum Role {
-  USER
-  ADMIN
-  STAFF
-}
-
-enum Course {
-  BIOLOGIA_APLICADA
-  BIOLOGIA_E_GEOLOGIA
-  BIOQUIMICA
-  CIENCIA_DE_DADOS
-  CIENCIAS_DA_COMPUTACAO
-  CIENCIAS_DO_AMBIENTE
-  ESTATISTICA_APLICADA
-  FISICA
-  GEOLOGIA
-  MATEMATICA
-  OPTOMETRIA_E_CIENCIAS_DA_VISAO
-  QUIMICA
-}

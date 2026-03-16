@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { PiSignOutDuotone } from "react-icons/pi";
-import { Button, Spinner } from "@nextui-org/react";
+import { Button, Spinner, Avatar } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Role } from "@node_modules/.prisma/client";
+import { Role } from "@/lib/types";
 
 const Nav = () => {
   const [user, setUser] = useState<{
@@ -16,16 +15,26 @@ const Nav = () => {
     role?: Role;
     id?: string;
     email?: string;
+    picture?: string | null;
   }>();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const router = useRouter();
 
-  const { data: session, status } = useSession({
-    required: false,
-  });
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
 
   useEffect(() => {
-    if (session) setUser(session.user);
+    if (session?.user) {
+      setUser({
+        id: session.user.id as string,
+        email: session.user.email,
+        name: session.user.name,
+        role: (session.user as any).role,
+        picture: (session.user as any).picture || null,
+      });
+    } else {
+      setUser(undefined);
+    }
   }, [session]);
 
   useEffect(() => {
@@ -35,6 +44,11 @@ const Nav = () => {
       document.body.classList.remove("overflow-hidden");
     }
   }, [toggleDropdown]);
+
+  const handleSignOut = async () => {
+    // next-auth signOut will clear the session and redirect
+    await signOut({ callbackUrl: "/" });
+  };
 
   return (
     // do not delete h[72px] and flex items-center
@@ -57,14 +71,14 @@ const Nav = () => {
         <Link href="/faqs" className="nav_btn text-base">
           FAQs
         </Link>
-        {status == "loading" && (
+        {loading && (
           <div className="flex items-center lg:gap-5 gap-3 ">
             <Spinner color="white" size="sm" />
             <span className="text-white font-poppins text-sm">Loading</span>
           </div>
         )}
 
-        {status != "loading" && !user?.name && (
+        {!loading && !user?.name && (
           <>
             <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
 
@@ -99,7 +113,10 @@ const Nav = () => {
         {user?.name && (
           <>
             <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
-            <Link href={`/profile/${user.id}`} className="nav_btn text-base">
+            <Link href={`/profile/${user.id}`} className="nav_btn text-base flex items-center gap-2">
+              {user.picture && (
+                <Avatar src={user.picture} size="sm" />
+              )}
               Profile
             </Link>
             <div className="flex justify-end items-center lg:gap-3 gap-2">
@@ -107,9 +124,7 @@ const Nav = () => {
                 className="font-poppins font-normal text-sm text-white"
                 variant="bordered"
                 size="md"
-                onClick={() => {
-                  signOut();
-                }}
+                onClick={handleSignOut}
               >
                 Sign Out
               </Button>
@@ -189,7 +204,7 @@ const Nav = () => {
                 <Button
                   onClick={() => {
                     setToggleDropdown(false);
-                    signOut();
+                    handleSignOut();
                   }}
                   className="blue_btn"
                 >
