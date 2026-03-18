@@ -79,10 +79,10 @@ export default function Accordion() {
           <IoArrowDownCircleOutline size={30} color="white" className={`ease-in-out duration-300 ${active6 ? 'rotate-180' : 'rotate-0'}`} />
         </div>
         <div className={`bg-white bg-opacity-25 text-white rounded-b-md overflow-hidden ease-in-out duration-300 ${active6 ? 'max-h-[500px]' : 'max-h-0'}`}>
-          <p className="p-3">{
+          <div className="p-3">{
           points.split('\n').map((line, index) => (
             <p key={index}>{line}</p>
-          ))}</p>
+          ))}</div>
         </div>
       </div>
     </div>

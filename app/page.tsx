@@ -102,7 +102,7 @@ export default function Home() {
             }}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
-            transition={{ duration: 0.8, delay: 0.5, transition: "easeInOut" }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeInOut" }}
             className="overflow-hidden"
           >
             <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
@@ -133,7 +133,7 @@ export default function Home() {
             }}
             initial="hidden"
             animate={inView_3 ? "visible" : "hidden"}
-            transition={{ duration: 0.8, delay: 0.5, transition: "easeInOut" }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeInOut" }}
             className="overflow-hidden"
           >
             <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">
@@ -167,7 +167,7 @@ export default function Home() {
             }}
             initial="hidden"
             animate={inView_4 ? "visible" : "hidden"}
-            transition={{ duration: 0.8, delay: 0.5, transition: "easeInOut" }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeInOut" }}
             className="overflow-hidden"
           >
             <div className="sm:w-4/5 w-11/12 m-auto mt-[70px]">
@@ -212,7 +212,7 @@ export default function Home() {
             }}
             initial="hidden"
             animate={inView_5 ? "visible" : "hidden"}
-            transition={{ duration: 0.8, delay: 0.5, transition: "easeInOut" }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeInOut" }}
             className="overflow-hidden"
           >
             <div className="sm:w-4/5 w-11/12 m-auto mt-[70px] ">

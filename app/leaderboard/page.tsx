@@ -1,5 +1,5 @@
 "use client"
-
+import useSWR, { Fetcher } from "swr";
 import { LineDots } from "@components/LineDots"
 import LeaderBoardCards from "@components/LeaderBoardCards"
 import { useCallback, useEffect, useState } from "react"
@@ -9,65 +9,57 @@ import { useSession } from "next-auth/react";
 import { RoleType as Role } from "@prisma/zod/index";
 import axios from "axios";
 
-type User = {
-  id: string;
-  name: string;
-  points: number;
+interface UsersApiResponse {
+  users: {
+    id: string;
+    name: string;
+    points: number;
+    role: string;
+  }[];
+}
+
+const fetcher: Fetcher<UsersApiResponse, string> = async (url: string) => {
+  const res = await axios.get<UsersApiResponse>(url);
+  return res.data;
 };
 
 export default function LeaderBoard() {
-   const [userY, setUserY] = useState<{
-       user: { id: string, name: string, role: Role;} | null;
-       loaded: boolean;
-       rank: number;
-       points: number;
-     }>({ user: null, loaded: false , rank: 0, points: 0});
-    const [users,setUsers] = useState<User[]>([]);
-    const [loading,setLoading] = useState(false);
+  const { data, error, isLoading } = useSWR('/api/users', fetcher, {
+    refreshInterval: 3600000,
+    revalidateOnFocus: false
+  })
 
-    const { data: session } = useSession({
-        required: false,
-    });
+  const { data: session } = useSession({ required: false })
 
-    const getUsers = useCallback(async () => {
-        setLoading(true);
-        const { data } = await axios.get<UsersGetResponse>(`/api/users`);
-        if (data.users){
-            const filteredUsers = data.users.filter((user) => user.role === "USER").map((user) => ({
-                name: user.name,
-                points: user.points,
-                id: user.id
-            })).sort((a,b) => b.points - a.points);
-            setUsers(filteredUsers);
-        }
-        setLoading(false);
-    }, []);
+  const [userY, setUserY] = useState<{
+    user: { id: string; name: string; role: Role } | null
+    loaded: boolean
+    rank: number
+    points: number
+  }>({ user: null, loaded: false, rank: 0, points: 0 })
 
-    const getCurrRank = useCallback(() => {
-        if (userY.user) {
-            const index = users.findIndex(user => user.id === userY.user!.id);
-            if (index !== -1) {
-                setUserY(prev => ({ ...prev, rank: index + 1, points: users[index].points }));
-            }
-        }
-    }, [users, userY.user]);
+  const users = data?.users
+    ?.filter((u: any) => u.role === "USER")
+    .sort((a: any, b: any) => b.points - a.points) || []
 
-    useEffect(() => {
-        console.log(session);
-        if (session) {
-          setUserY(prev => ({ ...prev, user: session.user, loaded: true }));
-        }
-      }, [session]);
 
-    useEffect(() => {
-        getCurrRank();
-    }, [getCurrRank]);
+  useEffect(() => {
+    if (session) {
+      setUserY(prev => ({ ...prev, user: session.user, loaded: true }))
+    }
+  }, [session])
 
-    useEffect(() =>{
-        getUsers();
-    }, [getUsers])
 
-    if (loading) return <div className="h-screen bg-gradient-to-l from-custom-blue-3 to-custom-blue-1"><Spinner color="default"/></div>;
+  useEffect(() => {
+    if (userY.user && users.length > 0) {
+      const index = users.findIndex((u: any) => u.id === userY.user!.id)
+      if (index !== -1) {
+        setUserY(prev => ({ ...prev, rank: index + 1, points: users[index].points }))
+      }
+    }
+  }, [users, userY.user])
+
+  if (isLoading) return <Spinner />
 
     return (
         <div className="h-[96vh] flex flex-col bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">

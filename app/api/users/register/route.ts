@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { signIn } from "next-auth/react";
 import { CreateUserSchema, CourseType as Course } from "@prisma/zod";
 import { prisma } from '@/lib/prisma';
 import { createClient } from '@/lib/supabase-server';
@@ -8,7 +7,7 @@ import { createClient } from '@/lib/supabase-server';
 export interface UserPostRegisterResponse {
   response: "success" | "error";
   user?: {
-    id: number;
+    id: string;
     name: string;
     email: string;
     role: string;
@@ -32,60 +31,66 @@ export async function POST(request: Request) {
     console.log("Registering user");
     const userData = await request.json();
     const validation = CreateUserSchema.safeParse(userData);
+
     if (!validation.success) {
       console.error("Form validation error", validation.error);
-      return new NextResponse(
-        JSON.stringify({ response: "error", error: "Form validation failed" })
+      return NextResponse.json(
+        { response: "error", error: "Form validation failed" },
+        { status: 400 }
       );
     }
 
     const data = validation.data;
 
-    // check for duplicate emails
+    // Check for duplicate emails in local DB
     const emailExists = await prisma.user.findUnique({
-      where: {
-        email: data.email.toLowerCase(),
-      },
+      where: { email: data.email.toLowerCase() },
     });
 
     if (emailExists) {
-      return new NextResponse(
-        JSON.stringify({
-          response: "error",
-          error: "Email already exists",
-        })
+      return NextResponse.json(
+        { response: "error", error: "Email already exists" },
+        { status: 409 }
       );
     }
 
     // Create user in Supabase Auth first
     const supabase = await createClient();
 
-    // Use supabase auth signUp to create the auth user
-    // We use any casts because the supabase client types can vary between versions
-    const signUpResult: any = await supabase.auth.signUp({
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: data.email.toLowerCase(),
       password: data.password,
       options: { data: { name: data.name } },
     });
 
-    if (signUpResult.error) {
-      console.error('Supabase signUp error', signUpResult.error);
-      return new NextResponse(
-        JSON.stringify({ response: 'error', error: signUpResult.error.message || 'Failed to create auth user' })
+    if (signUpError) {
+      console.error('Supabase signUp error', signUpError);
+
+      if (signUpError.code === 'user_already_exists') {
+        return NextResponse.json(
+          { response: 'error', error: 'Email already exists' },
+          { status: 409 }
+        );
+      }
+
+      return NextResponse.json(
+        { response: 'error', error: signUpError.message || 'Failed to create auth user' },
+        { status: 400 }
       );
     }
 
-    const authUser = signUpResult.data?.user || signUpResult.user;
-    if (!authUser || !authUser.id) {
-      console.error('No auth user returned from Supabase', signUpResult);
-      return new NextResponse(
-        JSON.stringify({ response: 'error', error: 'Failed to create auth user' })
+    const authUser = signUpData?.user;
+    if (!authUser?.id) {
+      console.error('No auth user returned from Supabase', signUpData);
+      return NextResponse.json(
+        { response: 'error', error: 'Failed to create auth user' },
+        { status: 500 }
       );
     }
 
     const authId = String(authUser.id);
 
-    // Hash local password if still storing locally (keeps compatibility with credentials provider)
+    // Hash local password (keeps compatibility with credentials provider)
     const hashPassword = await bcrypt.hash(data.password, 10);
 
     // Create local User record using the Supabase auth id as primary key
@@ -118,9 +123,11 @@ export async function POST(request: Request) {
       },
     });
 
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
     // Send welcome email to the new user
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/email`, {
+      await fetch(`${appUrl}/api/email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -148,7 +155,7 @@ export async function POST(request: Request) {
 
     // Send admin notification about new registration
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/email`, {
+      await fetch(`${appUrl}/api/email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -172,11 +179,13 @@ export async function POST(request: Request) {
       // Don't fail registration if admin email fails
     }
 
-    return new NextResponse(JSON.stringify({ response: 'success', user: user }));
+    return NextResponse.json({ response: 'success', user }, { status: 201 });
+
   } catch (error: any) {
     console.error("Error registering user:", error);
-    return new NextResponse(
-      JSON.stringify({ response: "error", error: error.message || "Failed to create user in database" })
+    return NextResponse.json(
+      { response: "error", error: error.message || "Failed to create user in database" },
+      { status: 500 }
     );
   } finally {
     prisma.$disconnect();

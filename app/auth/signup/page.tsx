@@ -17,6 +17,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CourseSchema, CreateUserSchema } from "@prisma/zod";
 import { UserPostRegisterResponse } from "@app/api/users/register/route";
+// import { toast, ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css"; 
 
 const Courses = CourseSchema.options;
 
@@ -573,5 +575,14 @@ export default function SignUpPage() {
         </form>
       </div>
     </div>
+    //  <ToastContainer 
+    //     position="bottom-right"
+    //     autoClose={3000}
+    //     hideProgressBar={false}
+    //     closeOnClick
+    //     pauseOnHover
+    //     theme="light"
+    //   />
   );
+  
 }
