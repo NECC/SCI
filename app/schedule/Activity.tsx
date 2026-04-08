@@ -54,6 +54,9 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
   const [dados, setDados] = useState<UserGetResponse["user"]>();
   const router = useRouter();
 
+  console.log("ESTAMOS AQUI");
+  console.log(item);
+
   // TODO: Handle the userId properly (it's undefined for now)
   const createEnrollment = async (activityId: number, userId: string) => {
     if (!userId) {

@@ -84,6 +84,8 @@ export const ActivitySchema = z.object({
     speakers: z.string(),
     endTime: z.string(),
     startTime: z.string(),
+    //startTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format"),
+    //endTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format"),
     points: z.number().int(),
 })
 
