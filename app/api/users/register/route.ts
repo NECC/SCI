@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { Prisma } from "@prisma/client";
 import { CreateUserSchema, CourseType as Course } from "@prisma/zod";
 import { prisma } from '@/lib/prisma';
 import { createClient } from '@/lib/supabase-server';
@@ -18,14 +19,6 @@ export interface UserPostRegisterResponse {
   error?: string;
 }
 
-/**
- * Registers a new User
- * @method POST
- * @param body name, email, password
- *
- * @example body: { "name": "Pedro Camargo", "email": "example@gmail.com", "password": "123456" }
- *
- */
 export async function POST(request: Request) {
   try {
     console.log("Registering user");
@@ -42,7 +35,7 @@ export async function POST(request: Request) {
 
     const data = validation.data;
 
-    // Check for duplicate emails in local DB
+    // Check for duplicate email
     const emailExists = await prisma.user.findUnique({
       where: { email: data.email.toLowerCase() },
     });
@@ -54,7 +47,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create user in Supabase Auth first
+    if (data.academicNumber) {
+      const academicNumberExists = await prisma.user.findUnique({
+        where: { academicNumber: data.academicNumber },
+      });
+
+      if (academicNumberExists) {
+        return NextResponse.json(
+          { response: "error", error: "A user with this academic number already exists." },
+          { status: 409 }
+        );
+      }
+    }
+
+    // Create user in Supabase Auth
     const supabase = await createClient();
 
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -89,31 +95,45 @@ export async function POST(request: Request) {
     }
 
     const authId = String(authUser.id);
-
-    // Hash local password (keeps compatibility with credentials provider)
     const hashPassword = await bcrypt.hash(data.password, 10);
 
-    // Create local User record using the Supabase auth id as primary key
-    const user = await prisma.user.create({
-      data: {
-        id: authId,
-        name: data.name,
-        email: data.email.toLowerCase(),
-        password: hashPassword,
-        role: 'USER',
-        academicNumber: data.academicNumber,
-        graduation: data.graduation,
-        courseYear: data.courseYear,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-      },
-    });
+    let user;
+    try {
+      user = await prisma.user.create({
+        data: {
+          id: authId,
+          name: data.name,
+          email: data.email.toLowerCase(),
+          password: hashPassword,
+          role: 'USER',
+          academicNumber: data.academicNumber,
+          graduation: data.graduation,
+          courseYear: data.courseYear,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        const fields = (error.meta?.target as string[]) ?? [];
+        const message = fields.includes('academicNumber')
+          ? 'A user with this academic number already exists.'
+          : fields.includes('email')
+          ? 'Email already exists.'
+          : 'A unique constraint was violated.';
 
-    // Create Account record to link with NextAuth / external provider
+        return NextResponse.json({ response: 'error', error: message }, { status: 409 });
+      }
+      throw error;
+    }
+
     await prisma.account.create({
       data: {
         userId: authId,
@@ -125,7 +145,7 @@ export async function POST(request: Request) {
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
-    // Send welcome email to the new user
+    // Send welcome email
     try {
       await fetch(`${appUrl}/api/email`, {
         method: 'POST',
@@ -136,24 +156,22 @@ export async function POST(request: Request) {
           html: `
             <h1>Welcome to SCI, ${data.name}!</h1>
             <p>Your account has been successfully created.</p>
-            <p>Here are your registration details:</p>
             <ul>
               <li><strong>Name:</strong> ${data.name}</li>
               <li><strong>Email:</strong> ${data.email.toLowerCase()}</li>
               ${data.academicNumber ? `<li><strong>Academic Number:</strong> ${data.academicNumber}</li>` : ''}
               ${data.graduation ? `<li><strong>Course:</strong> ${data.graduation}</li>` : ''}
             </ul>
-            <p>You can now sign in to your account and start participating in activities!</p>
+            <p>You can now sign in and start participating in activities!</p>
             <p>Best regards,<br/>The SCI Team</p>
           `,
         }),
       });
     } catch (emailError) {
       console.error('Failed to send welcome email:', emailError);
-      // Don't fail registration if email fails
     }
 
-    // Send admin notification about new registration
+    // Send admin notification
     try {
       await fetch(`${appUrl}/api/email`, {
         method: 'POST',
@@ -163,7 +181,6 @@ export async function POST(request: Request) {
           subject: 'New User Registration - SCI',
           html: `
             <h1>New User Registration</h1>
-            <p>A new user has registered on SCI:</p>
             <ul>
               <li><strong>Name:</strong> ${data.name}</li>
               <li><strong>Email:</strong> ${data.email.toLowerCase()}</li>
@@ -176,7 +193,6 @@ export async function POST(request: Request) {
       });
     } catch (adminEmailError) {
       console.error('Failed to send admin notification:', adminEmailError);
-      // Don't fail registration if admin email fails
     }
 
     return NextResponse.json({ response: 'success', user }, { status: 201 });
