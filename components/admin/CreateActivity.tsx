@@ -83,7 +83,6 @@ export default function CreateActivity() {
             {...register('title')}
           />
 
-          {/* Campo de Data Nativo Estilizado */}
           <div className="flex flex-col w-full max-w-[220px]">
             <label className="text-xs text-gray-500 mb-1 ml-1">Date</label>
             <input
@@ -96,8 +95,6 @@ export default function CreateActivity() {
             )}
           </div>
 
-          {/* Campo de Start Time Nativo Estilizado */}
-          {/* Start Time - FORÇADO PELO CONTROLLER */}
           <div className="flex flex-col w-full max-w-[220px]">
             <label className="text-xs text-gray-500 mb-1 ml-1">Start Time</label>
             <Controller
@@ -110,7 +107,7 @@ export default function CreateActivity() {
                   value={field.value || ""}
                   onChange={(e) => {
                     console.log("Tempo digitado (Start):", e.target.value);
-                    field.onChange(e.target.value); // Força a atualização do estado
+                    field.onChange(e.target.value); 
                   }}
                 />
               )}
@@ -120,7 +117,7 @@ export default function CreateActivity() {
             )}
           </div>
 
-          {/* End Time - FORÇADO PELO CONTROLLER */}
+   
           <div className="flex flex-col w-full max-w-[220px]">
             <label className="text-xs text-gray-500 mb-1 ml-1">End Time</label>
             <Controller
@@ -133,7 +130,7 @@ export default function CreateActivity() {
                   value={field.value || ""}
                   onChange={(e) => {
                     console.log("Tempo digitado (End):", e.target.value);
-                    field.onChange(e.target.value); // Força a atualização do estado
+                    field.onChange(e.target.value); 
                   }}
                 />
               )}
