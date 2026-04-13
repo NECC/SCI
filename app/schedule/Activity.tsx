@@ -54,9 +54,6 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
   const [dados, setDados] = useState<UserGetResponse["user"]>();
   const router = useRouter();
 
-  console.log("ESTAMOS AQUI");
-  console.log(item);
-
   // TODO: Handle the userId properly (it's undefined for now)
   const createEnrollment = async (activityId: number, userId: string) => {
     if (!userId) {
@@ -215,7 +212,7 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
                   isDisabled={enrolled}
                   variant="solid"
                   endContent={!enrolled ? <FaLongArrowAltRight /> : <FaCheck />}
-                  onClick={(e) => {
+                  onPress={(e) => {
                     if (userId == undefined) {
                       router.push("/auth/signup");
                       return;
@@ -235,10 +232,10 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
                   variant="faded"
                   color="primary"
                   className="text-tiny"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onPress={(e) => {
+                    //e.preventDefault();
                     onOpen3();
-                    e.stopPropagation();
+                    //e.stopPropagation();
                   }}
                 >
                   Enrollees
@@ -254,10 +251,10 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
                   variant="faded"
                   color="primary"
                   className="text-tiny"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onPress={(e) => {
+                    //e.preventDefault();
                     onOpen();
-                    e.stopPropagation();
+                    //e.stopPropagation();
                   }}
                 >
                   <BsQrCode className="text-medium" />
@@ -268,10 +265,10 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
                   variant="solid"
                   color="danger"
                   className="text-tiny"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onPress={(e) => {
+                    //e.preventDefault();
                     onOpen2();
-                    e.stopPropagation();
+                    //e.stopPropagation();
                   }}
                 >
                   Cancel Enroll
@@ -318,10 +315,10 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
                   variant="faded"
                   color="primary"
                   className="text-tiny"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onPress={(e) => {
+                    //e.preventDefault();
                     onOpen();
-                    e.stopPropagation();
+                    //e.stopPropagation();
                   }}
                 >
                   <BsQrCode className="text-medium" />

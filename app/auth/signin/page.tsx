@@ -26,19 +26,19 @@ export default function SignInPage() {
   const handleChange = (e: any) => {
     const value = e.target.value;
     const name = e.target.name;
-    console.log(`input change ${name} -> ${value}`);
+    //console.log(`input change ${name} -> ${value}`);
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleSubmit = async () => {
-    console.log("handleSubmit called", formData);
+    //console.log("handleSubmit called", formData);
     setLoading(true);
     const result = await signIn("credentials", {
       email: formData.email.toLowerCase(),
       password: formData.password,
       redirect: false,
     });
-    console.log("signIn result:", result);
+    //console.log("signIn result:", result);
     if (result?.error) {
       setError(true);
       setLoading(false);
@@ -164,7 +164,7 @@ export default function SignInPage() {
           variant="shadow"
           // using onClick here ensures the event fires in all environments
           onClick={async () => {
-            console.log('sign-in button clicked');
+            //console.log('sign-in button clicked');
             try {
               setLoading(true);
               await handleSubmit();
