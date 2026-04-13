@@ -428,7 +428,7 @@ const ProfileInfo = ({ id }: {
           </div>
 
           {/* picture URL edit field */}
-          {editMode && (
+          {/* {editMode && (
             <div className="flex flex-col gap-2">
               <Input
                 label="Profile picture URL"
@@ -437,7 +437,7 @@ const ProfileInfo = ({ id }: {
                 className="w-full"
               />
             </div>
-          )}
+          )} */}
 
           {/* actions */}
           <div className="flex flex-row gap-4 items-center">
@@ -464,10 +464,10 @@ const ProfileInfo = ({ id }: {
 
           {/* roulette/spin and QRCode remain unchanged */}
           <div className="flex flex-col gap-5 items-center">
-            <Button onClick={handleClick} className="md:w-[12.5%] w-1/2 bg-white text-black">
+            {/* <Button onClick={handleClick} className="md:w-[12.5%] w-1/2 bg-white text-black">
               <RxColorWheel className="text-black" />
               <p> Spin Roulette </p>
-            </Button>
+            </Button> */}
             {error && <div className="w-[12.5%] bg-red-500 p-2 text-white mt-3 rounded"> {error} </div>}
             <Code id={id} />
           </div>

@@ -12,6 +12,7 @@ const Nucleos = (data: {
                     alt={'núcleos'}
                     width={110}
                     height={110}
+                    //style={{ width: 'auto', height: '100%' }}
                     className='hover:opacity-80'
                 />
             </a>

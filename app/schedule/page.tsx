@@ -36,7 +36,7 @@ export default function Schedule() {
       return [];
     }
     const activities = data.activities;
-    console.log("Huh?",data);
+    //console.log("Huh?",data);
 
     return groupAndSortActivitiesByDay(
       activities.map((activity) => {
@@ -122,13 +122,13 @@ export default function Schedule() {
       return groups;
     }, {} as Record<string, ScheduleActivity[]>);
 
-    console.log(groups);
+    //console.log(groups);
 
     const res = Object.entries(groups).sort(
       ([dateA], [dateB]) => Number(new Date(dateA)) - Number(new Date(dateB))
     ) as [string, ScheduleActivity[]][];
 
-    console.log(res);
+    //console.log(res);
 
     // TODO: Fix this typescript error
     // Convert groups to an array and sort by date

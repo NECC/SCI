@@ -26,13 +26,13 @@ export interface EnrollmentGetByUserIdResponse {
  * @param {string} activityId
  * @returns [{ enrollments }]
  */
-export async function GET(request: Request, context: any) {
-  const id = context.params.userId;
+export async function GET(request: Request, { params }: { params: Promise<{ userId: string }> }) {
+  const {userId} = await params;
 
   try {
     const enrollments = await prisma.enrollments.findMany({
       where: {
-        userId: id,
+        userId: userId,
       },
       select: {
         id: true,
