@@ -2,13 +2,14 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { jsPDF } from "jspdf";
+import fs from "fs/promises";
+import path from "path";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { certificateType, formData } = body;
 
-    // Extract data from form
     const nome = formData?.name || "";
     const title = formData?.title || "";
     const role = formData?.role || "";
@@ -16,37 +17,47 @@ export async function POST(req: Request) {
     const days = Array.isArray(daysRaw) ? daysRaw.join(", ") : daysRaw || "";
     const isEmergency = certificateType === "Emergency";
 
-    // Create PDF in landscape SRA4 format
-    // SRA4 is 229mm x 324mm, in landscape: 324mm x 229mm
     const doc = new jsPDF({
       orientation: "landscape",
       unit: "mm",
-      format: [324, 229], // SRA4 dimensions
+      format: [324, 229], 
     });
 
-    // Get page dimensions
     const pageWidth = 324;
     const pageHeight = 229;
 
-    // Set text color to white
+    const publicDir = path.join(process.cwd(), "public");
+
+    const getImageBase64 = async (filename: string) => {
+      const filePath = path.join(publicDir, filename);
+      const fileBuffer = await fs.readFile(filePath);
+      return `data:image/png;base64,${fileBuffer.toString("base64")}`;
+    };
+
+    const bgPdf = await getImageBase64("bg-pdf.png");
+    const cienciasLogo = await getImageBase64("ciencias.png");
+    const sciLogo = await getImageBase64("sci-logo2025.png");
+    const assinatura = await getImageBase64("assinatura.png");
+
+    doc.addImage(bgPdf, "PNG", 0, 0, pageWidth, pageHeight);
+
+    doc.addImage(cienciasLogo, "PNG", 15, 15, 35, 18);
+    doc.addImage(sciLogo, "PNG", pageWidth - 55, 15, 40, 18);
+
     doc.setTextColor(255, 255, 255);
 
-    // Add title
     doc.setFontSize(35);
     doc.setFont("helvetica", "bold");
     doc.text("Certificado de Participação", pageWidth / 2, 60, { align: "center" });
 
-    // Add subtitle
     doc.setFontSize(20);
     doc.setFont("helvetica", "normal");
-    doc.text("Este certificado é concebido a", pageWidth / 2, 80, { align: "center" });
+    doc.text("Este certificado é concedido a", pageWidth / 2, 80, { align: "center" });
 
-    // Add name
     doc.setFontSize(30);
     doc.setFont("helvetica", "bold");
     doc.text(nome, pageWidth / 2, 100, { align: "center" });
 
-    // Add activity/role specific text
     if (isEmergency) {
       doc.setFontSize(20);
       doc.setFont("helvetica", "normal");
@@ -73,21 +84,25 @@ export async function POST(req: Request) {
       doc.text(days + " de Abril", pageWidth / 2, 175, { align: "center" });
     }
 
-    // Add signature section
-    const signatureY = isEmergency ? 195 : 205;
+  
+    const signatureY = isEmergency ? 180 : 190;
+    
+    doc.addImage(assinatura, "PNG", (pageWidth / 2) - 25, signatureY - 20, 50, 25);
+
+    doc.setDrawColor(255, 255, 255);
+    doc.setLineWidth(0.5);
+    doc.line((pageWidth / 2) - 40, signatureY + 5, (pageWidth / 2) + 40, signatureY + 5);
     
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
-    doc.text("José Manuel González-Méijome", pageWidth / 2, signatureY + 10, { align: "center" });
+    doc.text("José Manuel González-Méijome", pageWidth / 2, signatureY + 12, { align: "center" });
     
     doc.setFontSize(15);
     doc.setFont("courier", "normal");
-    doc.text("Presidente da Escola de Ciências", pageWidth / 2, signatureY + 18, { align: "center" });
+    doc.text("Presidente da Escola de Ciências", pageWidth / 2, signatureY + 19, { align: "center" });
 
-    // Get PDF as buffer
     const pdfBuffer = Buffer.from(doc.output("arraybuffer"));
 
-    // Return the PDF response
     return new NextResponse(pdfBuffer as unknown as BodyInit, {
       status: 200,
       headers: {

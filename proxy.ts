@@ -21,7 +21,7 @@ const protectedRoutes = ["/profile"];
 //   "/api/activities/delete",
 // ];
 
-export async function middleware(request: any) {
+export async function proxy(request: any) {
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,

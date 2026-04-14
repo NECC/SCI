@@ -11,6 +11,18 @@
             "path": "/sponsor/deloitte.png",
             "link": "https://www.deloitte.com/pt/pt.html",
             "size": 150
+        },
+         {
+            "name": "FarPedra",
+            "path": "/sponsor/farpedra.png",
+            "link": "https://www.farpedra.com",
+            "size": 150
+        },
+        {
+            "name": "DocaPesca",
+            "path": "/sponsor/docapesca.png",
+            "link": "https://www.docapesca.pt/pt",
+            "size": 150
         }
     ]
 }
