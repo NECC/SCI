@@ -1,105 +1,126 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
-import { View, Image, Text, Page, Document } from '@react-pdf/renderer';
+import { View, Image, Text, Page, Document, StyleSheet } from '@react-pdf/renderer';
+
+const styles = StyleSheet.create({
+    page: {
+        paddingTop: 40,
+        paddingLeft: 40,
+        paddingRight: 40,
+        backgroundColor: '#000',
+    },
+    background: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+    header: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    title: {
+        marginTop: 40,
+        fontSize: 35,
+        color: 'white',
+        textAlign: 'center',
+        fontFamily: 'Helvetica-Bold',
+    },
+    subtitle: {
+        marginTop: 15,
+        fontSize: 20,
+        color: 'white',
+        textAlign: 'center',
+        fontFamily: 'Helvetica',
+    },
+    userName: {
+        marginTop: 35,
+        fontSize: 30,
+        color: 'white',
+        textAlign: 'center',
+        fontFamily: 'Helvetica-Bold',
+    },
+    activityText: {
+        marginTop: 35,
+        fontSize: 20,
+        color: 'white',
+        textAlign: 'center',
+        fontFamily: 'Helvetica',
+    },
+    activityTitle: {
+        color: 'white',
+        fontSize: 25,
+        textAlign: 'center',
+        marginTop: 5,
+        fontFamily: 'Helvetica-Oblique',
+    },
+    signatureSection: {
+        marginTop: 40,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white',
+    },
+    signatureLine: {
+        width: '40%',
+        height: 1,
+        backgroundColor: 'white',
+        marginTop: -25,
+    }
+});
 
 const Pdf = (props: {
-    data: {
-        name?: string;
-        title?: string;
-    };
-    user: {
-        name?: string;
-        title?: string;
-    };
+    data: { name?: string; title?: string };
+    user: { name?: string; title?: string };
 }) => {
     const { data, user } = props;
-    const nome = user?.name || "";
-    const title = data?.title || "";
-    
+    const nome = user?.name || "Participante";
+    const title = data?.title || "Atividade";
+
+    // Helper to ensure absolute paths for the PDF engine
+    const getAssetUrl = (path: string) => {
+        if (typeof window === 'undefined') return path;
+        return `${window.location.origin}${path}`;
+    };
+
     return (
         <Document>
-            <Page size="SRA4" orientation="landscape" style={{
-                paddingTop: 40,
-                paddingLeft: 40,
-                paddingRight: 40,
-            }}>
-                <View style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                }}>
-                    <Image src="/bg-pdf.png" style={{ width: '100%', height: '100%' }} />
+            <Page size="SRA4" orientation="landscape" style={styles.page}>
+                {/* Background */}
+                <View style={styles.background}>
+                    <Image src={getAssetUrl("/bg-pdf.png")} />
                 </View>
 
-                <View style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                }}>
-                    <Image src="/ciencias.png" style={{ width: '95px', height: '50px' }} />
-                    <Image src="/sci-logo2025.png" style={{ width: '110px', height: '50px' }} />
+                {/* Header */}
+                <View style={styles.header}>
+                    <Image src={getAssetUrl("/ciencias.png")} style={{ width: 95, height: 50 }} />
+                    <Image src={getAssetUrl("/sci-logo2025.png")} style={{ width: 110, height: 50 }} />
                 </View>
 
-                <Text style={{
-                    marginTop: 40,
-                    fontSize: 35,
-                    color: 'white',
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                    fontFamily: 'Helvetica-Bold',
-                }}>Certificado de Participação</ Text>
-                <Text style={{
-                    marginTop: 15,
-                    fontSize: 20,
-                    color: 'white',
-                    textAlign: 'center',
-                    fontFamily: 'Helvetica',
-                }}>Este certificado é concebido a </ Text>
-                <Text style={{
-                    marginTop: 35,
-                    fontSize: 30,
-                    color: 'white',
-                    textAlign: 'center',
-                    fontFamily: 'Helvetica-Bold',
-                }}> {nome}</ Text>
-                <Text style={{
-                    marginTop: 35,
-                    fontSize: 20,
-                    color: 'white',
-                    textAlign: 'center',
-                    fontFamily: 'Helvetica',
-                }}>Pela sua participação na atividade </ Text>
-                <Text style={{
-                    color: 'white',
-                    fontSize: 25,
-                    textAlign: 'center',
-                    marginTop: 5,
-                    fontFamily: 'Helvetica-Oblique',
-                }}>{title || '(Sem título)' }</Text>
+                {/* Content */}
+                <Text style={styles.title}>Certificado de Participação</Text>
+                
+                <Text style={styles.subtitle}>Este certificado é concebido a</Text>
+                
+                <Text style={styles.userName}>{nome}</Text>
+                
+                <Text style={styles.activityText}>Pela sua participação na atividade</Text>
+                
+                <Text style={styles.activityTitle}>{title}</Text>
 
-                <View style={{
-                    marginTop: 40,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: 10,
-                    color: 'white',
-                }}>
-                    <Image src="/assinatura.png" style={{ width: '140px', height: '70px' }} />
-                    <View style={{
-                        width: '60%',
-                        height: '1px',
-                        backgroundColor: 'white',
-                        marginTop: -25,
-                    }}> </View>
-                    <Text style={{ marginTop: 15 }}>José Manuel González-Méijome</ Text>
-                    <Text style={{ marginTop: -5, fontFamily: 'Courier', fontSize: 15, }}>Presidente da Escola de Ciências</ Text>
+                {/* Signature */}
+                <View style={styles.signatureSection}>
+                    <Image src={getAssetUrl("/assinatura.png")} style={{ width: 140, height: 70 }} />
+                    <View style={styles.signatureLine} />
+                    <Text style={{ marginTop: 15, fontSize: 14 }}>José Manuel González-Méijome</Text>
+                    <Text style={{ marginTop: 2, fontFamily: 'Helvetica', fontSize: 12 }}>
+                        Presidente da Escola de Ciências
+                    </Text>
                 </View>
-
             </Page>
         </Document>
     );

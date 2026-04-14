@@ -428,7 +428,7 @@ const ProfileInfo = ({ id }: {
           </div>
 
           {/* picture URL edit field */}
-          {/* {editMode && (
+          {editMode && (
             <div className="flex flex-col gap-2">
               <Input
                 label="Profile picture URL"
@@ -437,7 +437,7 @@ const ProfileInfo = ({ id }: {
                 className="w-full"
               />
             </div>
-          )} */}
+          )}
 
           {/* actions */}
           <div className="flex flex-row gap-4 items-center">
