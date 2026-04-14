@@ -21,7 +21,7 @@
     "@hookform/resolvers": "^3.3.3",
     "@nextui-org/react": "^2.2.9",
     "@prisma/client": "^6.19.2",
-    "@react-pdf/renderer": "^3.4.5",
+    "@react-pdf/renderer": "^4.4.1",
     "@supabase/auth-helpers-nextjs": "^0.15.0",
     "@supabase/auth-helpers-react": "^0.15.0",
     "@supabase/ssr": "^0.8.0",
