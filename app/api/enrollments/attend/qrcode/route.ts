@@ -8,6 +8,7 @@ import { prisma } from '@/lib/prisma';
 export interface EnrollmentAttendQRCodePostResponse {
   response: "success" | "error";
   updateEnrollment?: Prisma.BatchPayload;
+  achievement?: any;
   error?: string;
 }
 
