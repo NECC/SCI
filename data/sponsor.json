@@ -4,24 +4,28 @@
             "name": "Accenture",
             "path": "/sponsor/accenture.png",
             "link": "https://www.accenture.com/pt-pt/insights/strategy/reinvented-with-accenture",
+            "plan": "standard",
             "size": 150
         },
         {
             "name": "Deloitte",
             "path": "/sponsor/deloitte.png",
             "link": "https://www.deloitte.com/pt/pt.html",
+            "plan": "premium",
             "size": 150
         },
          {
             "name": "FarPedra",
             "path": "/sponsor/farpedra.png",
             "link": "https://www.farpedra.com",
+            "plan": "standard",
             "size": 150
         },
         {
             "name": "DocaPesca",
             "path": "/sponsor/docapesca.png",
             "link": "https://www.docapesca.pt/pt",
+            "plan": "standard",
             "size": 150
         }
     ]

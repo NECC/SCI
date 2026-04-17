@@ -32,6 +32,9 @@ export const NullsOrderSchema = z.enum(['first','last']);
 export const Types = [ "WORKSHOP", "TALK", "OTHER", "TERTULIA" ] as const;
 export const TypeSchema = z.enum(Types);
 
+export const Sponsor = ["Non","FarPedra", "Accenture", "Deloitte", "DocaPesca"] as const;
+export const SponsorSchema = z.enum(Sponsor);
+
 export type TypeType = `${z.infer<typeof TypeSchema>}`
 
 export const RoleSchema = z.enum(['USER','ADMIN','STAFF']);
@@ -76,16 +79,21 @@ export type User = z.infer<typeof UserSchema>
 
 export const ActivitySchema = z.object({
     type: TypeSchema,
+    sponsor : SponsorSchema,
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
     location: z.string(),
-    capacity: z.number().int(),
+    capacity: z.number({
+          required_error: 'Capacity is required',
+          invalid_type_error: 'Capacity must be a number',
+          })
+          .int('Capacity must be a whole number')
+          .min(1, 'Capacity must be greater than 0'),
     speakers: z.string(),
     endTime: z.string(),
     startTime: z.string(),
-    //startTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format"),
-    //endTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format"),
+    achievement: z.string(),
     points: z.number().int(),
 })
 
