@@ -78,7 +78,7 @@ export default function CreateActivity() {
     }
   }, [selectedSponsorName, hasPlan, setValue]);
 
-  const onSubmit = (formData: any) => {
+  const onSubmit = async (formData: any) => {
     console.log("Dados capturados com sucesso:", formData);
     
     const parsedData = {
