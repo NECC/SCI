@@ -34,7 +34,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       where: {
         id: parseInt(id),
       },
-      select: {
+        select: {
         id: true,
         title: true,
         description: true,
@@ -43,6 +43,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         capacity: true,
         date: true,
         type: true,
+        points: true,
         enrollments: true,
         startTime: true,
         endTime: true,
