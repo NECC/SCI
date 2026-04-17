@@ -239,6 +239,7 @@ export default function CreateActivity() {
           
           {hasPlan ? (
           /* Adicionar pontos associados a um plano de patrocionio */
+          <>
           <Input
             key="fixed-points"
             type="number"
@@ -248,8 +249,9 @@ export default function CreateActivity() {
             variant="flat"
             color="primary"
             {...register('points', { valueAsNumber: true })}
-            {...register('achievement')}            
           />
+          <input type="hidden" {...register('achievement')} />
+        </>
         ) : (
           /* Adicionar pontos quando não há plano associado */
           <Controller
