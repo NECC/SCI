@@ -84,10 +84,12 @@ const handleScan = async (data: string) => {
             );
 
             if (res3.data.response !== "error") {
+                //console.error("Achievement value:", res.data);
                 await axios.put<UserUpdateResponse>(`/api/users/${userId}`, {
                     points: res3.data.points,
                     activity: parseInt(activityId),
-                    achievementType: res.data.achievement ?? "badge"
+                    achievementType: res3.data.achievement ?? "badge"
+                    
                 });
             }
         } else if (action === "spend") {
