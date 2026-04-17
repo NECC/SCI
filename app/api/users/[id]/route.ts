@@ -151,7 +151,7 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
                 achievements: {
                     create: {
                         achievement_id: data.activity,
-                        type: data.achievementType || "badge" 
+                        type: data.achievementType ?? "badge" 
                     }
                 }
             }

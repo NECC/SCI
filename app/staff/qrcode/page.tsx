@@ -70,40 +70,39 @@ useEffect(() => {
 }, [session]);
 
 const handleScan = async (data: string) => {
-    const [action, userId, activityId] = data.split(";");
-    if (action == "attend") {
-        setPause(true);
-        const res = await axios.post<EnrollmentAttendQRCodePostResponse>(
-        `/api/enrollments/attend/qrcode`,
-        {
-            userId: userId,
-            activityId: parseInt(activityId),
+    try {
+        const [action, userId, activityId] = data.split(";");
+
+        if (action === "attend") {
+            const res = await axios.post<EnrollmentAttendQRCodePostResponse>(
+                `/api/enrollments/attend/qrcode`,
+                { userId, activityId: parseInt(activityId) }
+            );
+
+            const res3 = await axios.get<ActivityPointsResponse>(
+                `/api/activities/points/${parseInt(activityId)}`
+            );
+
+            if (res3.data.response !== "error") {
+                await axios.put<UserUpdateResponse>(`/api/users/${userId}`, {
+                    points: res3.data.points,
+                    activity: parseInt(activityId),
+                    achievementType: res.data.achievement ?? "badge"
+                });
+            }
+        } else if (action === "spend") {
+            const res = await axios.put<UserPutRouletteResponse>(
+                `/api/users/roulette/${userId}/spend`
+            );
+            if (res.data.response === "success") {
+                setSuccess(true);
+            }
         }
-        );  
-
-        const res3 = await axios.get<ActivityPointsResponse>(
-        `/api/activities/points/${parseInt(activityId)}`
-        );
-
-        if (res3.data.response !== "error") {
-        const res4 = await axios.put<UserUpdateResponse>(
-            `/api/users/${userId}`,
-            { points: res3.data.points,achievement:res.data.achievement }
-        );
-        //setError(res4.data.response);
-        }
-
+    } catch (err) {
+        console.error("QR scan error:", err);
+    } finally {
+        setPause(false);
     }
-    else if (action == "spend"){
-        setPause(true);
-        const res = await axios.put<UserPutRouletteResponse>(`/api/users/roulette/${userId}/spend`);
-
-        if (res.data.response == "success") {
-        setSuccess(true);
-        }
-    }
-    setPause(false);
-    return;
 };
 
 if (status == "loading") return <p>Loading...</p>;
@@ -130,7 +129,7 @@ return (
           <option value={undefined}>No Tracker</option>
         </select>
       </div>
-        {(success && pause) && (
+        {success && (
             <div className="bg-green-500 p-4 rounded-md mt-4">
                 <h1 className="text-white">Success</h1>
             </div>
