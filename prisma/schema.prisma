@@ -33,6 +33,7 @@ model User {
   accounts       Account[]
   sessions       Session[]
   enrollments    Enrollments[]
+  achievements Achievement[]
 
   @@map("app_users")
   @@schema("public")
@@ -52,6 +53,10 @@ model Activity {
   type        String
   enrollments Enrollments[]
   speakers    Speaker[]     @relation("ActivityToSpeaker")
+  achievement String?
+  
+  //Relation 
+  achievements Achievement[]
 
   @@schema("public")
 }
@@ -99,6 +104,21 @@ model Account {
   @@map("app_accounts")
   @@schema("public")
 }
+
+model Achievement {
+  id_achievement Int    @id @default(autoincrement())
+  id_user        String @db.Uuid
+  achievement_id Int
+  type String?
+
+  activity Activity @relation(fields: [achievement_id], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [id_user], references: [id], onDelete: Cascade)
+
+  @@unique([id_user, achievement_id], name: "user_achievement_unique")
+  @@map("achievements")
+  @@schema("public")
+}
+
 
 model Session {
   id           String   @id @default(uuid()) @db.Uuid

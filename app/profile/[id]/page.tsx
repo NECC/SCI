@@ -23,18 +23,16 @@ import { useRouter, useParams } from "next/navigation";
 import { LineDots } from "@components/LineDots";
 import ActivityDayFilter from "@components/ActivityDayFilter";
 import MinimalArrowDown from "@components/MinimalArrowDown";
-import { ActivitySpeakersResponse } from "@app/api/activities/[id]/speakers/route";
-import { UserGetResponse } from "@app/api/users/[id]/route";
+import { UserGetResponse} from "@app/api/users/[id]/route";
 import { EnrollmentGetByUserIdResponse } from "@app/api/enrollments/getById/[userId]/route";
-import { Activity as ActivityI, Speaker } from "@prisma/generated/zod";
+import { Activity as ActivityI } from "@prisma/generated/zod";
 import { UserPutRouletteResponse } from "@app/api/users/roulette/[id]/route";
 
 export default function Profile() {
-  const { id } = useParams() as { id: string }; // dynamic segment
+  const { id } = useParams() as { id: string };
   const [user, setUser] = useState<UserGetResponse["user"]>();
   const [activeScreen, setActiveScreen] = useState("enrolled");
-  let count = 1;
-  let maxCount = 0;
+  //const [badgesData, setBadgesData] = useState<UserGetResponse["user"] | null>(null);
   const router = useRouter();
 
   const { status } = useSession({
@@ -44,15 +42,22 @@ export default function Profile() {
     },
   });
 
-  // get profile user
-  useEffect(() => {
-    const getUser = async () => {
-      const { data } = await axios.get<UserGetResponse>(`/api/users/${id}`);
-      // console.log(data);
+  // Fetch basic user profile
+ const getUser = useCallback(async () => {
+  try {
+    const { data } = await axios.get<UserGetResponse>(`/api/users/${id}`);
+    if (data.response === "success") {
       setUser(data.user);
-    };
-    getUser();
-  }, [id]);
+      // We don't need setBadgesData anymore because 'user' already contains 'achievements'
+    }
+  } catch (err) {
+    console.error("Error fetching user", err);
+  }
+}, [id]);
+
+useEffect(() => {
+  getUser();
+}, [getUser]);
 
   return (
     <div className="bg-gradient-to-r from-custom-blue-1 to-custom-blue-3 h-screen bg-no-repeat bg-top bg-cover overflow-y-scroll no-scrollbar">
@@ -69,12 +74,18 @@ export default function Profile() {
           </div>
         </div>
 
-        {status != "loading" && user ? (
+        {status !== "loading" && user ? (
           <div className="bg-transparent w-full h-full">
-            {activeScreen == "enrolled" ? (
-              <ActivitiesSubscribed id={id} />
-            ) : activeScreen == "info" ? (
+            {activeScreen === "info" ? (
               <ProfileInfo id={id} />
+            ) :activeScreen === "enrolled" ? (
+              <ActivitiesSubscribed id={id} />
+            ) : activeScreen === "badges" ? (
+              <div className="p-4 md:p-8">
+                <h2 className="text-white text-3xl font-extrabold mb-8 uppercase">Earned Badges</h2>
+                {/* Pass the 'user' object directly */}
+                {user ? <UserBadges user={user} /> : <Spinner color="white" />}
+              </div>
             ) : (
               <></>
             )}
@@ -96,20 +107,18 @@ const ProfileNav = ({
   activeScreen: string;
   setActiveScreen: (screen: string) => void;
 }) => {
-  const [selectedKeys, setSelectedKeys] = React.useState(
-    new Set([activeScreen])
-  );
+  const [selectedKeys, setSelectedKeys] = React.useState(new Set([activeScreen]));
 
   const items = [
-    {
-      key: "enrolled",
-      label: "Enrolled Activities",
-    },
-    {
-      key: "info",
-      label: "Info",
-    },
+    { key: "enrolled", label: "Enrolled Activities" },
+    { key: "badges", label: "Badges" },
+    { key: "info", label: "Info" },
   ];
+
+  const handleAction = (key: string) => {
+    setActiveScreen(key);
+    setSelectedKeys(new Set([key]));
+  };
 
   return (
     <>
@@ -117,405 +126,227 @@ const ProfileNav = ({
         <Dropdown>
           <DropdownTrigger>
             <Button
-              disableRipple={true}
-              radius={"none"}
+              disableRipple
+              radius="none"
               className="py-2 w-full h-fit justify-start overflow-visible flex flex-row bg-custombutton text-white relative border-l-2"
             >
-              <div className="bg-yellow-300 h-4 w-4 rounded-full -translate-y-1/2 -translate-x-1/2 absolute top-0 left-0 "></div>
-              <div className="bg-yellow-300 h-4 w-4 rounded-full translate-y-1/2 -translate-x-1/2 absolute bottom-0 left-0 "></div>
+              <div className="bg-yellow-300 h-4 w-4 rounded-full -translate-y-1/2 -translate-x-1/2 absolute top-0 left-0" />
+              <div className="bg-yellow-300 h-4 w-4 rounded-full translate-y-1/2 -translate-x-1/2 absolute bottom-0 left-0" />
               <div className="flex gap-3 justify-start items-center w-full">
-                <Avatar
-                  src="/user.svg"
-                  size="md"
-                  className="bg-custom-blue-3 p-1 border-1 border-white/50"
-                />
+                <Avatar src="/user.svg" size="md" className="bg-custom-blue-3 p-1 border-1 border-white/50" />
                 <div className="flex flex-1 flex-col items-start whitespace-break-spaces text-left">
                   <p className="text-xl uppercase font-extrabold">
-                    {items.find((v) => v.key == activeScreen)?.label || "Unknown"}
+                    {items.find((v) => v.key === activeScreen)?.label || "Unknown"}
                   </p>
                   <p className="">{user?.name}</p>
                 </div>
                 <MinimalArrowDown className="rotate-90" />
-                {/* <Image width={50} alt="" src={"/arrow-down.svg"} /> */}
               </div>
             </Button>
           </DropdownTrigger>
-
           <DropdownMenu
-            aria-label="Dynamic Actions"
+            aria-label="Navigation"
             items={items}
             variant="flat"
             disallowEmptySelection
             selectionMode="single"
             selectedKeys={selectedKeys}
-            onAction={(key) => {setActiveScreen(key as string); setSelectedKeys(new Set([key as string]));}}
+            onAction={(key) => handleAction(key as string)}
           >
             {(item) => <DropdownItem key={item.key}>{item.label}</DropdownItem>}
           </DropdownMenu>
         </Dropdown>
       </div>
+
       <div className="hidden md:block">
-      <div className="flex flex-row items-center">
-          <Button
-            disableRipple={true}
-            radius={"none"}
-            onClick={() => {setSelectedKeys(new Set(["info"])); setActiveScreen("info")}}
-            className={
-              activeScreen != "info"
-                ? "pl-3 flex flex-col text-white bg-transparent py-7"
-                : "pl-3 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold border-l-2"
-            }
-          >
-            {activeScreen == "info" && <LineDots />}
-            <p className="text-2xl leading-5">INFO</p>
-          </Button>
-        </div>
-        <div className="flex flex-row items-center">
-          <Button
-            disableRipple={true}
-            radius={"none"}
-            onClick={() => {setSelectedKeys(new Set(["enrolled"])); setActiveScreen("enrolled")}}
-            className={
-              activeScreen != "enrolled"
-                ? "pl-3 flex flex-col text-white bg-transparent py-7"
-                : "pl-3 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold border-l-2"
-            }
-          >
-            {activeScreen == "enrolled" && <LineDots />}
-            <p className="text-2xl leading-5">ENROLLED ACTIVITIES</p>
-          </Button>
-        </div>
+        {items.map((item) => (
+          <div key={item.key} className="flex flex-row items-center">
+            <Button
+              disableRipple
+              radius="none"
+              onClick={() => handleAction(item.key)}
+              className={
+                activeScreen !== item.key
+                  ? "pl-3 flex flex-col text-white bg-transparent py-7"
+                  : "pl-3 py-7 w-full justify-start overflow-visible flex flex-row bg-custombutton text-white font-extrabold border-l-2"
+              }
+            >
+              {activeScreen === item.key && <LineDots />}
+              <p className="text-2xl leading-5 uppercase">{item.label}</p>
+            </Button>
+          </div>
+        ))}
       </div>
     </>
   );
 };
 
-const ActivitiesSubscribed = ({ id }: { id: string }) => {
-  const [selectedDay, setSelectedDay] = useState("");
-  const [activities, setActivities] = useState<[string, Array<ActivityI & {
-    attended: boolean;
-  }>][]>([]);
-  const [type, setType] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  // console.log(id);
+const UserBadges = ({ user }: { user: UserGetResponse["user"] }) => {
+  const { achievements } = user;
 
-  // TODO: Move this to a helper function
-  const groupAndSortActivitiesByDay = (activities: Array<ActivityI & {
-    attended: boolean;
-  }>) => {
-    // Group activities by date
-    const groups = activities.reduce((groups: {[key: string]: Array<ActivityI & {
-      attended: boolean;
-    }>}, activity) => {
-      const date = new Date(activity.date);
-      const day = date.getUTCDate();
-      const month = date.getUTCMonth() + 1; // Months are 0-based
-      const year = date.getUTCFullYear();
-      const dateString = `${day}`;
-
-      const group = groups[dateString] || [];
-      group.push(activity);
-      groups[dateString] = group;
-      return groups;
-    }, {});
-
-    // Convert groups to an array and sort by date
-    return Object.entries(groups).sort(
-      ([dateA], [dateB]) => Number(new Date(dateA)) - Number(new Date(dateB))
-    );
-  };
-
-  const getUserEnrolledActivitiesGroupedByDay = useCallback(async () => {
-    const { data } = await axios.get<EnrollmentGetByUserIdResponse>(
-      `/api/enrollments/getById/${id}`
-    );
-    const activities = data.enrollment;
-
-    return groupAndSortActivitiesByDay(
-      activities.map((enrollment) => {
-        return {
-          ...enrollment.activity,
-          attended: enrollment.attended,
-        };
-      })
-    );
-  }, [id]);
-
-  const getDays = (activities: any) => {
-    return activities.map(([day , _]: any) => day);
-  };
-
-  const getActivitiesOfDayAndType = (selectedDay: string, type: string | null) => {
-    const activitiesOfDay = activities.find(([date]) => date === selectedDay);
-    if (activitiesOfDay) {
-      if (type) {
-        return activitiesOfDay[1].filter((e) => e.type == type);
-      }
-      return activitiesOfDay[1];
-    }
-    return [];
-  };
-
-  const getWorkshopCount = () => {
-    return getActivitiesOfDayAndType(selectedDay, "WORKSHOP").length;
-  };
-
-  const getOtherCount = () => {
-    return getActivitiesOfDayAndType(selectedDay, "OTHER").length;
-  };
-
-  useEffect(() => {
-    const fetchActivities = async () => {
-      const data = await getUserEnrolledActivitiesGroupedByDay();
-      setActivities(data);
-      setSelectedDay(getDays(data)[0]);
-      setLoading(false);
-    };
-
-    fetchActivities();
-  }, [getUserEnrolledActivitiesGroupedByDay, id]);
+  if (!achievements || achievements.length === 0) {
+    return <p className="text-white/60 italic">No badges earned yet!</p>;
+  }
 
   return (
-    <div className="dark:bg-black/40 flex flex-col">
-      <div className="flex flex-col gap-y-1">
-        <ActivityDayFilter
-          selectedDay={selectedDay}
-          setSelectedDay={setSelectedDay}
-          days={getDays(activities)}
-        >
-          {!loading ? (
-            <div className="md:ml-8 mt-8">
-              <div className="mt-1 -mb-3 flex flex-row h-8">
-                <ButtonGroup>
-                  <Button
-                    className={!type ? "bg-white text-black" : ""}
-                    onClick={() => setType(null)}
-                  >
-                    All
-                  </Button>
-                  <Button
-                    className={type == "WORKSHOP" ? "bg-white text-black" : ""}
-                    onClick={() => setType("WORKSHOP")}
-                  >
-                    Workshops: {getWorkshopCount()}
-                  </Button>
-                  <Button
-                    className={type == "OTHER" ? "bg-white text-black" : ""}
-                    onClick={() => setType("OTHER")}
-                  >
-                    Others: {getOtherCount()}
-                  </Button>
-                </ButtonGroup>
-              </div>
-              <div className="no-scrollbar flex flex-wrap gap-4 flex-col md:flex-row w-[300px] md:w-auto mt-8">
-                {getActivitiesOfDayAndType(selectedDay, type).length == 0 ? (
-                  <p className="text-white h-[117px]">
-                    {"You aren't enrolled in an activity of this type"}
-                  </p>
-                ) : (
-                  getActivitiesOfDayAndType(selectedDay, type).map(
-                    (item, index) => {
-                      // console.log(item)
-                      return (
-                        <div key={index}>
-                          <Activity item={item} userId={id} />
-                        </div>
-                      );
-                    }
-                  )
-                )}
-              </div>
+    <div className="flex flex-row flex-wrap gap-6">
+      {achievements.map((item) => {
+        // 'type' is the name of the badge (e.g., "Workshop Master")
+        const fileName = item.type ? item.type.toLowerCase().replace(/\s+/g, '-') : 'default';
+
+        return (
+          <div 
+            key={item.id_achievement} 
+            className="flex flex-col items-center p-5 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 w-36"
+          >
+            <div className="w-20 h-20 mb-4 flex items-center justify-center">
+              <img 
+                src={`/assets/badges/${fileName}.png`} 
+                alt={item.type}
+                className="max-w-full max-h-full object-contain"
+                onError={(e) => { e.currentTarget.src = '/assets/badges/default.png'; }}
+              />
             </div>
-          ) : (
-            <Spinner className="w-full" color="white" size="lg" />
-          )}
-        </ActivityDayFilter>
-      </div>
+            <p className="text-white text-[10px] font-black text-center uppercase tracking-widest">
+              {item.type}
+            </p>
+          </div>
+        );
+      })}
     </div>
   );
 };
 
-const ProfileInfo = ({ id }: {
-  id: string;
-}) => {
+const ActivitiesSubscribed = ({ id }: { id: string }) => {
+  const [selectedDay, setSelectedDay] = useState("");
+  const [activities, setActivities] = useState<[string, Array<ActivityI & { attended: boolean }>][]>([]);
+  const [type, setType] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const router = useRouter();
-  const [error, setError] = useState<string | undefined>(void 0);
+  const groupAndSortActivitiesByDay = useCallback((activities: Array<ActivityI & { attended: boolean }>) => {
+    const groups = activities.reduce((acc: any, activity) => {
+      const dateString = new Date(activity.date).getUTCDate().toString();
+      if (!acc[dateString]) acc[dateString] = [];
+      acc[dateString].push(activity);
+      return acc;
+    }, {});
+
+    return Object.entries(groups).sort(([a], [b]) => Number(a) - Number(b)) as [string, any[]][];
+  }, []);
+
+  const fetchData = useCallback(async () => {
+    const { data } = await axios.get<EnrollmentGetByUserIdResponse>(`/api/enrollments/getById/${id}`);
+    const grouped = groupAndSortActivitiesByDay(data.enrollment.map(e => ({ ...e.activity, attended: e.attended })));
+    setActivities(grouped);
+    if (grouped.length > 0) setSelectedDay(grouped[0][0]);
+    setLoading(false);
+  }, [id, groupAndSortActivitiesByDay]);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
+
+  const getDays = () => activities.map(([day]) => day);
+  const getCurrentActivities = () => {
+    const dayData = activities.find(([d]) => d === selectedDay);
+    if (!dayData) return [];
+    return type ? dayData[1].filter(a => a.type === type) : dayData[1];
+  };
+
+  return (
+    <div className="dark:bg-black/40 flex flex-col">
+      <ActivityDayFilter selectedDay={selectedDay} setSelectedDay={setSelectedDay} days={getDays()}>
+        {!loading ? (
+          <div className="md:ml-8 mt-8">
+            <ButtonGroup className="mb-8">
+              <Button className={!type ? "bg-white text-black" : "text-white"} onClick={() => setType(null)}>All</Button>
+              <Button className={type === "WORKSHOP" ? "bg-white text-black" : "text-white"} onClick={() => setType("WORKSHOP")}>Workshops</Button>
+              <Button className={type === "OTHER" ? "bg-white text-black" : "text-white"} onClick={() => setType("OTHER")}>Others</Button>
+            </ButtonGroup>
+            <div className="flex flex-wrap gap-4">
+              {getCurrentActivities().length === 0 ? (
+                <p className="text-white">No activities found.</p>
+              ) : (
+                getCurrentActivities().map((item, idx) => <Activity key={idx} item={item} userId={id} />)
+              )}
+            </div>
+          </div>
+        ) : <Spinner color="white" />}
+      </ActivityDayFilter>
+    </div>
+  );
+};
+
+const ProfileInfo = ({ id }: { id: string }) => {
   const [user, setUser] = useState<UserGetResponse["user"]>();
   const [editMode, setEditMode] = useState(false);
   const [name, setName] = useState("");
   const [pictureUrl, setPictureUrl] = useState("");
+  const [error, setError] = useState<string>();
 
-  const getUser = useCallback(async () => {
+  const loadUser = useCallback(async () => {
     const { data } = await axios.get<UserGetResponse>(`/api/users/${id}`);
     setUser(data.user);
     setName(data.user.name || "");
     setPictureUrl(data.user.picture || "");
   }, [id]);
 
-  // get profile user
-  useEffect(() => {
-    getUser();
-  }, [getUser, error]);
-
-  const handleClick = async () => {
-    const { data } = await axios.put<UserPutRouletteResponse>(`/api/users/roulette/${id}`);
-
-    if (data.response == "error") {
-      setError(data.error);
-    }
-    else {
-      setError(undefined);
-      getUser();
-    }
-  }
+  useEffect(() => { loadUser(); }, [loadUser]);
 
   const handleSave = async () => {
     try {
-      const { data } = await axios.put<UserPutRouletteResponse>(`/api/users/${id}`, {
-        name,
-        picture: pictureUrl,
-      });
-      if (data.response === "error") {
-        setError(data.error);
-      } else {
-        setEditMode(false);
-        setError(undefined);
-        getUser();
-      }
+      await axios.put(`/api/users/${id}`, { name, picture: pictureUrl });
+      setEditMode(false);
+      loadUser();
     } catch (e: any) {
-      setError(e?.response?.data?.error || "Failed to update profile");
+      setError(e.response?.data?.error || "Save failed");
     }
   };
 
+  if (!user) return <Spinner color="white" />;
+
   return (
-    <div className="flex flex-col gap-16 w-full">
-      {user ? (
-        <div className="flex flex-col gap-16 w-full">
-          {/* header with avatar and basic info */}
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <Avatar
-              src={user.picture || pictureUrl || "/default-avatar.png"}
-              size="lg"
-            />
-            <div className="flex flex-col gap-2 w-full">
-              {editMode ? (
-                <Input
-                  label="Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full"
-                />
-              ) : (
-                <p className="text-white font-extrabold text-4xl">{user.name}</p>
-              )}
-              <p className="text-white text-sm">{user.email}</p>
-            </div>
-          </div>
-
-          {/* additional profile details */}
-          <div className="flex flex-row flex-wrap gap-8">
-            <div className="flex flex-col w-1/2 min-w-[200px]">
-              <p className="text-white font-bold">Points</p>
-              <p className="text-white">{user.points}</p>
-            </div>
-            {user.graduation && (
-              <div className="flex flex-col w-1/2 min-w-[200px]">
-                <p className="text-white font-bold">Course</p>
-                <p className="text-white">{user.graduation}</p>
-              </div>
-            )}
-          </div>
-
-          {/* picture URL edit field */}
-          {editMode && (
-            <div className="flex flex-col gap-2">
-              <Input
-                label="Profile picture URL"
-                value={pictureUrl}
-                onChange={(e) => setPictureUrl(e.target.value)}
-                className="w-full"
-              />
-            </div>
+    <div className="flex flex-col gap-12 p-4 md:p-8">
+      <div className="flex items-center gap-6">
+        <Avatar src={user.picture || "/user.svg"} className="w-24 h-24 text-large" />
+        <div className="flex flex-col">
+          {editMode ? (
+            <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} />
+          ) : (
+            <h1 className="text-white text-4xl font-black uppercase">{user.name}</h1>
           )}
-
-          {/* actions */}
-          <div className="flex flex-row gap-4 items-center">
-            <Button
-              className="bg-white text-black"
-              onClick={() => setEditMode(!editMode)}
-            >
-              {editMode ? "Cancel" : "Edit Profile"}
-            </Button>
-            {editMode && (
-              <Button className="bg-green-500 text-white" onClick={handleSave}>
-                Save
-              </Button>
-            )}
-            {user.role === "ADMIN" && (
-              <Button
-                className="bg-blue-600 text-white"
-                onClick={() => router.push("/admin/users")}
-              >
-                Go to Admin
-              </Button>
-            )}
-          </div>
-
-          {/* roulette/spin and QRCode remain unchanged */}
-          <div className="flex flex-col gap-5 items-center">
-            {/* <Button onClick={handleClick} className="md:w-[12.5%] w-1/2 bg-white text-black">
-              <RxColorWheel className="text-black" />
-              <p> Spin Roulette </p>
-            </Button> */}
-            {error && <div className="w-[12.5%] bg-red-500 p-2 text-white mt-3 rounded"> {error} </div>}
-            <Code id={id} />
-          </div>
-        </div>) 
-        : <Spinner color="white" size="lg" />
-      }
-    </div>
-  )
-}
-
-const Code = ({ id }: {
-  id: string;
-}) => {
-  const qrcode = useRef(null);
-  const currentUrl =
-    process.env.NEXT_PUBLIC_MODE == "development"
-      ? process.env.BASE_URL
-      : process.env.PRODUCTION_URL;
-
-  // console.log(currentUrl);
-
-  useEffect(() => {
-    var options = {
-      text: "Bem-vindo ao evento",
-      width: 100,
-      height: 100,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H,
-    };
-
-    const code = new QRCode(qrcode.current, options);
-    code.makeCode(`spend;${id}`);
-    return () => code.clear();
-  }, [qrcode, currentUrl, id]);
-
-  return (
-    <div className="dark:bg-black/40 h-full mt-8">
-      <div className="gap-3 flex flex-col h-full">
-        <div className="flex flex-wrap content-start justify-center h-full">
-          <div
-            className="border-[12px] rounded-md border-white"
-            ref={qrcode}
-          ></div>
+          <p className="text-white/70">{user.email}</p>
         </div>
       </div>
+      <div className="grid grid-cols-2 gap-8 text-white">
+        <div><p className="font-bold opacity-50">Points</p><p className="text-2xl">{user.points}</p></div>
+        {user.graduation && <div><p className="font-bold opacity-50">Course</p><p className="text-2xl">{user.graduation}</p></div>}
+      </div>
+      <div className="flex gap-4">
+        <Button onClick={() => setEditMode(!editMode)}>{editMode ? "Cancel" : "Edit Profile"}</Button>
+        {editMode && <Button color="success" onClick={handleSave}>Save Changes</Button>}
+      </div>
+      <Code id={id} />
     </div>
   );
 };
 
+const Code = ({ id }: { id: string }) => {
+  const qrcode = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!qrcode.current) return;
+    qrcode.current.innerHTML = "";
+    new QRCode(qrcode.current, {
+      text: `spend;${id}`,
+      width: 150,
+      height: 150,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+    });
+  }, [id]);
 
+  return (
+    <div className="flex flex-col items-center mt-10">
+      <div className="p-4 bg-white rounded-xl" ref={qrcode} />
+      <p className="text-white/40 text-xs mt-4 uppercase font-bold tracking-widest">Your Entry Pass</p>
+    </div>
+  );
+};

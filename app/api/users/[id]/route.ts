@@ -17,21 +17,42 @@ export interface UserGetResponse {
         email: string;
         role: string;
         picture?: string;
-        points: number,
-        graduation: string,
-        courseYear: number,
-        academicNumber: number,
+        points: number;
+        graduation: string;
+        courseYear: number;
+        academicNumber: number;
         enrollments: {
-            id: string;
+            id: number;
             activity: {
-                id: string;
+                id: number;
                 title: string;
                 type: string;
+                achievement: string | null;
             }
+        }[];
+        achievements: {
+            id_achievement: number;
+            id_user: string;
+            type: string; // The badge name/type
         }[];
     };
     error?: string;
 }
+
+// export interface UserGetBadges {
+//     response: "success" | "error";
+//     user: {
+//         id: string;
+//         achievements: {
+//             id: string;
+//             achievement: {
+//                 id : string;
+//                 type: string;
+//             }
+//         }[];
+//     };
+//     error?: string;
+// }
 
 export interface UserUpdateResponse {
     response: "success" | "error";
@@ -70,8 +91,16 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
                             id: true,
                             title: true,
                             type: true,
+                            achievement : true,
                         },
                     },
+                }
+            },
+            achievements: {
+                select: {
+                    id_user: true,
+                    achievement_id: true,
+                    type: true,
                 }
             },
         },

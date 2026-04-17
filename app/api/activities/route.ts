@@ -107,6 +107,7 @@ export async function POST(request: Request) {
       type: data.type,
       url: null,
       points: data.points,
+      achievement:data.achievement,
     },
   });
   prisma.$disconnect();
