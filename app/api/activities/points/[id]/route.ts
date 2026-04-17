@@ -26,6 +26,8 @@ export async function GET(req: Request, props: { params: Promise<{ id: string }>
         achievement:true,
       },
     });
+    console.log("Activity from DB:", activity);
+    console.log(activity.achievement);
     // console.log(activity);
 
     if (!activity) {
@@ -37,7 +39,7 @@ export async function GET(req: Request, props: { params: Promise<{ id: string }>
 
     prisma.$disconnect();
     return new NextResponse(
-      JSON.stringify({ response: "success", points: activity.points })
+      JSON.stringify({ response: "success", points: activity.points,achievement: activity.achievement})
     );
   } catch (error) {
     prisma.$disconnect();

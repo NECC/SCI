@@ -131,6 +131,7 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
                 achievement_id: data.activity 
             }
         });
+        
 
         if (alreadyHasBadge) {
             return NextResponse.json({ 
@@ -143,6 +144,7 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
         if (data.points !== undefined) {
             updateData.points = { increment: parseInt(data.points) || 0 };
         }
+        
         
         const updatedUser = await prisma.user.update({
             where: { id },
