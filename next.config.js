@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   // Increase header size limits
   headers: async () => [
@@ -17,8 +16,6 @@ const nextConfig = {
   basePath: '',
   // Suppress experimental warnings if needed
 };
-
-module.exports = nextConfig;
 
 module.exports = nextConfig;
 

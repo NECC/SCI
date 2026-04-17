@@ -12,7 +12,7 @@ import {
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { MdEdit } from "react-icons/md";
-import { Button } from "@node_modules/@nextui-org/button/dist";
+import { Button } from "@nextui-org/button";
 import { IoMdTrash } from "react-icons/io";
 import axios from "axios";
 import { UserPostAccreditationResponse } from "@app/api/users/accreditation/[id]/route";
@@ -48,7 +48,7 @@ const columnsUsers = [
   },
 ];
 
-const columnsActivities = [
+const columnsActivitiesBase = [
   {
     key: "id",
     label: "ID",
@@ -77,10 +77,6 @@ const columnsActivities = [
     key: "capacity",
     label: "CAPACITY",
   },
-  {
-    key: "deleteActivities",
-    label: "DELETE",
-  },
 ];
 
 const columnsEnrollments = [
@@ -107,8 +103,8 @@ const columnsEnrollments = [
 ];
 
 export default function GetDataTable(props: any) {
-  const { data, active, page, changePage, more, deleteUsers, deleteActivities, deleteEnrollments, edit} = props;
-  const [columns, setColumns] = useState([...columnsActivities]);
+  const { data, active, page, changePage, more, deleteUsers, deleteActivities, deleteEnrollments, edit } = props;
+  const [columns, setColumns] = useState([...columnsActivitiesBase, { key: "actions", label: "ACTIONS" }]);
   const [loading, setLoading] = useState(false);
 
   const renderCell = (item: any, columnKey: any) => {
@@ -167,18 +163,29 @@ export default function GetDataTable(props: any) {
             </Tooltip>
           </div>
         );
+      case "qrScanner":
+        return (
+          <Tooltip color="primary" content="QR Scanner">
+            <span
+              onClick={() => window.open(`/admin/qrcodes/${uid}`, '_blank')}
+              className="text-lg text-primary cursor-pointer active:opacity-50"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 2.25 9 8.25l5.25-3 5.25 3 5.25-3v11.25a2.625 2.625 0 0 1-2.625 2.625H2.625A2.625 2.625 0 0 1 0 13.5V2.25ZM7.5 15.75a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-.75.75h-4.5a.75.75 0 0 1-.75-.75v-1.5Z" />
+              </svg>
+            </span>
+          </Tooltip>
+        );
       case "deleteActivities":
         return (
-          <div className="relative flex justify-center items-center gap-2">
-            <Tooltip color="danger" content="Delete Activity">
-              <span
-                onClick={() => deleteActivities(uid)}
-                className="text-lg text-danger cursor-pointer active:opacity-50"
-              >
-                <IoMdTrash />
-              </span>
-            </Tooltip>
-          </div>
+          <Tooltip color="danger" content="Delete Activity">
+            <span
+              onClick={() => deleteActivities(uid)}
+              className="text-lg text-danger cursor-pointer active:opacity-50"
+            >
+              <IoMdTrash />
+            </span>
+          </Tooltip>
         );
       case "deleteEnrollments":
         return (
@@ -208,7 +215,7 @@ export default function GetDataTable(props: any) {
               {getKeyValue(item,columnKey)}
             </div>
           </>
-        )
+        );
       default:
         return getKeyValue(item, columnKey);
     }
@@ -218,7 +225,7 @@ export default function GetDataTable(props: any) {
     if (active == "users") {
       setColumns(columnsUsers);
     } else if (active == "activities") {
-      setColumns(columnsActivities);
+      setColumns([...columnsActivitiesBase, { key: "qrScanner", label: "QR" }, { key: "deleteActivities", label: "DELETE" }]);
     } else if (active == "enrollments") {
       setColumns(columnsEnrollments);
     }
@@ -246,7 +253,7 @@ export default function GetDataTable(props: any) {
           )}
         </TableHeader>
         <TableBody emptyContent={"No data selected"} items={data}>
-          {(item: any) => ( // TODO: Fix this any by checking documentation of TableBody
+          {(item: any) => (
             <TableRow key={item.key}>
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>
@@ -258,14 +265,4 @@ export default function GetDataTable(props: any) {
     </div>
   );
 }
-/*<ButtonGroup>
-          <Button onClick={() => changePage(page-1)}>
-            <MdKeyboardArrowLeft/>
-          </Button>
-          <Button>
-            {page}
-          </Button>
-          <Button onClick={() => changePage(page+1)}>
-            <MdKeyboardArrowRight/>
-          </Button>
-        </ButtonGroup>*/
+
