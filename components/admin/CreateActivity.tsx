@@ -1,12 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import axios from "axios";
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import {
   Card,
   CardBody,
   CardHeader,
-  Divider,
   Input,
   Select,
   SelectItem
@@ -19,6 +19,7 @@ import sponsors from "@data/sponsor.json"
 
 export default function CreateActivity() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const plans: Record<string, string> = {
     standard: "silver",
@@ -42,6 +43,7 @@ export default function CreateActivity() {
     watch,      
     setValue,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: zodResolver(ActivitySchema),
     defaultValues: {
@@ -78,7 +80,7 @@ export default function CreateActivity() {
     }
   }, [selectedSponsorName, hasPlan, setValue]);
 
-  const onSubmit = (formData: any) => {
+  const onSubmit = async (formData: any) => {
     console.log("Dados capturados com sucesso:", formData);
     
     const parsedData = {
@@ -86,40 +88,45 @@ export default function CreateActivity() {
       date: new Date(formData.date),
     };
 
-    axios
-      .post("/api/activities", parsedData)
-      .then((res) => {
-        if (res.status === 200) {
-          router.push("/admin");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Erro ao criar atividade");
-      });
+    try {
+      const response = await axios.post('/api/activities', parsedData);
+      const data = response.data as { response: string; error?: string };
+      if (data.response === 'success') {
+        reset();
+        router.push('/admin');
+      } else {
+        throw new Error(data.error || 'Unknown error');
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert('Erro ao criar atividade: ' + (err.response?.data?.error || err.message));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col items-center justify-center gap-1 mt-1"
+      className="space-y-4"
       noValidate
     >
-      <Card className="w-[250px] pb-4">
-        <CardHeader className="flex justify-center bg-black text-white rounded-t-xl">
-          Create New Activity
+      <Card className="admin-gradient-card border-white/20 shadow-lg backdrop-blur-md">
+        <CardHeader className="bg-white/5 border-b border-white/10 p-5">
+          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <FiPlus className="text-emerald-400" />
+            New Activity
+          </h3>
         </CardHeader>
-        <Divider />
-        <CardBody className="flex flex-col items-center justify-center gap-3">
-          
+        <CardBody className="p-6 space-y-4">
           <Input
-            color="default"
-            type="text"
-            label="Title"
-            className="max-w-[220px]"
+            label="Title *"
+            {...register('title')}
             isInvalid={!!errors.title}
             errorMessage={errors.title?.message as string}
-            {...register('title')}
+            variant="bordered"
+            className="bg-white/10 border-white/20"
+            color="default"
           />
 
 
@@ -150,53 +157,43 @@ export default function CreateActivity() {
                     field.onChange(e.target.value); 
                   }}
                 />
-              )}
-            />
-            {errors.startTime && (
-              <span className="text-danger text-[10px] mt-1 ml-1">{errors.startTime.message as string}</span>
-            )}
+                {errors.startTime && <span className="text-danger text-[10px] mt-1 block">{errors.startTime.message as string}</span>}
+              </div>
+              <div>
+                <label className="text-xs text-white/70 mb-1 block">End Time *</label>
+                <Controller
+                  name="endTime"
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      type="time"
+                      className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                      value={field.value || ''}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+                {errors.endTime && <span className="text-danger text-[10px] mt-1 block">{errors.endTime.message as string}</span>}
+              </div>
+            </div>
           </div>
 
-   
-          <div className="flex flex-col w-full max-w-[220px]">
-            <label className="text-xs text-gray-500 mb-1 ml-1">End Time</label>
-            <Controller
-              name="endTime"
-              control={control}
-              render={({ field }) => (
-                <input
-                  type="time"
-                  className="bg-default-100 hover:bg-default-200 focus:bg-default-200 px-3 py-2.5 rounded-xl text-sm outline-none transition-colors w-full"
-                  value={field.value || ""}
-                  onChange={(e) => {
-                    console.log("Tempo digitado (End):", e.target.value);
-                    field.onChange(e.target.value); 
-                  }}
-                />
-              )}
-            />
-            {errors.endTime && (
-              <span className="text-danger text-[10px] mt-1 ml-1">{errors.endTime.message as string}</span>
-            )}
-          </div>
           <Input
-            color="default"
-            type="text"
             label="Description"
-            className="max-w-[220px]"
+            {...register('description')}
             isInvalid={!!errors.description}
             errorMessage={errors.description?.message as string}
-            {...register('description')}
+            variant="bordered"
+            className="bg-white/10 border-white/20"
           />
           
           <Input
-            color="default"
-            type="text"
             label="Location"
-            className="max-w-[220px]"
+            {...register('location')}
             isInvalid={!!errors.location}
             errorMessage={errors.location?.message as string}
-            {...register('location')}
+            variant="bordered"
+            className="bg-white/10 border-white/20"
           />
           
           <Input
@@ -233,10 +230,8 @@ export default function CreateActivity() {
           />
 
           <Input
-            color="default"
-            type="text"
             label="Speakers"
-            className="max-w-[220px]"
+            {...register('speakers')}
             isInvalid={!!errors.speakers}
             errorMessage={errors.speakers?.message as string}
             {...register('speakers')}
@@ -244,6 +239,7 @@ export default function CreateActivity() {
           
           {hasPlan ? (
           /* Adicionar pontos associados a um plano de patrocionio */
+          <>
           <Input
             key="fixed-points"
             type="number"
@@ -253,8 +249,9 @@ export default function CreateActivity() {
             variant="flat"
             color="primary"
             {...register('points', { valueAsNumber: true })}
-            {...register('achievement')}            
           />
+          <input type="hidden" {...register('achievement')} />
+        </>
         ) : (
           /* Adicionar pontos quando não há plano associado */
           <Controller
@@ -291,12 +288,13 @@ export default function CreateActivity() {
             control={control}
             render={({ field: { onChange, value } }) => (
               <Select
-                label="Type"
-                className="max-w-[220px]"
+                label="Type *"
                 isInvalid={!!errors.type}
                 errorMessage={errors.type?.message as string}
-                selectedKeys={value ? [value] : [Types[0]]}
-                onChange={(e) => onChange(e.target.value)}
+                selectedKeys={value ? [value] : []}
+                onSelectionChange={(keys) => onChange(Array.from(keys)[0] || Types[0])}
+                variant="bordered"
+                className="bg-white/10 border-white/20"
               >
                 {Types.map((type) => (
                   <SelectItem key={type} value={type}>
@@ -309,14 +307,15 @@ export default function CreateActivity() {
           
 
         </CardBody>
-        
-        <div className="px-4 w-full flex justify-center mt-2">
-          <button 
+        <div className="p-6 pt-0 border-t border-white/10">
+          <Button 
             type="submit" 
-            className="w-[220px] py-2.5 rounded-xl bg-black hover:bg-slate-800 text-white transition-colors shadow-md text-sm font-medium"
+            className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-lg transition-all py-3 rounded-xl text-base"
+            isLoading={isLoading}
+            startContent={isLoading ? <Spinner size="sm" /> : <FiPlus size={18} />}
           >
-            Create Activity
-          </button>
+            {isLoading ? 'Creating...' : 'Create Activity'}
+          </Button>
         </div>
       </Card>
     </form>

@@ -12,8 +12,9 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { IoMdPerson } from "react-icons/io";
 import { MdLocalActivity, MdScreenRotationAlt } from "react-icons/md";
-import { Card, CardBody, CardHeader, Divider, Input, Spinner } from "@nextui-org/react";
-import { FaRegCheckCircle } from "react-icons/fa";
+import { Card, CardBody, CardHeader, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Select, SelectItem, useDisclosure } from "@nextui-org/react";
+import { FiUsers, FiActivity, FiList, FiBarChart, FiCheckCircle } from "react-icons/fi";
+import { usePathname } from "next/navigation";
 
 export default function Admin() {
   const [user, setUser] = useState<{
@@ -23,15 +24,22 @@ export default function Admin() {
   const [active, setActive] = useState("activities");
   const [prev, setPrev] = useState("activities");
   const [rows, setRows] = useState<any>([]);
-  const [backupData, setBackupData] = useState<any>([]);
-  const [edit, setEdit] = useState("");
-  const [formData, setFormData] = useState({
+  const [backupData, setBackupData] = useState<any[]>([]);
+  const [editId, setEditId] = useState("");
+  const [editFormData, setEditFormData] = useState({
     name: "",
-    role: "NO CHANGE",
+    role: "NO CHANGE" as "NO CHANGE" | "USER" | "STAFF" | "ADMIN",
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalActivities: 0,
+    totalEnrollments: 0,
+  });
 
   const { data: session, status } = useSession({
     required: true,
@@ -40,8 +48,8 @@ export default function Admin() {
     },
   });
 
-  const [page,setPage] = useState(0);
-  const [more,setMore] = useState(true);
+  const [page, setPage] = useState(0);
+  const [more, setMore] = useState(true);
 
   useEffect(() => {
     if (session) {
@@ -49,109 +57,130 @@ export default function Admin() {
     }
   }, [session]);
 
-  const getUsers = useCallback(async () => {
-    if (prev != "users") setPage(0);
-    setLoading(true);
-    const { data } = await axios.get<UsersGetResponse>(`/api/users?skip=${page}&take=50`);
-    if (data.users.length == 0){
-      setMore(false);
+  // Load stats
+  const loadStats = async () => {
+    try {
+      const [usersRes, activitiesRes, enrollRes] = await Promise.all([
+        axios.get<UsersGetResponse>('/api/users'),
+        axios.get<ActivityGetResponse>('/api/activities'),
+        axios.get<EnrollmentGetResponse>('/api/enrollments'),
+      ]);
+      setStats({
+        totalUsers: usersRes.data.users?.length || 0,
+        totalActivities: activitiesRes.data.activities?.length || 0,
+        totalEnrollments: enrollRes.data.enrollments?.length || 0,
+      });
+    } catch (err) {
+      console.error('Failed to load stats');
     }
-    else{
-      // console.log(data.users);
-      setMore(true);
-      if (page == 0 || prev != "users") {
-        setRows(data.users);
-        setBackupData(data.users);
+  };
+
+  useEffect(() => {
+    loadStats();
+  }, []);
+
+  const getUsers = useCallback(async () => {
+    if (prev !== "users") setPage(0);
+    setLoading(true);
+    try {
+      const { data } = await axios.get<UsersGetResponse>(`/api/users?skip=${page * 50}&take=50`);
+      if (data.users.length === 0) {
+        setMore(false);
+      } else {
+        setMore(true);
+        if (page === 0 || prev !== "users") {
+          setRows(data.users);
+          setBackupData(data.users);
+        } else {
+          setRows((prevRows: any[]) => [...prevRows, ...data.users]);
+          setBackupData((prevData: any) => [...prevData, ...data.users]);
+        }
       }
-      else{
-        setRows((rows: any[]) => [...rows,...data.users]);
-        setBackupData((backupData: any) => [...backupData,...data.users]);
-      }
+    } catch (err) {
+      console.error('Failed to fetch users');
     }
     setLoading(false);
   }, [page, prev]);
 
   const deleteActivities = async (id: string) => {
-    // console.log(id);
-    const { data } = await axios.delete(`/api/activities/delete/${id}`);
+    await axios.delete(`/api/activities/delete/${id}`);
     getActivities();
   };
 
   const deleteUsers = async (id: string) => {
-    // console.log(id);
-    const { data } = await axios.delete(`/api/users/delete/${id}`);
+    await axios.delete(`/api/users/delete/${id}`);
     getUsers();
   };
 
   const deleteEnrollments = async (id: string) => {
-    // console.log(id);
-    const { data } = await axios.delete(`/api/enrollments/delete/${id}`);
+    await axios.delete(`/api/enrollments/delete/${id}`);
     getEnrollments();
   };
 
   const getActivities = useCallback(async () => {
-    if (prev != "activities") setPage(0);
+    if (prev !== "activities") setPage(0);
     setLoading(true);
-    const { data } = await axios.get<ActivityGetResponse>(`/api/activities?skip=${page}&take=10`);
-    if (data.activities.length == 0){
-      setMore(false);
-    }
-    else{
-      // console.log(data.activities);
-      setMore(true);
-      if (page == 0 || prev != "activities"){
-        setRows(data.activities);
-        setBackupData(data.activities);
+    try {
+      const { data } = await axios.get<ActivityGetResponse>(`/api/activities?skip=${page * 10}&take=10`);
+      if (data.activities.length === 0) {
+        setMore(false);
+      } else {
+        setMore(true);
+        if (page === 0 || prev !== "activities") {
+          setRows(data.activities);
+          setBackupData(data.activities);
+        } else {
+          setRows((prevRows: any) => [...prevRows, ...data.activities]);
+          setBackupData((prevData: any) => [...prevData, ...data.activities]);
+        }
       }
-      else{
-        setRows((rows: any) => [...rows,...data.activities]);
-        setBackupData((backupData: any) => [...backupData,...data.activities]);
-      }
+    } catch (err) {
+      console.error('Failed to fetch activities');
     }
-    console.log("activities",data.activities);
     setLoading(false);
   }, [page, prev]);
 
   const getEnrollments = useCallback(async () => {
-    if (prev != "enrollments") setPage(0);
+    if (prev !== "enrollments") setPage(0);
     setLoading(true);
-    const { data } = await axios.get<EnrollmentGetResponse>(`/api/enrollments?skip=${page}&take=20`);
-    if (data.enrollments.length == 0){
-      setMore(false);
-    }
-    else{
-      // console.log(data.enrollments);
-      setMore(true);
-      if (page == 0 || prev != "enrollments"){
-        setRows(data.enrollments);
-        setBackupData(data.enrollments);
+    try {
+      const { data } = await axios.get<EnrollmentGetResponse>(`/api/enrollments?skip=${page * 20}&take=20`);
+      if (data.enrollments.length === 0) {
+        setMore(false);
+      } else {
+        setMore(true);
+        if (page === 0 || prev !== "enrollments") {
+          setRows(data.enrollments);
+          setBackupData(data.enrollments);
+        } else {
+          setRows((prevRows: any) => [...prevRows, ...data.enrollments]);
+          setBackupData((prevData: any) => [...prevData, ...data.enrollments]);
+        }
       }
-      else{
-        setRows((rows: any) => [...rows,...data.enrollments]);
-        setBackupData((backupData: any) => [...backupData,...data.enrollments]);
-      }
+    } catch (err) {
+      console.error('Failed to fetch enrollments');
     }
     setLoading(false);
   }, [page, prev]);
 
   useEffect(() => {
-    setEdit("");
-    if (active == "users") {
-      if (prev != active) {
+    setEditId("");
+    if (active === "users") {
+      if (prev !== active) {
         setRows([]);
         setPrev("users");
         setPage(0);
       }
       getUsers();
-    } else if (active == "activities") {
-      if (prev != "activities") {
+    } else if (active === "activities") {
+      if (prev !== "activities") {
         setRows([]);
         setPrev("activities");
         setPage(0);
       }
       getActivities();
-    } else if (active == "enrollments") {
-      if (prev != "enrollments") {
+    } else if (active === "enrollments") {
+      if (prev !== "enrollments") {
         setRows([]);
         setPrev("enrollments");
         setPage(0);
@@ -160,148 +189,191 @@ export default function Admin() {
     }
   }, [active, page, getActivities, getEnrollments, getUsers, prev]);
 
-  if (status == "loading") return <p>Loading...</p>;
-  if (user.user?.role != "ADMIN" && user.loaded) router.push("/");
+  if (status === "loading") return <div className="flex items-center justify-center h-64"><Spinner size="lg" /></div>;
+  if (user.user?.role !== "ADMIN" && user.loaded) router.push("/");
 
-  const activeClass = "bg-white text-black";
-  const unactiveClass = "text-white/80 hover:bg-white/20";
-  const optionsClass =
-    "font-comfortaa font-bold p-4 flex cursor-pointer transition";
-  const Icons = "text-lg mr-2 mt-[1px]";
+  const tabs = [
+    { key: 'users', label: 'Users', icon: IoMdPerson, count: stats.totalUsers },
+    { key: 'activities', label: 'Activities', icon: MdLocalActivity, count: stats.totalActivities },
+    { key: 'enrollments', label: 'Enrollments', icon: MdScreenRotationAlt, count: stats.totalEnrollments },
+  ];
 
-  const handleActive = (e: any) => {
-    const active = e.target.innerText?.toLowerCase();
-    // console.log(active);
-    setActive(active);
-  };
+  const handleTabChange = (key: string) => setActive(key);
 
   const editUser = (id: string) => {
-    setEdit(id);
-  }
-
-  const handleChange = (e: any) => {
-    const value = e.target.value;
-    const name = e.target.name;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
-  }
-  
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    setErrorMessage("");
-    axios
-      .put(`/api/users/edit/${edit}`, formData)
-      .then((res) => {
-        if (res.status == 200) {
-          router.push("/admin");
-        };
-        console.log(res);
-        setPage(0);
-        getUsers();
-      })
-      .catch((err) => {
-        setErrorMessage(err.message);
-      });
-    setEdit("");
-    setFormData({
-      name: "",
-      role: "NO CHANGE",
-    });
+    // Find user data
+    const userData = backupData.find((row: any) => row.id === id);
+    if (userData) {
+      setEditFormData({ name: userData.name || '', role: 'NO CHANGE' });
+    }
+    setEditId(id);
+    onOpen();
   };
 
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setEditFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editFormData.role === "NO CHANGE") return;
+    setErrorMessage("");
+    try {
+      await axios.put(`/api/users/edit/${editId}`, editFormData);
+      getUsers(); // Refresh if users
+      onOpenChange();
+    } catch (err: any) {
+      setErrorMessage(err.message || "Update failed");
+    }
+  };
+
+  const EmptyState = () => (
+    <div className="text-center py-20">
+<FiBarChart className="mx-auto h-16 w-16 text-white/50 mb-4" />
+      <h3 className="text-xl font-bold text-white mb-2">No data yet</h3>
+      <p className="text-white/60">Start by creating users, activities, or enrollments.</p>
+    </div>
+  );
+
   return (
-    <div className="w-full p-3">
-      <div className={`${edit != "" ? "absolute z-20 text-white right-5" : "hidden"}`}>
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col items-center justify-center gap-1 mt-1"
-        >
-          <Card className="w-[250px]">
-            <CardHeader className="flex justify-center bg-black text-white">
-              Edit User: <br/> {edit}
-            </CardHeader>
-            <Divider />
-            <CardBody className="flex flex-col items-center justify-center gap-1">
-              <Input
-                key="primary"
-                color="default"
-                type="text"
-                label="Name"
-                className="max-w-[220px]"
-                required={true}
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-              />
-              <select
-                name="role"
-                onChange={handleChange}
-                required={true}
-                value={formData.role}
-                className="mx-2 rounded border p-2"
+    <div className="max-w-7xl mx-auto space-y-8">
+      {/* Header */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-4">
+          <h1 className="admin-header">Dashboard</h1>
+        </div>
+        <p className="text-white/70 text-lg">Overview & quick actions</p>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="admin-gradient-card admin-stats-card from-blue-500/20 to-blue-600/20 border-blue-400/30">
+          <CardBody className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-blue-100 text-sm font-semibold uppercase tracking-wide">Total Users</p>
+                <p className="text-3xl font-bold text-white mt-1">{stats.totalUsers}</p>
+              </div>
+              <FiUsers className="text-blue-300 text-4xl" />
+            </div>
+          </CardBody>
+        </Card>
+
+        <Card className="admin-gradient-card admin-stats-card from-emerald-500/20 to-emerald-600/20 border-emerald-400/30">
+          <CardBody className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-emerald-100 text-sm font-semibold uppercase tracking-wide">Activities</p>
+                <p className="text-3xl font-bold text-white mt-1">{stats.totalActivities}</p>
+              </div>
+              <FiActivity className="text-emerald-300 text-4xl" />
+            </div>
+          </CardBody>
+        </Card>
+
+        <Card className="admin-gradient-card admin-stats-card from-purple-500/20 to-purple-600/20 border-purple-400/30">
+          <CardBody className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-purple-100 text-sm font-semibold uppercase tracking-wide">Enrollments</p>
+                <p className="text-3xl font-bold text-white mt-1">{stats.totalEnrollments}</p>
+              </div>
+              <FiList className="text-purple-300 text-4xl" />
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+
+      {/* Tabs/Filter */}
+      <Card className="admin-gradient-card">
+        <CardBody className="p-0">
+          <div className="flex flex-wrap gap-2 p-4 bg-white/5 border-b border-white/10">
+            {tabs.map(({ key, label, icon: Icon, count }) => (
+              <Button
+                key={key}
+                variant={active === key ? "solid" : "light"}
+                color="primary"
+                className={`font-comfortaa font-bold ${active === key ? 'bg-white/20 backdrop-blur-sm' : 'text-white/80 hover:bg-white/10'}`}
+                onPress={() => handleTabChange(key)}
+                startContent={<Icon size={18} />}
+                endContent={count > 0 && <span className="ml-1 text-xs bg-white/20 px-2 py-1 rounded-full">{count}</span>}
               >
-                <option value="NOCHANGE">NO CHANGE</option>
-                <option value="USER">USER</option>
-                <option value="STAFF">STAFF</option>
-                <option value="ADMIN">ADMIN</option>
-              </select>
-            </CardBody>
-            <button
-              type="submit"
-              className="flex bg-black hover:bg-slate-800 text-white justify-center items-center gap-1 p-2 w-full"
-            >
-              Confirm <FaRegCheckCircle />
-            </button>
-          </Card>
+                {label}
+              </Button>
+            ))}
+            <div className="flex-1 flex justify-end">
+              <TableFilter active={active} data={backupData} setData={setRows} />
+            </div>
+          </div>
+        </CardBody>
+      </Card>
 
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-        </form> 
-      </div>
-      <div className="w-full flex rounded-lg bg-black border">
-        <span className="text-white font-comfortaa font-bold text-base p-4 bg-white/20">
-          Filter:{" "}
-        </span>
-        <div
-          onClick={handleActive}
-          className={`${optionsClass} ${
-            active == "users" ? activeClass : unactiveClass
-          }`}
-        >
-          <IoMdPerson className={`${Icons}`} />
-          Users
-        </div>
-        <div
-          onClick={handleActive}
-          className={`${optionsClass} ${
-            active == "activities" ? activeClass : unactiveClass
-          }`}
-        >
-          <MdLocalActivity className={`${Icons}`} />
-          Activities
-        </div>
-        <div
-          onClick={handleActive}
-          className={`${optionsClass} ${
-            active == "enrollments" ? activeClass : unactiveClass
-          }`}
-        >
-          <MdScreenRotationAlt className={`${Icons}`} />
-          Enrollments
-        </div>
+      {/* Table */}
+      <Card className="admin-gradient-card border-white/10 shadow-2xl">
+        <CardBody className="p-0">
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <Spinner size="lg" />
+            </div>
+          ) : rows.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <GetDataTable
+              data={rows}
+              active={active}
+              page={page}
+              changePage={setPage}
+              more={more}
+              deleteUsers={deleteUsers}
+              deleteActivities={deleteActivities}
+              deleteEnrollments={deleteEnrollments}
+              edit={editUser}
+            />
+          )}
+        </CardBody>
+      </Card>
 
-        <TableFilter active={active} data={backupData} setData={setRows} />
-      </div>
-      {loading ? <div className="flex justify-center items-center h-[200px]"> <Spinner/> </div> : 
-      <GetDataTable
-        data={rows}
-        active={active}
-        page={page}
-        changePage={setPage}
-        more={more}
-        deleteUsers={deleteUsers}
-        deleteActivities={deleteActivities}
-        deleteEnrollments={deleteEnrollments}
-        edit={editUser}
-      />}
+      {/* Edit Modal */}
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm">
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <h3 className="text-lg font-bold text-gray-900">Edit User Role</h3>
+              </ModalHeader>
+              <form onSubmit={handleEditSubmit}>
+                <ModalBody className="py-4">
+                  <Input
+                    label="Name"
+                    name="name"
+                    value={editFormData.name}
+                    onChange={handleEditChange}
+                    className="mb-4"
+                  />
+                  <Select
+                    label="Role"
+                    name="role"
+                    selectedKeys={editFormData.role === "NO CHANGE" ? [] : [editFormData.role]}
+                    onChange={handleEditChange}
+                    className="w-full"
+                  >
+                    <SelectItem key="USER">USER</SelectItem>
+                    <SelectItem key="STAFF">STAFF</SelectItem>
+                    <SelectItem key="ADMIN">ADMIN</SelectItem>
+                  </Select>
+                  {errorMessage && <p className="text-danger mt-2">{errorMessage}</p>}
+                </ModalBody>
+                <ModalFooter>
+                  <Button variant="light" onPress={onClose}>Cancel</Button>
+                  <Button color="primary" type="submit">Update Role</Button>
+                </ModalFooter>
+              </form>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
+

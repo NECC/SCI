@@ -1,31 +1,21 @@
 "use client";
 
-import Pdf from "@components/Pdf";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Divider, Input, Select, SelectItem } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import RolePdf from "@components/RolePdf";
+import { Card, CardBody, CardHeader, Spinner } from "@nextui-org/react";
+import { FiFileText, FiAward, FiDownload, FiSearch } from "react-icons/fi";
+import { Input, Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 
-const days = [
-  {key: "27", label: "27"},
-  {key: "28", label: "28"},
-  {key: "29", label: "29"},
-  {key: "30", label: "30"},
-]
-
-const roles = [
-  {key: "Organização", label: "Organização"},
-  {key: "Staff", label: "Staff"}
-]
-
-export default function UsersAdmin() {
+export default function CertificatesPage() {
   const [user, setUser] = useState<{
     user: { email: string; role: string } | null;
     loaded: boolean;
   }>({ user: null, loaded: false });
   const router = useRouter();
-  const [certificate, setCerificate] = useState("Emergency");
+  const [loading, setLoading] = useState(true);
+  const [certificates, setCertificates] = useState<any[]>([]); // Placeholder data
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { data: session, status } = useSession({
     required: true,
@@ -37,187 +27,131 @@ export default function UsersAdmin() {
   useEffect(() => {
     if (session) {
       setUser({ user: session.user, loaded: true });
+      // Simulate loading certificates
+      setTimeout(() => {
+        setCertificates([
+          { id: 1, userName: "John Doe", activity: "Workshop A", date: "2024-01-15", status: "Ready" },
+          { id: 2, userName: "Jane Smith", activity: "Workshop B", date: "2024-01-16", status: "Ready" },
+        ]);
+        setLoading(false);
+      }, 1000);
     }
   }, [session]);
 
-  // keep "days" as an array since the NextUI <Select> in multiple mode
-  // expects an array value.  initializing it to an empty string caused the
-  // component to try to access `value.hasOwnProperty` and blow up when the
-  // organisation certificate view was rendered.
-  const [formData, setFormData] = useState<{ name: string; title: string; role: string; days: string[] }>({
-    name: "",
-    title: "",
-    role: "",
-    days: [],
-  });
+  if (status === "loading" || loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
 
-  // separate handlers for plain inputs and for NextUI selects.  the latter
-  // doesn't fire a native event, it simply passes the new value(s), so the
-  // old generic handler was reading `e.target` and eventually triggered a
-  // runtime error (undefined.hasOwnProperty).
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  if (user.user?.role !== "ADMIN" && user.loaded) {
+    router.push("/");
+    return null;
+  }
 
-  // unused now, kept for reference in case other selects are added later
-  // but not invoked anywhere in this component.
-  const handleSelectChange = (name: string) => (value: string | string[]) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: Array.isArray(value) ? value : [value],
-    }));
-  };
+  const filteredCertificates = certificates.filter(cert =>
+    cert.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    cert.activity.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  if (status == "loading") return <p>Loading...</p>;
-  if (user.user?.role != "ADMIN" && user.loaded) router.push("/");
+  const columns = [
+    { key: "userName", label: "USER" },
+    { key: "activity", label: "ACTIVITY" },
+    { key: "date", label: "DATE" },
+    { key: "status", label: "STATUS" },
+    { key: "actions", label: "ACTIONS" },
+  ];
 
   return (
-    <div className="flex flex-col justify-start items-start gap-3 my-4 mx-12">
-      <ButtonGroup>
-        <Button className={certificate == "Emergency" ? "text-white bg-black" : ""} onPress={() => setCerificate("Emergency")}> Emergency certificate </Button>
-        <Button className={certificate == "Organization" ? "text-white bg-black" : ""} onPress={() => setCerificate("Organization")}> Organization certificate </Button>
-      </ButtonGroup>
-      {certificate == "Emergency" && 
-        <div className="flex justify-start items-start gap-3 my-4 mx-12">
-          <Card className="w-[250px]">
-              <CardHeader className="flex justify-center bg-black text-white">
-                  Create Custom Certificate
-              </CardHeader>
-              <Divider />
-              <CardBody className="flex flex-col items-center justify-center gap-1">
-                  <Input
-                      key="primary"
-                      color="default"
-                      type="text"
-                      label="User"
-                      className="max-w-[220px]"
-                      required={true}
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                  />
-                  <Input
-                      key="workshop"
-                      color="default"
-                      type="workshop"
-                      label="Workshop"
-                      name="title"
-                      className="max-w-[220px]"
-                      required={true}
-                      value={formData.title}
-                      onChange={handleInputChange}
-                  />
-              </CardBody>
-              <button
-                className="flex justify-center bg-black hover:bg-slate-800 text-white py-1"
-                onClick={async () => {
-                  try {
-                    const resp = await fetch("/api/generate-certificate", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        certificateType: "Emergency",
-                        formData,
-                      }),
-                    });
-                    if (!resp.ok) throw new Error("Server error");
-                    const blob = await resp.blob();
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = "certificate.pdf";
-                    a.click();
-                    URL.revokeObjectURL(url);
-                  } catch (err) {
-                    console.error("PDF generation failed", err);
-                  }
-                }}
-              >
-                Create Certificate
-              </button>
-          </Card>  
-        </div>
-      }
-      {certificate == "Organization" && 
-        <div className="flex justify-start items-start gap-3 my-4 mx-12">
-          <Card className="w-[250px]">
-              <CardHeader className="flex justify-center bg-black text-white">
-                  Create Custom Certificate
-              </CardHeader>
-              <Divider />
-              <CardBody className="flex flex-col items-center justify-center gap-1">
-                  <Input
-                      key="primary"
-                      color="default"
-                      type="text"
-                      label="Name"
-                      className="max-w-[220px]"
-                      required={true}
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                  />
-                  <Select 
-                    label="Select days of participation" 
-                    selectionMode="multiple"
-                    name="days"
-                    selectedKeys={new Set(formData.days)}
-                    onSelectionChange={(keys) => {
-                      // `keys` is a Set in NextUI
-                      const selectedArray = Array.from(keys).map(String);
-                      setFormData(prev => ({ ...prev, days: selectedArray }));
-                    }}
-                  >
-                    {days.map((day) => (
-                      <SelectItem key={day.key}>{day.label}</SelectItem>
-                    ))}
-                  </Select>
-                  <Select 
-                    label="Select role"
-                    name="role"
-                    selectedKeys={formData.role ? new Set([formData.role]) : new Set()}
-                    onSelectionChange={(keys) => {
-                      // `keys` is a Set in NextUI; items are Key type (string | number)
-                      const selectedArray = Array.from(keys);
-                      setFormData(prev => ({ ...prev, role: selectedArray.length > 0 ? String(selectedArray[0]) : "" }));
-                    }}
-                  >
-                    {roles.map((role) => (
-                      <SelectItem key={role.key}>{role.label}</SelectItem>
-                    ))}
-                  </Select>
-              </CardBody>
-              <button
-                className="flex justify-center bg-black hover:bg-slate-800 text-white py-1"
-                onClick={async () => {
-                  try {
-                    const resp = await fetch("/api/generate-certificate", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        certificateType: "Organization",
-                        formData,
-                      }),
-                    });
-                    if (!resp.ok) throw new Error("Server error");
-                    const blob = await resp.blob();
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = "certificate.pdf";
-                    a.click();
-                    URL.revokeObjectURL(url);
-                  } catch (err) {
-                    console.error("PDF generation failed", err);
-                  }
-                }}
-              >
-                Create Certificate
-              </button>
-          </Card>  
-        </div>
-      }
+    <div className="max-w-7xl mx-auto space-y-8">
+      {/* Header */}
+      <div className="space-y-4">
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent drop-shadow-lg">
+          Certificates
+        </h1>
+        <p className="text-white/70 text-xl">Generate, manage and download certificates</p>
+      </div>
+
+      {/* Stats & Search */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="admin-gradient-card admin-stats-card from-purple-500/20 to-pink-600/20 border-purple-400/30">
+          <CardBody className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-purple-100 text-sm font-semibold uppercase tracking-wide">Total Generated</p>
+                <p className="text-4xl font-bold text-white mt-2">{filteredCertificates.length}</p>
+              </div>
+              <FiAward className="text-purple-300 text-5xl" />
+            </div>
+          </CardBody>
+        </Card>
+        <Card className="md:col-span-2 admin-gradient-card">
+          <CardBody className="p-4">
+            <div className="flex gap-2">
+              <Input
+                placeholder="Search certificates by user or activity..."
+                startContent={<FiSearch className="text-white/50" />}
+                value={searchTerm}
+                onValueChange={setSearchTerm}
+                className="flex-1 bg-white/10 border-white/20"
+              />
+              <Button color="primary" variant="solid">
+                Bulk Export
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+
+      {/* Certificates Table */}
+      <Card className="admin-gradient-card shadow-2xl">
+        <CardHeader className="bg-white/5 border-b border-white/10">
+          <h3 className="text-xl font-bold text-white">Certificates List</h3>
+        </CardHeader>
+        <CardBody className="p-0">
+          {filteredCertificates.length === 0 ? (
+            <div className="text-center py-20">
+              <FiFileText className="mx-auto h-16 w-16 text-white/30 mb-4" />
+              <h3 className="text-2xl font-bold text-white mb-2">No certificates found</h3>
+              <p className="text-white/60">Certificates will appear here once generated.</p>
+            </div>
+          ) : (
+            <Table aria-label="Certificates table">
+              <TableHeader columns={columns}>
+                {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+              </TableHeader>
+              <TableBody items={filteredCertificates}>
+                {(item) => (
+                  <TableRow key={item.id}>
+                    {(columnKey) => (
+                      <TableCell>
+                        {columnKey === "actions" ? (
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              color="success" 
+                              variant="light"
+                              startContent={<FiDownload size={14} />}
+                              onPress={() => alert(`Download certificate ${item.id}`)}
+                            >
+                              Download
+                            </Button>
+                          </div>
+                        ) : (
+                          item[columnKey as keyof typeof item]
+                        )}
+                      </TableCell>
+                    )}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
+        </CardBody>
+      </Card>
     </div>
   );
 }
+

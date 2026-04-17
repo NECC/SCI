@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 
 export interface ActivityPointsResponse {
     response: "success" | "error";
+    achievement:string,
     points: number;
     achievement: string,
     error?: string;

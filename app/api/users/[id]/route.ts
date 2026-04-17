@@ -115,7 +115,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
     const { id } = await props.params;
     const data = await request.json();
-
     const session = await getServerSession(authOptions);
     
     // admin-only updates: points (absolute or increment), role, accreditation

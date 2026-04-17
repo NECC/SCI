@@ -34,23 +34,73 @@ export async function POST(request: Request) {
   }
 
   try {
+    const qrParts = data.code.split(';');
+    if (qrParts.length !== 3 || qrParts[0] !== 'attend') {
+      prisma.$disconnect();
+      return new NextResponse(
+        JSON.stringify({
+          response: "error",
+          error: "Invalid QR code format",
+        })
+      );
+    }
+    const userId = qrParts[1];
+    const scannedActivityId = parseInt(qrParts[2]);
+    const activityId = parseInt(data.activityId);
+    if (scannedActivityId !== activityId) {
+      prisma.$disconnect();
+      return new NextResponse(
+        JSON.stringify({
+          response: "error",
+          error: "QR code activity mismatch",
+        })
+      );
+    }
+
     const updateEnrollment = await prisma.enrollments.updateMany({
       where: {
-        activityId: parseInt(data.activityId),
-        userId: data.userId,
+        activityId,
+        userId,
       },
       data: {
         attended: true,
       },
     });
 
-    prisma.$disconnect();
-    return new NextResponse(
-      JSON.stringify({
-        response: "success",
-        updateEnrollment,
-      })
-    );
+    if (updateEnrollment.count === 1) {
+      const activity = await prisma.activity.findUnique({
+        where: { id: activityId },
+        select: { points: true },
+      });
+      let awardedPoints = 0;
+      if (activity) {
+        await prisma.user.update({
+          where: { id: userId },
+          data: { points: { increment: activity.points } },
+        });
+        awardedPoints = activity.points;
+      }
+
+      prisma.$disconnect();
+      return new NextResponse(
+        JSON.stringify({
+          response: "success",
+          updateEnrollment,
+          awardedPoints,
+          message: `Check-in successful! Awarded ${awardedPoints} points.`,
+        })
+      );
+    } else {
+      prisma.$disconnect();
+      return new NextResponse(
+        JSON.stringify({
+          response: "success",
+          updateEnrollment,
+          awardedPoints: 0,
+          message: "Already checked in or enrollment not found.",
+        })
+      );
+    }
   } catch (error) {
     prisma.$disconnect();
     // console.log(error)
