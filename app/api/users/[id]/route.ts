@@ -119,43 +119,45 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
     const session = await getServerSession(authOptions);
     
     // admin-only updates: points (absolute or increment), role, accreditation
-    if (data.points !== undefined || data.role !== undefined || data.accredited !== undefined) {
-          if (session?.user.role !== "ADMIN") {
-            prisma.$disconnect();
-            return new NextResponse(
-              JSON.stringify({
-                response: "error",
-                error: "You don't have permission to update users!",
-              })
-            );
-          }
+    
+    if (data.points !== undefined || data.role !== undefined) {
+        if (session?.user.role !== "ADMIN") {
+            return NextResponse.json({ response: "error", error: "Forbidden" }, { status: 403 });
+        }
 
-          const updateData: any = {};
-          
-          if (data.pointsAbsolute !== undefined) {
-            // Set points to an absolute value
-            updateData.points = data.pointsAbsolute;
-          } else if (data.points !== undefined) {
-            // Increment points by this amount
-            updateData.points = { increment: parseInt(data.points) ?? 0 };
-          }
-          
-          if (data.role !== undefined) {
-            updateData.role = data.role;
-          }
-          
-          if (data.accredited !== undefined) {
-            updateData.accredited = data.accredited;
-          }
+        const alreadyHasBadge = await prisma.achievement.findFirst({
+            where: {
+                id_user: id,
+                achievement_id: data.activity 
+            }
+        });
 
-          const user = await prisma.user.update({
-              where: { id },
-              data: updateData,
-          });
-          prisma.$disconnect();
-          return new NextResponse(
-              JSON.stringify({ response: "success", user: user })
-          );
+        if (alreadyHasBadge) {
+            return NextResponse.json({ 
+                response: "error", 
+                error: "Pontos já atribuídos para esta atividade." 
+            });
+        }
+
+        const updateData: any = {};
+        if (data.points !== undefined) {
+            updateData.points = { increment: parseInt(data.points) || 0 };
+        }
+        
+        const updatedUser = await prisma.user.update({
+            where: { id },
+            data: {
+                ...updateData,
+                achievements: {
+                    create: {
+                        achievement_id: data.activity,
+                        type: data.achievementType || "badge" 
+                    }
+                }
+            }
+        });
+
+        return NextResponse.json({ response: "success", user: updatedUser });
     }
 
     // otherwise treat as profile edit (name/picture)

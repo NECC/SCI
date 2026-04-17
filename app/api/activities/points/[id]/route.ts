@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 export interface ActivityPointsResponse {
     response: "success" | "error";
     points: number;
+    achievement:string,
     error?: string;
   }
 
@@ -22,6 +23,7 @@ export async function GET(req: Request, props: { params: Promise<{ id: string }>
       },
       select: {
         points: true,
+        achievement:true,
       },
     });
     // console.log(activity);

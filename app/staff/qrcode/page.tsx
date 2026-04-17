@@ -88,7 +88,7 @@ const handleScan = async (data: string) => {
         if (res3.data.response !== "error") {
         const res4 = await axios.put<UserUpdateResponse>(
             `/api/users/${userId}`,
-            { points: res3.data.points }
+            { points: res3.data.points,achievement:res.data.achievement }
         );
         //setError(res4.data.response);
         }
