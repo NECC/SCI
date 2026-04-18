@@ -26,9 +26,7 @@ export async function GET(req: Request, props: { params: Promise<{ id: string }>
         achievement:true,
       },
     });
-    console.log("Activity from DB:", activity);
-    console.log(activity.achievement);
-    // console.log(activity);
+    //console.log("Activity from DB:", activity);
 
     if (!activity) {
       prisma.$disconnect();
