@@ -32,8 +32,15 @@ export default function LeaderBoard() {
   const users = useMemo(() => {
     return data?.users
       ?.filter((u: any) => u.role === "USER")
+      // map filtra só as informações essenciais
+      .map((u: any) =>({
+        id : u.id,
+        name : u.name,
+        points : u.points,
+        role : u.role
+      }))
       .sort((a: any, b: any) => b.points - a.points) || []
-  }, [data])
+  }, [data])  
 
   const currentUserStats = useMemo(() => {
     if (!session?.user || users.length === 0) return null;
