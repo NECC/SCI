@@ -83,6 +83,7 @@ export const ActivitySchema = z.object({
   startTime: z.string(),
   url: z.string().nullable(),
   points: z.number().int(),
+  achievement:z.string(),
 })
 
 export type Activity = z.infer<typeof ActivitySchema>

@@ -60,7 +60,7 @@ export default function Activity({ item, userId }: ActivityProps) {
     <>
       <Card className="min-w-[18rem] max-w-[300px]" shadow="sm">
         <CardBody className="gap-2 p-5 rounded-2xl">
-          {item.type !== "OTHER" && (
+          {(
             <div className="text-tiny text-black/60 dark:text-white/60 uppercase font-bold mb-1">
               {item.type}
             </div>
@@ -86,7 +86,7 @@ export default function Activity({ item, userId }: ActivityProps) {
             </div>
           )}
         </CardBody>
-        {item.type !== "OTHER" && (
+        {(
           <CardFooter className="flex flex-row gap-2 p-5 dark:bg-gray-700/50 mt-1">
             {userId && !item.attended && (
               <div className="ml-auto">

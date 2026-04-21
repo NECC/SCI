@@ -13,6 +13,7 @@ export interface ActivityGetResponseById {
     capacity: number;
     date: Date;
     type: string;
+    achievement:string;
     enrollments: {
       id: number;
       userId: number;
@@ -43,6 +44,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         capacity: true,
         date: true,
         type: true,
+        achievement: true,
         enrollments: true,
         startTime: true,
         endTime: true,

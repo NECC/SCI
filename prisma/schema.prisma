@@ -7,7 +7,7 @@ datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
-  schemas   = ["public", "auth"]
+  schemas   = ["public"]
 }
 
 model User {
@@ -34,6 +34,7 @@ model User {
   sessions       Session[]
   enrollments    Enrollments[]
   achievements Achievement[]
+  cvs CV[]
 
   @@map("app_users")
   @@schema("public")
@@ -116,6 +117,19 @@ model Achievement {
 
   @@unique([id_user, achievement_id], name: "user_achievement_unique")
   @@map("achievements")
+  @@schema("public")
+}
+
+model CV {
+  id          Int      @id @default(autoincrement())
+  candidateId String   @map("candidate_id") @db.Uuid
+  fileName    String   @map("file_name") @db.VarChar(245)
+  fileUrl     String   @map("file_url") @db.VarChar(512)
+  uploadedAt  DateTime @default(now()) @map("uploaded_at") @db.Timestamptz(6)
+
+  user        User     @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@map("cv")
   @@schema("public")
 }
 

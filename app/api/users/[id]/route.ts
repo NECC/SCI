@@ -1,13 +1,13 @@
 import { authOptions } from "@lib/auth";
-import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-
 import { prisma } from '@/lib/prisma';
+import { createClient } from '@supabase/supabase-js';
 
-interface Props {
-    params: { id: string };
-}
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! 
+);
 
 export interface UserGetResponse {
     response: "success" | "error";
@@ -21,165 +21,124 @@ export interface UserGetResponse {
         graduation: string;
         courseYear: number;
         academicNumber: number;
-        enrollments: {
-            id: number;
-            activity: {
-                id: number;
-                title: string;
-                type: string;
-                achievement: string | null;
-            }
-        }[];
-        achievements: {
-            id_achievement: number;
-            id_user: string;
-            type: string; // The badge name/type
-        }[];
+        enrollments: any[];
+        achievements: any[];
+        cvs: any[];
     };
     error?: string;
 }
 
-// export interface UserGetBadges {
-//     response: "success" | "error";
-//     user: {
-//         id: string;
-//         achievements: {
-//             id: string;
-//             achievement: {
-//                 id : string;
-//                 type: string;
-//             }
-//         }[];
-//     };
-//     error?: string;
-// }
-
 export interface UserUpdateResponse {
     response: "success" | "error";
+    user?: any; 
     error?: string;
 }
 
-
-// TODO: Try catch() block
-/**
- * Get an User by ID
- * @method GET
- * @param {string} id User id to get
- * @returns 
- */
+// 1. GET: Fetch User Data
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
-    const user = await prisma.user.findUnique({
-        where: {
-            id: id,
-        },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
-            picture: true,
-            points: true,
-            graduation: true,
-            courseYear: true,
-            academicNumber: true,
-            enrollments: {
-                select: {
-                    id: true,
-                    activity: {
-                        select: {
-                            id: true,
-                            title: true,
-                            type: true,
-                            achievement : true,
-                        },
-                    },
-                }
-            },
-            achievements: {
-                select: {
-                    id_user: true,
-                    achievement_id: true,
-                    type: true,
-                }
-            },
-        },
-    });
-    // console.log(user);
-    prisma.$disconnect();
-    return new NextResponse(
-        JSON.stringify({ response: "success", user: user })
-    );
-}
-
-export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
-    const { id } = await props.params;
-    const data = await request.json();
-
-    const session = await getServerSession(authOptions);
-    
-    // admin-only updates: points (absolute or increment), role, accreditation
-    
-    if (data.points !== undefined || data.role !== undefined) {
-        if (session?.user.role !== "ADMIN") {
-            return NextResponse.json({ response: "error", error: "Forbidden" }, { status: 403 });
-        }
-
-        const alreadyHasBadge = await prisma.achievement.findFirst({
-            where: {
-                id_user: id,
-                achievement_id: data.activity 
+    try {
+        const { id } = await params;
+        const user = await prisma.user.findUnique({
+            where: { id },
+            include: {
+                enrollments: { include: { activity: true }},
+                achievements: true,
+                cvs: true
             }
         });
-        
 
-        if (alreadyHasBadge) {
-            return NextResponse.json({ 
-                response: "error", 
-                error: "Pontos já atribuídos para esta atividade." 
+        if (!user) return NextResponse.json({ response: "error", error: "User not found" }, { status: 404 });
+        return NextResponse.json({ response: "success", user });
+    } catch (error) {
+        return NextResponse.json({ response: "error", error: "Internal Server Error" }, { status: 500 });
+    }
+}
+
+// 2. POST: Handle CV Uploads
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    try {
+        const { id } = await params;
+        const session = await getServerSession(authOptions);
+
+        if (session?.user.id !== id && session?.user.role !== "ADMIN") {
+            return NextResponse.json({ response: "error", error: "Not authorized" }, { status: 401 });
+        }
+
+        const formData = await request.formData();
+        const file = formData.get("file") as File;
+
+        if (!file) return NextResponse.json({ response: "error", error: "No file" }, { status: 400 });
+
+        const fileExtension = file.name.split('.').pop();
+        const filePath = `${id}/${Date.now()}.${fileExtension}`;
+
+        const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('cvs')
+            .upload(filePath, file, {
+                contentType: file.type,
+                upsert: true
             });
-        }
 
-        const updateData: any = {};
-        if (data.points !== undefined) {
-            updateData.points = { increment: parseInt(data.points) || 0 };
-        }
-        
-        
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('cvs')
+            .getPublicUrl(uploadData.path);
+
         const updatedUser = await prisma.user.update({
             where: { id },
             data: {
-                ...updateData,
-                achievements: {
+                cvs: {
                     create: {
-                        achievement_id: data.activity,
-                        type: data.achievementType ?? "badge" 
+                        fileName: file.name,
+                        fileUrl: publicUrl, 
+                        uploadedAt: new Date(),
                     }
                 }
-            }
+            },
+            select: { cvs: true }
         });
 
-        return NextResponse.json({ response: "success", user: updatedUser });
+        return NextResponse.json({ response: "success", cvs: updatedUser.cvs });
+    } catch (error) {
+        console.error("Upload error:", error);
+        return NextResponse.json({ response: "error", error: "Upload failed" }, { status: 500 });
     }
+}
 
-    // otherwise treat as profile edit (name/picture)
-    if (session?.user.id !== id && session?.user.role !== "ADMIN") {
-      prisma.$disconnect();
-      return new NextResponse(
-        JSON.stringify({ response: "error", error: "Not authorized" })
-      );
+export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
+    try {
+        const { id } = await props.params;
+        const data = await request.json();
+        const session = await getServerSession(authOptions);
+        
+        // Admin Logic (Points/Roles)
+        if (data.points !== undefined || data.activity !== undefined) {
+            if (session?.user.role !== "ADMIN") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+            const updateData: any = {};
+            if (data.points !== undefined) updateData.points = { increment: parseInt(data.points) };
+            if (data.activity) {
+                updateData.achievements = {
+                    create: { achievement_id: data.activity, type: data.achievementType || "badge" }
+                };
+            }
+            
+            const user = await prisma.user.update({ where: { id }, data: updateData });
+            return NextResponse.json({ response: "success", user });
+        }
+
+        if (session?.user.id !== id && session?.user.role !== "ADMIN") {
+            return NextResponse.json({ error: "Not authorized" }, { status: 401 });
+        }
+
+        const user = await prisma.user.update({
+            where: { id },
+            data: { name: data.name, picture: data.picture }
+        });
+
+        return NextResponse.json({ response: "success", user });
+    } catch (error) {
+        return NextResponse.json({ response: "error", error: "Update failed" }, { status: 500 });
     }
-
-    const updateData: any = {};
-    if (data.name) updateData.name = data.name;
-    if (data.picture) updateData.picture = data.picture;
-
-    const user = await prisma.user.update({
-      where: { id },
-      data: updateData,
-    });
-    prisma.$disconnect();
-    return new NextResponse(
-      JSON.stringify({ response: "success", user: user })
-    );
 }

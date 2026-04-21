@@ -37,6 +37,7 @@ export async function GET(req: Request) {
         endTime: true,
         url: true,
         points: true,
+        achievement: true,
       },
 
       ...(all
