@@ -32,6 +32,19 @@ import { Activity as ActivityI } from "@prisma/generated/zod";
 
 type UserData = UserGetResponse["user"];
 
+type ActivityType = {
+  id: number;
+  sponsor: string | null;
+};
+
+
+interface UserDataAchievements {
+  id: string;
+  sponsor_badge?: boolean;
+  achievements?: { achievement_id: number; type: string | null }[];
+  enrollments?: { activityId: number; attended: boolean }[];
+}
+
 // --- Main Profile Component ---
 
 export default function Profile() {
@@ -100,6 +113,7 @@ export default function Profile() {
           {activeScreen === "badges" && user && (
             <div className="p-4 md:p-8">
               <h2 className="text-white text-3xl font-extrabold mb-8 uppercase tracking-tighter">Earned Badges</h2>
+              {/* @ts-ignore - passing user directly since UserData usually extends UserDataAchievements based on Prisma */}
               <UserBadges user={user} />
             </div>
           )}
@@ -200,30 +214,106 @@ const ProfileNav = ({
 };
 
 // --- Badges Sub-Component ---
+// FUTURE UPDATE : REMOVE THE SPONSOR BADGES IF THE CRITERA ARE NOT FOLLOWED AT SOME POINT
+// IMPORTANT
 
-const UserBadges = ({ user }: { user: UserData }) => {
-  if (!user.achievements || user.achievements.length === 0) {
+const UserBadges = ({ user }: { user: UserDataAchievements }) => {
+  const [activityList, setActivityList] = useState<ActivityType[]>([]);
+
+  useEffect(() => {
+    axios
+      .get<{ activities: ActivityType[] }>("/api/activities")
+      .then((res) => {
+        if (res.data && res.data.activities) {
+          setActivityList(res.data.activities);
+        }
+      })
+      .catch((err) => console.error("Failed to load activities:", err));
+  }, []);
+
+  const totalSponsorActivities = activityList.filter(
+    (activity) => activity.sponsor && activity.sponsor.toLowerCase() !== "non"
+  ).length;
+
+  const userAttendedSponsorActivities = user.enrollments?.filter((enrollment) => {
+    if (!enrollment.attended) return false;
+
+    const matchedActivity = activityList.find((a) => a.id === enrollment.activityId);
+    
+    return (
+      matchedActivity &&
+      matchedActivity.sponsor &&
+      matchedActivity.sponsor.toLowerCase() !== "non"
+    );
+  }).length || 0;
+
+  const qualifiesForSponsorBadge =
+    totalSponsorActivities > 0 &&
+    userAttendedSponsorActivities / totalSponsorActivities >= 0.6;
+    
+  useEffect(() => {
+    if (qualifiesForSponsorBadge && user.id && !user.sponsor_badge) {
+      axios
+        .put(`/api/users/${user.id}`, {
+          userId: user.id,
+          sponsor_badge: true,
+        })
+        .then(() => console.log("User awarded the Sponsor Badge in DB!"))
+        .catch((err) => console.error("Failed to update database:", err));
+    }
+  }, [qualifiesForSponsorBadge, user.id, user.sponsor_badge]);
+
+  const hasAchievements = user.achievements && user.achievements.length > 0;
+  
+  if (!hasAchievements && !qualifiesForSponsorBadge && !user.sponsor_badge) {
     return <p className="text-white/60 italic">No badges earned yet!</p>;
   }
 
   return (
     <div className="flex flex-row flex-wrap gap-6">
-      {user.achievements.map((item) => {
-        const fileName = item.type ? item.type.toLowerCase().replace(/\s+/g, '-') : 'default';
+      {user.achievements?.map((item) => {
+        const fileName = item.type
+          ? item.type.toLowerCase().replace(/\s+/g, "-")
+          : "default";
         return (
-          <div key={item.achievement_id} className="flex flex-col items-center p-5 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 w-36 hover:scale-105 transition-transform">
+          <div
+            key={item.achievement_id}
+            className="flex flex-col items-center p-5 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 w-36 hover:scale-105 transition-transform"
+          >
             <div className="w-20 h-20 mb-4 flex items-center justify-center">
               <img
                 src={`/assets/badges/${fileName}.png`}
-                alt={item.type}
+                alt={item.type || "Badge"}
                 className="max-w-full max-h-full object-contain"
-                onError={(e) => (e.currentTarget.src = '/assets/badges/default.png')}
+                onError={(e) => {
+                  e.currentTarget.src = "/assets/badges/default.png";
+                }}
               />
             </div>
-            <p className="text-white text-[10px] font-black text-center uppercase tracking-widest">{item.type}</p>
+            <p className="text-white text-[10px] font-black text-center uppercase tracking-widest">
+              {item.type}
+            </p>
           </div>
         );
       })}
+
+      {(qualifiesForSponsorBadge || user.sponsor_badge) && (
+        <div className="flex flex-col items-center p-5 bg-gradient-to-br from-yellow-500/20 to-orange-600/20 backdrop-blur-md rounded-2xl border border-yellow-500/50 w-36 hover:scale-105 transition-transform shadow-[0_0_15px_rgba(234,179,8,0.2)]">
+          <div className="w-20 h-20 mb-4 flex items-center justify-center">
+            <img
+              src="/assets/badges/sponsor-champion.png"
+              alt="Sponsor Champion"
+              className="max-w-full max-h-full object-contain drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
+              onError={(e) => {
+                e.currentTarget.src = "/assets/badges/default.png";
+              }}
+            />
+          </div>
+          <p className="text-yellow-400 text-[10px] font-black text-center uppercase tracking-widest">
+            Sponsor Champion
+          </p>
+        </div>
+      )}
     </div>
   );
 };

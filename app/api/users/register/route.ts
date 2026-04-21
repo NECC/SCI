@@ -109,6 +109,7 @@ export async function POST(request: Request) {
           academicNumber: data.academicNumber,
           graduation: data.graduation,
           courseYear: data.courseYear,
+          sponsor_badge: false,
         },
         select: {
           id: true,

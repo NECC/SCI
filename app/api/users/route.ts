@@ -172,6 +172,7 @@ export async function POST(req: Request) {
         password: hashPassword,
         role: userData.role,
         academicNumber: userData.academicNumber,
+        sponsor_badge: false,
       },
       select: {
         id: true,

@@ -21,6 +21,7 @@ export interface UserGetResponse {
         graduation: string;
         courseYear: number;
         academicNumber: number;
+        sponsor_badge: boolean;
         enrollments: any[];
         achievements: any[];
         cvs: any[];
@@ -134,10 +135,16 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
             return NextResponse.json({ error: "Not authorized" }, { status: 401 });
         }
 
+        const updateData: any = {};
+        if (data.name !== undefined) updateData.name = data.name;
+        if (data.picture !== undefined) updateData.picture = data.picture;
+        if (data.sponsor_badge !== undefined) updateData.sponsor_badge = data.sponsor_badge;
+
         const user = await prisma.user.update({
             where: { id },
-            data: { name: data.name, picture: data.picture }
+            data: updateData 
         });
+
 
         return NextResponse.json({ response: "success", user });
     } catch (error) {
