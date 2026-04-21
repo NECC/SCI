@@ -63,15 +63,16 @@ const Nav = () => {
         <Link href="/schedule" className="nav_btn text-base">
           Schedule
         </Link>
-        {/* <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div> */}
-        {/* <Link href="/schedule" className="nav_btn text-base">
-          C.V.
+         <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div> 
+        <Link href="/spoints" className="nav_btn text-base whitespace-nowrap">
+          Points System
         </Link>
-        <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div> */}
+        <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
         <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
         <Link href="/leaderboard" className="nav_btn text-base">
           Leaderboard
         </Link>
+        <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
         <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
         <Link href="/faqs" className="nav_btn text-base">
           FAQs
