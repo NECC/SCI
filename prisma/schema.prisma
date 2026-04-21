@@ -41,22 +41,24 @@ model User {
 }
 
 model Activity {
-  id          Int           @id @default(autoincrement())
-  title       String
-  description String?
-  date        DateTime
-  location    String
-  capacity    Int?
-  endTime     String
-  startTime   String
-  points      Int
-  url         String?
-  type        String
-  enrollments Enrollments[]
-  speakers    Speaker[]     @relation("ActivityToSpeaker")
-  achievement String?
+  id           Int           @id @default(autoincrement())
+  title        String
+  description  String?
+  date         DateTime
+  location     String
+  capacity     Int?
+  endTime      String
+  startTime    String
+  points       Int
+  url          String?
+  type         String
+  enrollments  Enrollments[]
+  achievement  String?
   
-  //Relation 
+  // FIX: Made these optional so activities can be created without a speaker
+  speakerId    Int?          
+  speaker      Speaker?      @relation("ActivityToSpeaker", fields: [speakerId], references: [id], onDelete: Cascade)
+  
   achievements Achievement[]
 
   @@schema("public")

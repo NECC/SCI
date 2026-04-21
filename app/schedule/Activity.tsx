@@ -36,7 +36,7 @@ import { ActivityEnrolleesResponse } from "@app/api/activities/[id]/enrolled/rou
 
 interface ActivityProps {
   item: ActivityI & {
-    speakers: Speaker[];
+    speaker: Speaker | null;
     enrollments: Enrollments[];
     enrollable: boolean;
     alreadyEnrolled: boolean;
@@ -182,27 +182,23 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
 
         
         <CardFooter className="flex flex-row justify-between items-center px-5 py-4 bg-default-50/30">  
-          {item.speakers?.length > 0 &&(
-          <div className="flex flex-col gap-2 w-1/2">
-            <p className="text-[10px] uppercase font-bold text-default-400 tracking-wider">
-              Speaker{item.speakers.length > 1 ? "s" : ""}
-            </p>
-            <div className="flex flex-col gap-2">
-              {item.speakers.map((speaker, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <Avatar
-                    src={speaker.picUrl ?? undefined}
-                    name={speaker.name}
-                    size="sm"
-                    className="w-6 h-6 text-tiny"
-                  />
-                  <p className="text-xs font-semibold text-default-700 truncate">
-                    {speaker.name}
-                  </p>
-                </div>
-              ))}
+          {item.speaker && (
+            <div className="flex flex-col gap-2 w-1/2">
+              <p className="text-[10px] uppercase font-bold text-default-400 tracking-wider">
+                Speaker
+              </p>
+              <div className="flex items-center gap-2">
+                <Avatar
+                  src={item.speaker.picUrl ?? undefined}
+                  name={item.speaker.name}
+                  size="sm"
+                  className="w-6 h-6 text-tiny"
+                />
+                <p className="text-xs font-semibold text-default-700 truncate">
+                  {item.speaker.name}
+                </p>
+              </div>
             </div>
-          </div>
           )}
           <div className="flex flex-col gap-2 items-end w-1/2">
             {userRole === "USER" && !item.attended && (

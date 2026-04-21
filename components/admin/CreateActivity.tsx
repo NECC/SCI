@@ -14,11 +14,19 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Types, ActivitySchema, Sponsor } from "@prisma/zod";
-import { useEffect } from "react";
-import sponsors from "@data/sponsor.json"
+import { useEffect, useState } from "react";
+import sponsors from "@data/sponsor.json";
+
+type Speaker = {
+  id: string;
+  name: string;
+};
 
 export default function CreateActivity() {
   const router = useRouter();
+  
+
+  const [speakersList, setSpeakersList] = useState<Speaker[]>([]);
 
   const plans: Record<string, string> = {
     standard: "silver",
@@ -26,14 +34,13 @@ export default function CreateActivity() {
     main: "diamond",
   };
 
-  const achivements : Record<string,number> = 
-  {
-    bronze : 10,
-    silver : 20,
-    gold : 50,
-    diamond : 100,
-    emerald : 200
-  }
+  const achievements: Record<string, number> = {
+    bronze: 10,
+    silver: 20,
+    gold: 50,
+    diamond: 100,
+    emerald: 200
+  };
 
   const {
     register,
@@ -52,15 +59,24 @@ export default function CreateActivity() {
       description: "",
       location: "",
       capacity: 1,
-      speakers: "",
+      speakers: "", 
       points: 0,
       achievement: "",
       type: Types[0],
-      sponsor : Sponsor[0],
+      sponsor: Sponsor[0],
     },
   });
 
-  //Sponsor selecionado
+  useEffect(() => {
+   axios.get<{ speakers: Speaker[] }>("/api/speakers")
+  .then((res) => {
+    if (res.data && res.data.speakers) {
+      setSpeakersList(res.data.speakers);
+    }
+  })
+  .catch((err) => console.error("Failed to load speakers:", err));
+  }, []);
+
   const selectedSponsorName = watch("sponsor");
   const currentSponsorObj = sponsors.Patrocinadores.find(
     (s) => s.name === selectedSponsorName
@@ -71,9 +87,9 @@ export default function CreateActivity() {
     if (hasPlan && currentSponsorObj?.plan) {
       const planTier = plans[currentSponsorObj.plan.toLowerCase()];
       if (planTier) {
-        const pointsValue = achivements[planTier] || 0;
+        const pointsValue = achievements[planTier] || 0;
         setValue("points", pointsValue);
-        setValue("achievement",planTier)
+        setValue("achievement", planTier);
       }
     }
   }, [selectedSponsorName, hasPlan, setValue]);
@@ -84,6 +100,9 @@ export default function CreateActivity() {
     const parsedData = {
       ...formData,
       date: new Date(formData.date),
+      speakerId: (formData.speakers === "" || formData.speakers === "none") 
+               ? undefined 
+               : formData.speakers,
     };
 
     axios
@@ -91,6 +110,7 @@ export default function CreateActivity() {
       .then((res) => {
         if (res.status === 200) {
           router.push("/admin");
+          router.refresh(); 
         }
       })
       .catch((err) => {
@@ -122,7 +142,6 @@ export default function CreateActivity() {
             {...register('title')}
           />
 
-
           <div className="flex flex-col w-full max-w-[220px]">
             <label className="text-xs text-gray-500 mb-1 ml-1">Date</label>
             <input
@@ -145,10 +164,7 @@ export default function CreateActivity() {
                   type="time"
                   className="bg-default-100 hover:bg-default-200 focus:bg-default-200 px-3 py-2.5 rounded-xl text-sm outline-none transition-colors w-full"
                   value={field.value || ""}
-                  onChange={(e) => {
-                    console.log("Tempo digitado (Start):", e.target.value);
-                    field.onChange(e.target.value); 
-                  }}
+                  onChange={(e) => field.onChange(e.target.value)}
                 />
               )}
             />
@@ -157,7 +173,6 @@ export default function CreateActivity() {
             )}
           </div>
 
-   
           <div className="flex flex-col w-full max-w-[220px]">
             <label className="text-xs text-gray-500 mb-1 ml-1">End Time</label>
             <Controller
@@ -168,10 +183,7 @@ export default function CreateActivity() {
                   type="time"
                   className="bg-default-100 hover:bg-default-200 focus:bg-default-200 px-3 py-2.5 rounded-xl text-sm outline-none transition-colors w-full"
                   value={field.value || ""}
-                  onChange={(e) => {
-                    console.log("Tempo digitado (End):", e.target.value);
-                    field.onChange(e.target.value); 
-                  }}
+                  onChange={(e) => field.onChange(e.target.value)}
                 />
               )}
             />
@@ -179,6 +191,7 @@ export default function CreateActivity() {
               <span className="text-danger text-[10px] mt-1 ml-1">{errors.endTime.message as string}</span>
             )}
           </div>
+
           <Input
             color="default"
             type="text"
@@ -206,12 +219,12 @@ export default function CreateActivity() {
             label="Capacity"
             className="max-w-[220px]"
             min={1}
-            
             isInvalid={!!errors.capacity}
             errorMessage={errors.capacity?.message as string}
             {...register('capacity', { valueAsNumber: true })}
           />
-           <Controller
+
+          <Controller
             name="sponsor"
             control={control}
             render={({ field: { onChange, value } }) => (
@@ -232,59 +245,69 @@ export default function CreateActivity() {
             )}
           />
 
-          <Input
-            color="default"
-            type="text"
-            label="Speakers"
-            className="max-w-[220px]"
-            isInvalid={!!errors.speakers}
-            errorMessage={errors.speakers?.message as string}
-            {...register('speakers')}
-          />
+          <Controller
+              name="speakers"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+               <Select
+                  label="Speakers"
+                  className="max-w-[220px]"
+                  isInvalid={!!errors.speakers}
+                  errorMessage={errors.speakers?.message as string}
+                  selectedKeys={value ? [value] : []}
+                  onChange={(e) => onChange(e.target.value)}
+                >
+                  {[
+                    <SelectItem key="none" value="none">--No Speaker--</SelectItem>,
+                    ...speakersList.map((speaker) => (
+                      <SelectItem key={speaker.id} value={speaker.id}>
+                        {speaker.name}
+                      </SelectItem>
+                    ))
+                  ]}
+                </Select>
+              )}
+            />
           
           {hasPlan ? (
-          /* Adicionar pontos associados a um plano de patrocionio */
-          <Input
-            key="fixed-points"
-            type="number"
-            label={`Points (${currentSponsorObj.plan})`}
-            className="max-w-[220px]"
-            isDisabled
-            variant="flat"
-            color="primary"
-            {...register('points', { valueAsNumber: true })}
-            {...register('achievement')}            
-          />
-        ) : (
-          /* Adicionar pontos quando não há plano associado */
-          <Controller
-            name="points"
-            control={control}
-            render={({ field }) => (
-              <Select
-                label="Select Achievement Points"
-                className="max-w-[220px]"
-                isInvalid={!!errors.points}
-                errorMessage={errors.points?.message as string}
-                selectedKeys={field.value ? [field.value.toString()] : []}
-                onChange={(e) => {
-                const val = Number(e.target.value);
-                field.onChange(val);
-                
-                // Find the tier name based on the points value selected
-                const tierName = Object.keys(achivements).find(key => achivements[key] === val);
-                if (tierName) setValue("achievement", tierName);
-              }}
-            >
-              {Object.entries(achivements).map(([tier, value]) => (
-                <SelectItem key={value} value={value} textValue={`${value} pts`}>
-                  {tier.toUpperCase()} ({value} pts)
-                </SelectItem>
-              ))}
-            </Select>
-            )}
-          />
-        )}
+            <Input
+              key="fixed-points"
+              type="number"
+              label={`Points (${currentSponsorObj.plan})`}
+              className="max-w-[220px]"
+              isDisabled
+              variant="flat"
+              color="primary"
+              {...register('points', { valueAsNumber: true })}        
+            />
+          ) : (
+            <Controller
+              name="points"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="Select Achievement Points"
+                  className="max-w-[220px]"
+                  isInvalid={!!errors.points}
+                  errorMessage={errors.points?.message as string}
+                  selectedKeys={field.value ? [field.value.toString()] : []}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    field.onChange(val);
+                    
+                    const tierName = Object.keys(achievements).find(key => achievements[key] === val);
+                    if (tierName) setValue("achievement", tierName);
+                  }}
+                >
+                  {Object.entries(achievements).map(([tier, value]) => (
+                    <SelectItem key={value} value={value} textValue={`${value} pts`}>
+                      {tier.toUpperCase()} ({value} pts)
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+          )}
 
           <Controller
             name="type"
@@ -306,7 +329,6 @@ export default function CreateActivity() {
               </Select>
             )}
           />
-          
 
         </CardBody>
         
