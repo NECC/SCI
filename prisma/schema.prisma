@@ -34,6 +34,8 @@ model User {
   sessions       Session[]
   enrollments    Enrollments[]
   achievements Achievement[]
+  sponsor_badge Boolean        @default(false) @map("sponsor_badge")
+
   cvs CV[]
 
   @@map("app_users")
@@ -53,9 +55,8 @@ model Activity {
   url          String?
   type         String
   enrollments  Enrollments[]
+  sponsor      String?
   achievement  String?
-  
-  // FIX: Made these optional so activities can be created without a speaker
   speakerId    Int?          
   speaker      Speaker?      @relation("ActivityToSpeaker", fields: [speakerId], references: [id], onDelete: Cascade)
   

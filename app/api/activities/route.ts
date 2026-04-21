@@ -38,6 +38,7 @@ export async function GET(req: Request) {
         url: true,
         points: true,
         achievement: true,
+        sponsor:true,
       },
 
       ...(all
@@ -110,6 +111,7 @@ export async function POST(request: Request) {
       points: data.points,
       achievement:data.achievement,
       speakerId: data.speakerId,
+      sponsor:data.sponsor,
     },
   });
   prisma.$disconnect();

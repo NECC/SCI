@@ -18,6 +18,7 @@ import {
   Divider,
 } from "@nextui-org/react";
 import { FaLongArrowAltRight } from "react-icons/fa";
+import { SiGithubsponsors } from "react-icons/si";
 import { CiMapPin, CiClock2 } from "react-icons/ci";
 import { BsQrCode } from "react-icons/bs";
 import { TbFileDownload } from "react-icons/tb";
@@ -167,6 +168,12 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
               <div className="flex items-center text-sm text-default-600 font-medium">
                 <MdOutlineEventSeat className="mr-2 text-primary text-lg" />
                 {item.enrollments?.length || 0} / {item.capacity} Seats Filled
+              </div>
+            )}
+            {item.sponsor != "Non" && item.sponsor != null &&(
+              <div className="flex items-center text-sm text-default-600 font-medium">
+                <SiGithubsponsors className="mr-2 text-primary text-lg" />
+                Sponsor - {item.sponsor}
               </div>
             )}
             {(
