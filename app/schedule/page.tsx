@@ -10,8 +10,8 @@ import { set } from "zod";
 import { ActivityGetResponse } from "@app/api/activities/route";
 import { Activity as ActivityI, Enrollments, Speaker } from "@prisma/generated/zod";
 
-type ScheduleActivity = ActivityI & {
-  speakers: Speaker[];
+export type ScheduleActivity = ActivityI & {
+  speaker: Speaker | null;  
   enrollments: Enrollments[];
   enrollable: boolean;
   alreadyEnrolled: boolean;

@@ -22,7 +22,7 @@ export async function GET(req: Request, props: { params: Promise<{ id: string }>
         id: parseInt(id),
       },
       select: {
-        speakers: true,
+        speaker: true,
       },
     });
     // console.log(activity);

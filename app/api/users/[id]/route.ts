@@ -24,6 +24,7 @@ export interface UserGetResponse {
         enrollments: any[];
         achievements: any[];
         cvs: any[];
+        //speakers : any[];
     };
     error?: string;
 }
@@ -43,7 +44,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
             include: {
                 enrollments: { include: { activity: true }},
                 achievements: true,
-                cvs: true
+                cvs: true,
+                //speakers: true,
             }
         });
 

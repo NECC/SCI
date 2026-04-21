@@ -11,7 +11,7 @@ export interface ActivityDeleteResponse {
     id: number;
     title: string;
     description: string;
-    speakers: string;
+    speakerId: number;
     location: string;
     capacity: number;
     date: Date;
@@ -66,7 +66,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
         id: true,
         title: true,
         description: true,
-        speakers: true,
+        speakerId: true,
         location: true,
         capacity: true,
         date: true,

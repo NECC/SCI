@@ -5,6 +5,7 @@ import { IoMdPerson } from "react-icons/io";
 import { MdLocalActivity, MdScreenRotationAlt } from "react-icons/md";
 import { ImExit } from "react-icons/im";
 import { PiCertificateFill } from "react-icons/pi";
+import { FaMicrophoneAlt } from "react-icons/fa";
 
 export default function Sidebar() {
 
@@ -32,6 +33,9 @@ export default function Sidebar() {
                 </Link>
                 <Link href="/admin/certificates" className={`${LinkClass}`}>
                     <PiCertificateFill className={`${Icons}`}/> Certificates
+                </Link>
+                <Link href="/admin/speakers" className={`${LinkClass}`}>
+                    <FaMicrophoneAlt className={`${Icons}`}/> Speakers
                 </Link>
                 <Link href="/" className={`${LinkClass} border-t border-white/30`}>
                     <ImExit className={`${Icons}`}/> Back to Home

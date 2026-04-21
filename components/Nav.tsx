@@ -63,7 +63,7 @@ const Nav = () => {
         <Link href="/schedule" className="nav_btn text-base">
           Schedule
         </Link>
-        <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div>
+        {/* <div className="w-[1px] h-[20px] rounded-full bg-white/50"></div> */}
         {/* <Link href="/schedule" className="nav_btn text-base">
           C.V.
         </Link>

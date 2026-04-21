@@ -8,7 +8,7 @@ export interface ActivityGetResponseById {
     id: number;
     title: string;
     description: string;
-    speakers: string;
+    speakerId: string;
     location: string;
     capacity: number;
     date: Date;
@@ -39,7 +39,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         id: true,
         title: true,
         description: true,
-        speakers: true,
+        speakerId: true,
         location: true,
         capacity: true,
         date: true,

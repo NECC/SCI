@@ -8,7 +8,7 @@ import { prisma } from '@/lib/prisma';
 
 export interface ActivityGetResponse {
   response: "success" | "error";
-  activities: (Activity & { enrollments: Enrollments[]} & {speakers: Speaker[]})[]
+  activities: (Activity & { enrollments: Enrollments[]} & {speaker: Speaker | null})[]
   error?: string;
 }
 
@@ -27,7 +27,7 @@ export async function GET(req: Request) {
         id: true,
         title: true,
         description: true,
-        speakers: true,
+        speaker: true,
         location: true,
         capacity: true,
         date: true,
@@ -109,6 +109,7 @@ export async function POST(request: Request) {
       url: null,
       points: data.points,
       achievement:data.achievement,
+      speakerId: data.speakerId,
     },
   });
   prisma.$disconnect();
