@@ -6,6 +6,7 @@ import { MdLocalActivity, MdScreenRotationAlt } from "react-icons/md";
 import { ImExit } from "react-icons/im";
 import { PiCertificateFill } from "react-icons/pi";
 import { FaMicrophoneAlt } from "react-icons/fa";
+import { GiVuvuzelas } from "react-icons/gi";
 
 export default function Sidebar() {
 
@@ -36,6 +37,9 @@ export default function Sidebar() {
                 </Link>
                 <Link href="/admin/speakers" className={`${LinkClass}`}>
                     <FaMicrophoneAlt className={`${Icons}`}/> Speakers
+                </Link>
+                <Link href="/admin/giveway" className={`${LinkClass}`}>
+                    <GiVuvuzelas className={`${Icons}`}/> Giveway
                 </Link>
                 <Link href="/" className={`${LinkClass} border-t border-white/30`}>
                     <ImExit className={`${Icons}`}/> Back to Home

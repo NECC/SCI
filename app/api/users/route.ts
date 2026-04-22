@@ -14,7 +14,8 @@ export interface UsersGetResponse {
     role: string;
     graduation: string;
     courseYear: number;
-    accredited: boolean;
+    accredited: boolean; 
+    sponsor_badge : boolean;
     points: number;
     enrollments: {
       id: string;
@@ -49,6 +50,7 @@ export async function GET(req : Request) {
       courseYear: true,
       accredited: true,
       points: true,
+      sponsor_badge: true,
       enrollments: {
         select: {
           id: true,

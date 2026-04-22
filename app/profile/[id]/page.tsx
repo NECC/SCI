@@ -214,8 +214,9 @@ const ProfileNav = ({
 };
 
 // --- Badges Sub-Component ---
-// FUTURE UPDATE : REMOVE THE SPONSOR BADGES IF THE CRITERA ARE NOT FOLLOWED AT SOME POINT
-// IMPORTANT
+
+// THE CURRENT IMPLEMENTION IS ASS, BUT IT WORKS FOR THE CONTEXT 
+// FUTURE DO IT BETTER --- PLS
 
 const UserBadges = ({ user }: { user: UserDataAchievements }) => {
   const [activityList, setActivityList] = useState<ActivityType[]>([]);
@@ -261,6 +262,16 @@ const UserBadges = ({ user }: { user: UserDataAchievements }) => {
         .then(() => console.log("User awarded the Sponsor Badge in DB!"))
         .catch((err) => console.error("Failed to update database:", err));
     }
+  else if(!qualifiesForSponsorBadge && user.id && user.sponsor_badge)
+    {
+      axios
+        .put(`/api/users/${user.id}`, {
+          userId: user.id,
+          sponsor_badge: false,
+        })
+        .then(() => console.log("Removed Sponsor Badge!"))
+        .catch((err) => console.error("Failed to update database:", err));
+    }
   }, [qualifiesForSponsorBadge, user.id, user.sponsor_badge]);
 
   const hasAchievements = user.achievements && user.achievements.length > 0;
@@ -282,11 +293,11 @@ const UserBadges = ({ user }: { user: UserDataAchievements }) => {
           >
             <div className="w-20 h-20 mb-4 flex items-center justify-center">
               <img
-                src={`/assets/badges/${fileName}.png`}
+                src={`/badges/${fileName}.png`}
                 alt={item.type || "Badge"}
                 className="max-w-full max-h-full object-contain"
                 onError={(e) => {
-                  e.currentTarget.src = "/assets/badges/default.png";
+                  e.currentTarget.src = "/public/badges/default.png";
                 }}
               />
             </div>
@@ -301,7 +312,7 @@ const UserBadges = ({ user }: { user: UserDataAchievements }) => {
         <div className="flex flex-col items-center p-5 bg-gradient-to-br from-yellow-500/20 to-orange-600/20 backdrop-blur-md rounded-2xl border border-yellow-500/50 w-36 hover:scale-105 transition-transform shadow-[0_0_15px_rgba(234,179,8,0.2)]">
           <div className="w-20 h-20 mb-4 flex items-center justify-center">
             <img
-              src="/assets/badges/sponsor-champion.png"
+              src="/badges/sponsor-champion.png"
               alt="Sponsor Champion"
               className="max-w-full max-h-full object-contain drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
               onError={(e) => {

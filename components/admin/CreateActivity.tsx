@@ -102,9 +102,13 @@ export default function CreateActivity() {
       date: new Date(formData.date),
       speakerId: (formData.speakers === "" || formData.speakers === "none") 
                ? undefined 
-               : formData.speakers,
+               : Number(formData.speakers),
     };
+    // console.log(parsedData.speakerId);
 
+    // console.log(parsedData.speakerId.type);
+    // For some reason this type is undefined so I cast it as number 
+    
     axios
       .post("/api/activities", parsedData)
       .then((res) => {
