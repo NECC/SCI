@@ -184,7 +184,7 @@ export default function Home() {
                     Contact us:
                   </h1>
                   <p>
-                    Email: sci.uminho@gmail.com
+                    Email: geral@sciuminho.org
                   </p>
                 </div>
               </div>
