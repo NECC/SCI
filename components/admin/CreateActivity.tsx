@@ -108,7 +108,6 @@ export default function CreateActivity() {
 
     // console.log(parsedData.speakerId.type);
     // For some reason this type is undefined so I cast it as number 
-    
     axios
       .post("/api/activities", parsedData)
       .then((res) => {
@@ -239,6 +238,7 @@ export default function CreateActivity() {
                 errorMessage={errors.sponsor?.message as string}
                 selectedKeys={value ? [value] : [Sponsor[0]]}
                 onChange={(e) => onChange(e.target.value)}
+                disallowEmptySelection
               >
                 {Sponsor.map((type) => (
                   <SelectItem key={type} value={type}>
