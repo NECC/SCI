@@ -73,6 +73,7 @@ export default function UsersAdmin() {
   };
 
   const handleDeleteUser = async (userId: string) => {
+    console.log("USER ID : ",userId);
     if (!confirm("Are you sure you want to delete this user?")) return;
     try {
       await axios.delete(`/api/users/delete/${userId}`);
