@@ -23,6 +23,7 @@ export default function Sidebar() {
                 <Link href="/admin" className={`${LinkClass}`}>
                     <FaHome className="mt-[2px] text-lg mr-2"/> Home
                 </Link>
+                {/*Correct This PAGE PLS ANYONE */}
                 {/* <Link href="/admin/users" className={`${LinkClass}`}>
                     <IoMdPerson className={`${Icons}`}/> Users
                 </Link> */}
