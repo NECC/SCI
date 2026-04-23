@@ -9,7 +9,7 @@ export default function Accordion() {
   const participate = "Of course! SCI is open to everyone, regardless if you’re a student or not. Everyone is welcome to participate in our workshops and our talks.";
   const register = "You can participate by registering in this year’s edition through the link below.";
   const contact = " You can email us at geral@sciuminho.org or send us a message through our social media accounts.";
-  const points = "In SCI every activity has a number of points assigned! At the end of every activity, reach someone from the Staff so they can scan the QR Code on your profile and give you the points. Points can be used to roll a wheel of fortune and win prizes! At the end of the week the 3 participants with more points will win one of this prizes:\n 1º- Smartwatch Xiaomi Redmi Watch 5 Active Preto\n2º- Auriculares Xiaomi Redmi Buds 6 Active True Wireless\n3º- Powerbank Xiaomi Mi 10W 10000mAh Wireless Preta";
+  const points = "In SCI every activity has a number of points assigned! At the end of every activity, reach someone from the Staff so they can scan the QR Code on your profile and give you the points. Points can be used to roll a wheel of fortune and win prizes! At the end of the week the 3 participants with more points will win one of this prizes:\n 1º- Lenovo Idea Tab\n2º- Ereader Kobo Clara Colour\n3º- Sony WH-1000XM5SA Wireless Preta\nSponsor Prize - Máquina Fotográfica Instantânea FUJIFILM Instax Mini 12";
 
   const [active, setActive] = useState(false);
   const [active2, setActive2] = useState(false);
