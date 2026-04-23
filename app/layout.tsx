@@ -19,7 +19,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <NextUI>
           <AuthProvider>
             <Nav />
+            <div className="bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">
             {children}
+            </div>
           </AuthProvider>
         </NextUI>
       </body>
