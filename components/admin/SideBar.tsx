@@ -9,6 +9,15 @@ import { FaMicrophoneAlt } from "react-icons/fa";
 import { GiVuvuzelas } from "react-icons/gi";
 
 export default function Sidebar() {
+  const pathname = usePathname();
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
+
+  const getLinkClass = (path: string): string => `p-4 font-comfortaa transition-all duration-200 text-white hover:bg-white/20 flex items-center w-full rounded-r-lg group ${pathname === path ? 'admin-sidebar-link-active bg-white/30' : ''}`;
+
+  const Icons = "text-xl mr-3";
+
+  const toggleMobile = () => setIsMobileOpen(!isMobileOpen);
 
     const LinkClass = "p-3 font-comfortaa transition text-white hover:bg-white hover:text-black flex"
     const Icons = "text-lg mr-2 mt-[2px]"
@@ -46,5 +55,44 @@ export default function Sidebar() {
                 </Link>
             </div>
         </div>
-    )
+        
+        <div className="flex flex-col w-full px-2 py-4 space-y-1">
+          <Link href="/admin" className={getLinkClass('/admin').replace('rounded-r-lg', 'rounded-lg')}>
+            <FaHome className={Icons} />
+            <span className={`${isCollapsed ? 'opacity-0 scale-95 -translate-x-2' : 'opacity-100 scale-100 translate-x-0'} transition-all duration-200 group-hover:opacity-100`}>Dashboard</span>
+          </Link>
+          <Link href="/admin/users" className={getLinkClass('/admin/users')}>
+            <IoMdPerson className={Icons} />
+            <span className={`${isCollapsed ? 'opacity-0 scale-95 -translate-x-2' : 'opacity-100 scale-100 translate-x-0'} transition-all duration-200 group-hover:opacity-100`}>Users</span>
+          </Link>
+          <Link href="/admin/activities" className={getLinkClass('/admin/activities')}>
+            <MdLocalActivity className={Icons} />
+            <span className={`${isCollapsed ? 'opacity-0 scale-95 -translate-x-2' : 'opacity-100 scale-100 translate-x-0'} transition-all duration-200 group-hover:opacity-100`}>Activities</span>
+          </Link>
+          <Link href="/admin/enrollments" className={getLinkClass('/admin/enrollments')}>
+            <MdScreenRotationAlt className={Icons} />
+            <span className={`${isCollapsed ? 'opacity-0 scale-95 -translate-x-2' : 'opacity-100 scale-100 translate-x-0'} transition-all duration-200 group-hover:opacity-100`}>Enrollments</span>
+          </Link>
+          <Link href="/admin/certificates" className={getLinkClass('/admin/certificates')}>
+            <PiCertificateFill className={Icons} />
+            <span className={`${isCollapsed ? 'opacity-0 scale-95 -translate-x-2' : 'opacity-100 scale-100 translate-x-0'} transition-all duration-200 group-hover:opacity-100`}>Certificates</span>
+          </Link>
+          <div className="border-t border-white/20 mt-auto pt-4">
+            <Link href="/" className={`${getLinkClass('/') } hover:bg-red-500/20`}>
+              <ImExit className={Icons} />
+              <span className={`${isCollapsed ? 'opacity-0 scale-95 -translate-x-2' : 'opacity-100 scale-100 translate-x-0'} transition-all duration-200 group-hover:opacity-100`}>Exit</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile overlay */}
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 md:hidden transition-opacity duration-300"
+          onClick={toggleMobile}
+        />
+      )}
+    </>
+  );
 }

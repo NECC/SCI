@@ -1,118 +1,124 @@
 "use client";
 
-import React, { useState } from "react";
-import axios from "axios";
-import { Card, CardBody, CardHeader, Divider, Input } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
-import { UserPostResponse } from "@app/api/users/route";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Card, CardBody, CardHeader, Input, Select, SelectItem, Button } from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
+import { UserPostResponse } from '@app/api/users/route';
+import { FiUsers } from 'react-icons/fi';
 
 export default function CreateUser(props?: { onUserCreated?: () => void }) {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "USER",
+    name: '',
+    email: '',
+    password: '',
+    role: 'USER',
   });
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const value = e.target.value;
-    const name = e.target.name;
+    const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
+    if (errorMessage) setErrorMessage('');
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorMessage("");
-    axios
-      .post<UserPostResponse>("/api/users", formData)
-      .then((res) => {
-        if (res.status == 200) {
-          // Reset form
-          setFormData({ name: "", email: "", password: "", role: "USER" });
-          // Call callback if provided, otherwise redirect
-          if (props?.onUserCreated) {
-            props.onUserCreated();
-          } else {
-            router.push("/admin");
-          }
+    setErrorMessage('');
+    setIsLoading(true);
+
+    try {
+      const { data } = await axios.post<UserPostResponse>('/api/users', formData);
+      if (data.response === 'success') {
+        // Reset form
+        setFormData({ name: '', email: '', password: '', role: 'USER' });
+        // Call callback if provided, otherwise redirect
+        if (props?.onUserCreated) {
+          props.onUserCreated();
         } else {
-          setErrorMessage(res.data.error || "");
+          router.push('/admin');
         }
-      })
-      .catch((err) => {
-        setErrorMessage(err.message);
-      });
+      } else {
+        setErrorMessage(data.error || 'Failed to create user');
+      }
+    } catch (err: any) {
+      setErrorMessage(err.response?.data?.error || err.message || 'Failed to create user');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col items-center justify-center gap-1 mt-1"
-      >
-        <Card className="w-[250px]">
-          <CardHeader className="flex justify-center bg-black text-white">
-            Create New User
-          </CardHeader>
-          <Divider />
-          <CardBody className="flex flex-col items-center justify-center gap-1">
-            <Input
-              key="primary"
-              color="default"
-              type="text"
-              label="Name"
-              className="max-w-[220px]"
-              required={true}
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-            <Input
-              key="email"
-              color="default"
-              type="email"
-              label="Email"
-              name="email"
-              className="max-w-[220px]"
-              required={true}
-              value={formData.email}
-              onChange={handleChange}
-            />
-            <Input
-              key="password"
-              color="default"
-              type="password"
-              label="Password"
-              name="password"
-              className="max-w-[220px]"
-              required={true}
-              value={formData.password}
-              onChange={handleChange}
-            />
-            <select
-              name="role"
-              onChange={handleChange}
-              required={true}
-              value={formData.role}
-              className="mx-2 rounded border p-2"
-            >
-              <option value="USER">USER</option>
-              <option value="ADMIN">ADMIN</option>
-              <option value="STAFF">STAFF</option>
-            </select>
-          </CardBody>
-          <button
-            type="submit"
-            className="bg-black hover:bg-slate-800 text-white"
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <Card className="admin-gradient-card border-white/20 shadow-lg backdrop-blur-md">
+        <CardHeader className="bg-white/5 border-b border-white/10 p-4">
+          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            New User
+          </h3>
+        </CardHeader>
+        <CardBody className="p-6 space-y-4">
+          <Input
+            label="Full Name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Enter full name"
+            variant="bordered"
+            className="bg-white/10 text-white border-white/20"
+            isInvalid={!!errorMessage && formData.name === ''}
+          />
+          <Input
+            label="Email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="user@example.com"
+            variant="bordered"
+            className="bg-white/10 text-white border-white/20"
+            isInvalid={!!errorMessage && formData.email === ''}
+          />
+          <Input
+            label="Password"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Enter secure password"
+            variant="bordered"
+            className="bg-white/10 text-white border-white/20"
+            isInvalid={!!errorMessage && formData.password === ''}
+          />
+          <Select
+            label="Role"
+            name="role"
+            selectedKeys={[formData.role]}
+            onSelectionChange={(keys) => setFormData(prev => ({ ...prev, role: Array.from(keys)[0] as string }))}
+            variant="bordered"
+            className="bg-white/10 text-white border-white/20"
           >
-            Create User
-          </button>
-        </Card>
-
-        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-      </form>
-    </>
+            <SelectItem key="USER" value="USER">User</SelectItem>
+            <SelectItem key="STAFF" value="STAFF">Staff</SelectItem>
+            <SelectItem key="ADMIN" value="ADMIN">Admin</SelectItem>
+          </Select>
+        </CardBody>
+        <div className="p-6 pt-0">
+          <Button
+            type="submit"
+            color="primary"
+            className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold shadow-lg"
+            isLoading={isLoading}
+            startContent={isLoading ? null : <FiUsers size={18} />}
+          >
+            {isLoading ? 'Creating...' : 'Create User'}
+          </Button>
+          {errorMessage && (
+            <p className="text-danger mt-3 text-sm text-center">{errorMessage}</p>
+          )}
+        </div>
+      </Card>
+    </form>
   );
 }
