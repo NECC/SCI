@@ -121,6 +121,7 @@ export default function Admin() {
     }
     else{
       // console.log(data.enrollments);
+      // console.log(JSON.stringify(data.enrollments, null, 2));
       setMore(true);
       if (page == 0 || prev != "enrollments"){
         setRows(data.enrollments);

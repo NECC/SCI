@@ -30,9 +30,9 @@ export default function Sidebar() {
                 <Link href="/admin/activities" className={`${LinkClass}`}>
                     <MdLocalActivity className={`${Icons}`}/> Activities
                 </Link>
-                <Link href="/admin" className={`${LinkClass}`}>
+                {/* <Link href="/admin" className={`${LinkClass}`}>
                     <MdScreenRotationAlt className={`${Icons}`}/> Enrollments
-                </Link>
+                </Link> */}
                 <Link href="/admin/certificates" className={`${LinkClass}`}>
                     <PiCertificateFill className={`${Icons}`}/> Certificates
                 </Link>

@@ -196,10 +196,26 @@ export default function GetDataTable(props: any) {
       case "profileEnrollments":
         return (
           <User
-            name={item.userId}
-            description={item.userName}
+            name={item.user?.name || "Unknown"}
+            description={item.user?.email || ""}
             avatarProps={{ src: "/user.svg", isBordered: true, size: "sm" }}
           />
+        );
+      case "activityId":
+        return (
+          <>
+            <div className="relative flex items-center gap-2"> 
+              {item.activity?.id}
+            </div>
+          </>
+        );
+      case "activityName":
+        return (
+          <>
+            <div className="relative flex items-center gap-2"> 
+              {item.activity?.title}
+            </div>
+          </>
         );
       case "name":
         return (
