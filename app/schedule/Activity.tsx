@@ -260,7 +260,7 @@ export default function Activity({ item, userId, userRole }: ActivityProps) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1 text-xl font-bold">
-                Activity QR Code
+                Activity QR Code - {item.title}
               </ModalHeader>
               <ModalBody className="pb-6">
                 <p className="text-default-500 text-sm mb-4">
