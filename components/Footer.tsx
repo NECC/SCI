@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { IoLogoGithub } from "react-icons/io";
 import { FaInstagram } from "react-icons/fa";
 
-//...
+//...//...
 const Footer = () => {
   return (
     <div className='w-full bg-gradient-to-l from-custom-blue-3 to-custom-blue-1'>
