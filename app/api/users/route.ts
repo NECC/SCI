@@ -63,6 +63,12 @@ export async function GET(req : Request) {
           },
         }
       },
+      achievements: {
+        select: {
+          id_achievement : true,
+          achievement_id : true,
+        }
+      },
     },
     ...(all
       ? {}
