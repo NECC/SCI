@@ -88,9 +88,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
             .from('cvs')
             .getPublicUrl(uploadData.path);
 
+        const bonusPoints = parseInt(formData.get("bonusPoints") as string) || 0;
         const updatedUser = await prisma.user.update({
             where: { id },
             data: {
+                points: { increment: bonusPoints},
                 cvs: {
                     create: {
                         fileName: file.name,

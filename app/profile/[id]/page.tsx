@@ -490,6 +490,10 @@ const UserCV = ({ user, refreshUser }: { user: UserData; refreshUser: () => void
     formData.append("file", file);
     setUploading(true);
     try {
+      
+      if (user.cvs.length === 0) {
+        formData.append("bonusPoints", "100"); 
+      }
       await axios.post(`/api/users/${user.id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
