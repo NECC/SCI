@@ -1,44 +1,64 @@
 "use client";
-import { 
-    Scanner,
-    useDevices,
+import {
+  Scanner,
+  useDevices,
   outline,
   boundingBox,
   centerText,
- } from "@yudiel/react-qr-scanner";
+} from "@yudiel/react-qr-scanner";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { UserPutRouletteResponse } from "@app/api/users/roulette/[id]/spend/route";
-import { RankingPostResponse } from "@app/api/ranking/route";
-import { EnrollmentAttendQRCodePostResponse } from "@app/api/enrollments/attend/qrcode/route";
-import { UserUpdateResponse } from "@app/api/users/[id]/route";
-import { ActivityPointsResponse } from "@app/api/activities/points/[id]/route";
-import { RxDragHandleDots1 } from "@node_modules/react-icons/rx";
+
+interface ProcessAttendanceResponse {
+  success: boolean;
+  error?: string;
+}
 
 const styles = {
-    container: {
-      width: 400,
-      margin: "auto",
-    },
-    controls: {
-      marginBottom: 8,
-    },
-  };
+  container: {
+    width: 400,
+    margin: "auto",
+  },
+  controls: {
+    marginBottom: 8,
+  },
+};
 
 export default function QRCodeReader() {
-const [user, setUser] = useState<{
+  const router = useRouter();
+  const devices = useDevices();
+
+  const [user, setUser] = useState<{
     user: { email: string; role: string } | null;
     loaded: boolean;
-}>({ user: null, loaded: false });
+  }>({ user: null, loaded: false });
 
-const [success, setSuccess] = useState(false);
-const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null); 
+  
+  const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
   const [tracker, setTracker] = useState<string | undefined>("centerText");
   const [pause, setPause] = useState(false);
 
-  const devices = useDevices();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/api/auth/signin");
+    },
+  });
+
+  useEffect(() => {
+    if (session) {
+      setUser({ user: session.user, loaded: true });
+      
+      if (session.user.role === "USER") {
+        router.push("/");
+      }
+    }
+  }, [session, router]);
 
   function getTracker() {
     switch (tracker) {
@@ -53,66 +73,90 @@ const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
     }
   }
 
-const router = useRouter();
+  const triggerSuccess = () => {
+    setSuccess(true);
+    setError(null); 
+    setTimeout(() => {
+      setSuccess(false);
+    }, 3000); 
+  };
 
-//   console.log(ids);
-const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-    router.push("/api/auth/signin");
-    },
-});
+  const triggerError = (message: string) => {
+    setError(message);
+    setSuccess(false); 
+    setTimeout(() => {
+      setError(null);
+    }, 4000);
+  };
 
-useEffect(() => {
-    if (session) {
-    setUser({ user: session.user, loaded: true });
+  const handleScan = async (data: string) => {
+    if (!data) {
+      setPause(false);
+      return;
     }
-}, [session]);
 
-const handleScan = async (data: string) => {
     try {
-        const [action, userId, activityId] = data.split(";");
+      const [action, userId, activityId] = data.split(";");
 
-        if (action === "attend") {
-            const res = await axios.post<EnrollmentAttendQRCodePostResponse>(
-                `/api/enrollments/attend/qrcode`,
-                { userId, activityId: parseInt(activityId) }
-            );
-
-            const res3 = await axios.get<ActivityPointsResponse>(
-                `/api/activities/points/${parseInt(activityId)}`
-            );
-
-            if (res3.data.response !== "error") {
-                //console.error("Achievement value:", res.data);
-                await axios.put<UserUpdateResponse>(`/api/users/${userId}`, {
-                    points: res3.data.points,
-                    activity: parseInt(activityId),
-                    achievementType: res3.data.achievement ?? "badge"
-                    
-                });
-            }
-        } else if (action === "spend") {
-            const res = await axios.put<UserPutRouletteResponse>(
-                `/api/users/roulette/${userId}/spend`
-            );
-            if (res.data.response === "success") {
-                setSuccess(true);
-            }
+      // --- ATTEND LOGIC ---
+      if (action === "attend" && userId && activityId) {
+        const parsedActivityId = parseInt(activityId);
+        
+        if (isNaN(parsedActivityId)) {
+            triggerError("Invalid Activity ID in QR Code.");
+            return;
         }
-    } catch (err) {
-        console.error("QR scan error:", err);
+        
+        // One single call to your new unified endpoint
+        const response = await axios.post<ProcessAttendanceResponse>(
+        '/api/scan/process-attendance', 
+        {
+            userId,
+            activityId: parsedActivityId
+        }
+        );
+
+        if (response.data.success) {
+            triggerSuccess();
+        } else {
+            triggerError("Transaction failed. No changes were made.");
+        }
+
+      // --- SPEND LOGIC (Restored) ---
+      } else if (action === "spend" && userId) {
+        const res = await axios.put<UserPutRouletteResponse>(
+          `/api/users/roulette/${userId}/spend`
+        );
+        if (res.data.response === "success") {
+          triggerSuccess();
+        } else {
+          triggerError("Failed to process spend action.");
+        }
+
+      // --- INVALID QR FORMAT ---
+      } else {
+        triggerError("Unrecognized QR code format.");
+      }
+
+    } catch (error) {
+      console.error("Scan processing error:", error);
+      triggerError("Network or server error. Please try again.");
     } finally {
-        setPause(false);
+      setTimeout(() => setPause(false), 1500);
     }
-};
+  };
 
-if (status == "loading") return <p>Loading...</p>;
-if (user.user?.role == "USER" && user.loaded) router.push("/");
+  if (status === "loading" || (user.loaded && user.user?.role === "USER")) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
-return (
-    <div className="flex justify-center flex-col items-center w-full h-screen bg-gradient-to-l from-custom-blue-3 to-custom-blue-1">
-        <div style={styles.controls}>
+  return (
+    <div className="flex justify-center flex-col items-center w-full h-screen bg-gradient-to-l from-custom-blue-3 to-custom-blue-1 relative">
+      <div style={styles.controls} className="z-10">
         <select onChange={(e) => setDeviceId(e.target.value)}>
           <option value={undefined}>Select a device</option>
           {devices.map((device, index) => (
@@ -131,57 +175,51 @@ return (
           <option value={undefined}>No Tracker</option>
         </select>
       </div>
-        {success && (
-            <div className="bg-green-500 p-4 rounded-md mt-4">
-                <h1 className="text-white">Success</h1>
-            </div>
-        )}
-        <Scanner
+
+      {success && (
+        <div className="bg-green-500 p-4 rounded-md mt-4 transition-all absolute top-20 z-50 shadow-lg">
+          <h1 className="text-white font-bold">Action Successful!</h1>
+        </div>
+      )}
+
+      {error && (
+        <div className="bg-red-500 p-4 rounded-md mt-4 transition-all absolute top-20 z-50 shadow-lg border-2 border-red-700">
+          <h1 className="text-white font-bold text-center">Scan Failed</h1>
+          <p className="text-white text-sm mt-1">{error}</p>
+        </div>
+      )}
+
+      <Scanner
         formats={[
-            "qr_code",
-            "micro_qr_code",
-            "rm_qr_code",
-            "maxi_code",
-            "pdf417",
-            "aztec",
-            "data_matrix",
-            "matrix_codes",
-            "dx_film_edge",
-            "databar",
-            "databar_expanded",
-            "codabar",
-            "code_39",
-            "code_93",
-            "code_128",
-            "ean_8",
-            "ean_13",
-            "itf",
-            "linear_codes",
-            "upc_a",
-            "upc_e",
+          "qr_code",
+          "micro_qr_code",
+          "rm_qr_code",
         ]}
         constraints={{
-            deviceId: deviceId,
-          }}
+          deviceId: deviceId,
+        }}
         onScan={(detectedCodes) => {
+          if (detectedCodes.length > 0 && !pause) {
             setPause(true);
             handleScan(detectedCodes[0].rawValue);
+          }
         }}
-        onError={(error) => {
-            console.log(`onError: ${error}'`);
+        onError={(err) => {
+          console.error(`Scanner Error: ${err}`);
+          triggerError("Camera error or unable to read QR code.");
         }}
         styles={{ container: { height: "400px", width: "350px" } }}
         components={{
-            onOff: true,
-            torch: true,
-            zoom: true,
-            finder: true,
-            tracker: getTracker(),
+          onOff: true,
+          torch: true,
+          zoom: true,
+          finder: true,
+          tracker: getTracker(),
         }}
         allowMultiple={true}
         scanDelay={2000}
         paused={pause}
-        />
+      />
     </div>
-);
+  );
 }
