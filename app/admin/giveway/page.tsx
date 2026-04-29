@@ -71,7 +71,7 @@ export default function SponsorSpinWheel() {
       (activity) => activity.sponsor && activity.sponsor.toLowerCase() !== "non"
     ).length;
 
-    //console.log(totalSponsorActivities);
+    console.log(totalSponsorActivities);
 
     if (totalSponsorActivities === 0) return [];
 
@@ -81,17 +81,17 @@ export default function SponsorSpinWheel() {
       const attendedCount = u.enrollments?.filter((enrollment: any) => {
         if (!enrollment.attended) return false;
 
-        const matchedActivity = activityList.find((a) => a.id === enrollment.activityId);
+        const matchedActivity = activityList.find((a) => a.id === enrollment.activity.id);
         return (
           matchedActivity &&
           matchedActivity.sponsor &&
           matchedActivity.sponsor.toLowerCase() !== "non"
         );
       }).length || 0;
-
       return (attendedCount / totalSponsorActivities) >= 0.6;
     });
   }, [users, activityList]);
+  //console.log(users);
 
   const spinTheWheel = () => {
     if (isSpinning || contestants.length === 0) return;
