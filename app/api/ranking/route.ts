@@ -19,17 +19,9 @@ export interface RankingPostResponse {
 export async function GET() {
   // const data = await request.json();
   const session = await getServerSession(authOptions);
+  if (session?.user.role !== "ADMIN") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-
-  if (session?.user.role == "USER") {
-    prisma.$disconnect();
-    return new NextResponse(
-      JSON.stringify({
-        response: "error",
-        error: "You don't have permission to get the ranking!",
-      })
-    );
-  }
+  
 
   try {
     // get csv file of user id, email, name, and points
@@ -86,9 +78,18 @@ export async function POST(request : Request) {
   const data = await request.json();
   const session = await getServerSession(authOptions);
 
+  // if(!session)
+  // {
+  //   return new NextResponse(
+  //     JSON.stringify({
+  //       response: "error",
+  //       error: "You don't have permission to give points to an user!",
+  //     })
+  //   );
+  // }
 
-  if (session?.user.role == "USER") {
-    prisma.$disconnect();
+  if (!session || session?.user.role == "USER") {
+    //prisma.$disconnect();
     return new NextResponse(
       JSON.stringify({
         response: "error",
