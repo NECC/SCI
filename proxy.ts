@@ -1,55 +1,47 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-/**
- * The /auth/signin callback is '/'
- * @publicRoutes Anyone can access
- * @authRoutes Mustn't be signed in
- * @adminRoutes Must have ADMIN role in jwt token
- * @protectedRoutes Must be signed in
- */
 const publicRoutes = ["/", "/schedule", "/faqs"];
 const authRoutes = ["/auth"];
 const adminRoutes = ["/admin"];
 const protectedRoutes = ["/profile"];
-// const apiAdminRoutes = [
-//   "/api/ranking",
-//   "/api/users",
-//   "/api/users/accreditation",
-//   "/api/enrollments/delete",
-//   "/api/enrollments/attend/qrcode",
-//   "/api/activities/delete",
-// ];
 
-export async function proxy(request: any) {
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
-    cookieName:
-      process.env.NODE_ENV === "production"
-        ? "__Secure-next-auth.session-token"
-        : "next-auth.session-token",
+    secureCookie: process.env.NODE_ENV === "production",
   });
 
-  // Admin paths
-  // if signed in and doesn't have role SUPER_USER, can't access /super_user/**
-  if (adminRoutes.some((path) => request.nextUrl.pathname.startsWith(path))) {
-    console.log("Admin route attempt - Token:", token);
-    console.log("Admin route attempt - Token role:", token?.role);
-    if (!token || token.role != "ADMIN") {
-      console.log("Access denied - redirecting to home");
+  // 1. Admin Logic
+  if (adminRoutes.some((path) => pathname.startsWith(path))) {
+    if (!token || token.role !== "ADMIN") {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
-  // Protected paths
-  if (protectedRoutes.some((path) => request.nextUrl.pathname.startsWith(path))) {
-    if (!token) return NextResponse.redirect(new URL("/", request.url));
+  if (protectedRoutes.some((path) => pathname.startsWith(path))) {
+    if (!token) {
+      return NextResponse.redirect(new URL("/auth", request.url));
+    }
   }
 
-  // Auth paths
-  // if signed in, user can't access /auth paths
-  if (authRoutes.some((path) => request.nextUrl.pathname.startsWith(path))) {
-    if (token) return NextResponse.redirect(new URL("/", request.url));
+  if (authRoutes.some((path) => pathname.startsWith(path))) {
+    if (token) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
+
+  return NextResponse.next();
 }
+
+export const config = {
+  matcher: [
+    "/admin/:path*",
+    "/profile/:path*",
+    "/auth/:path*",
+  ],
+};
