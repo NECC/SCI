@@ -40,7 +40,13 @@ export async function GET(req : Request) {
   const params = new URL(req.url);
   const takeParam = params.searchParams.get("take");
   const all = (takeParam !== null && +takeParam === -1) || takeParam === null;
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
+  // if (session.user.role !== "ADMIN") {
+  //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  // }
   const users = await prisma.user.findMany({
     select: {
       id: true,

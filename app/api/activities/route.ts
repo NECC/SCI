@@ -48,7 +48,7 @@ export async function GET(req: Request) {
             take: +(params.searchParams.get("take") ?? 0),
           }),
     });
-    console.log(activities);
+    //console.log(activities);
 
     prisma.$disconnect();
     return new NextResponse(

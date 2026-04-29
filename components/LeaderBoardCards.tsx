@@ -12,7 +12,7 @@ interface LeaderBoardCardsList {
 }
 
 export default function LeaderBoardCards({ players, userId }: LeaderBoardCardsList) {
-  console.log(players);
+  //console.log(players);
   const getCardRankColor = (rank: number, isCurrentUser: boolean) => {
     if (isCurrentUser) {
       return "bg-white text-blue-600 hover:bg-blue-50"
