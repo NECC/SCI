@@ -1,11 +1,16 @@
 export const runtime = "nodejs";
-
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { jsPDF } from "jspdf";
 import fs from "fs/promises";
 import path from "path";
+import { authOptions } from "@/lib/auth";
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+  
+  if (session?.user.role !== "ADMIN") { return NextResponse.json({ response: "error", error: "Not authorized" }, { status: 401 });}
+  
   try {
     const body = await req.json();
     const { certificateType, formData } = body;

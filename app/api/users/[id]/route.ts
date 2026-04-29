@@ -38,13 +38,15 @@ export interface UserUpdateResponse {
 
 // 1. GET: Fetch User Data
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
-    const session = await getServerSession(authOptions);
-    if(!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    if (session && session.user.role !== "ADMIN") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     try {
         const { id } = await params;
+        const session = await getServerSession(authOptions);
+        // if (!session) {
+        //     return NextResponse.json({ response: "error", error: "Unauthorized" }, { status: 401 });
+        // }
+        if (session?.user.id !== id) {
+            return NextResponse.json({ response: "error", error: "Forbidden" }, { status: 403 });
+        }
         const user = await prisma.user.findUnique({
             where: { id },
             include: {
@@ -64,17 +66,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
 // 2. POST: Handle CV Uploads
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
-    const session = await getServerSession(authOptions);
-    if(!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    if (session && session.user.role !== "ADMIN") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
+    //const session = await getServerSession(authOptions);
+    //if(!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     try {
         const { id } = await params;
         const session = await getServerSession(authOptions);
 
-        if (session?.user.id !== id && session?.user.role !== "ADMIN") {
-            return NextResponse.json({ response: "error", error: "Not authorized" }, { status: 401 });
+        if (session?.user.id !== id) {
+            return NextResponse.json({ response: "error", error: "Forbidden" }, { status: 403 });
         }
 
         const formData = await request.formData();
@@ -98,7 +97,17 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
             .from('cvs')
             .getPublicUrl(uploadData.path);
 
-        const bonusPoints = parseInt(formData.get("bonusPoints") as string) || 0;
+        const userWithCvCount = await prisma.user.findUnique({
+            where: { id },
+            select: {
+                _count: {
+                    select: { cvs: true }
+                }
+            }
+        });
+        const cvCount = userWithCvCount?._count.cvs || 0;
+        const bonusPoints = cvCount > 0 ? 0 : 100;
+        //const bonusPoints = parseInt(formData.get("bonusPoints") as string) || 0;
         const updatedUser = await prisma.user.update({
             where: { id },
             data: {
@@ -122,13 +131,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 }
 
 export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
-    const session = await getServerSession(authOptions);
-    
-    if(!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    if (session && session.user.role !== "ADMIN") {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-    
     try {
         const { id } = await props.params;
         const data = await request.json();
@@ -150,7 +152,11 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
             return NextResponse.json({ response: "success", user });
         }
 
-        if (session?.user.id !== id && session?.user.role !== "ADMIN") {
+        if(session?.user.id !== id )
+        {
+            return NextResponse.json({ error: "Not authorized" }, { status: 401 });
+        }
+        if (session?.user.role !== "ADMIN") {
             return NextResponse.json({ error: "Not authorized" }, { status: 401 });
         }
 
@@ -161,7 +167,7 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
 
         const user = await prisma.user.update({
             where: { id },
-            data: updateData 
+            data: updateData
         });
 
 
