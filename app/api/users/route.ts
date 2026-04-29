@@ -23,7 +23,8 @@ export interface UsersGetResponse {
         id: string;
         title: string;
         type: string;
-      }
+      };
+      attended : boolean;
     }[]
   }[];
   error?: string;
@@ -61,6 +62,7 @@ export async function GET(req : Request) {
               type: true,
             },
           },
+          attended: true,
         }
       },
       achievements: {
