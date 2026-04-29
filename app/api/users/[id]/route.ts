@@ -38,6 +38,11 @@ export interface UserUpdateResponse {
 
 // 1. GET: Fetch User Data
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const session = await getServerSession(authOptions);
+    if(!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (session && session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
     try {
         const { id } = await params;
         const user = await prisma.user.findUnique({
@@ -59,6 +64,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
 // 2. POST: Handle CV Uploads
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const session = await getServerSession(authOptions);
+    if(!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (session && session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
     try {
         const { id } = await params;
         const session = await getServerSession(authOptions);
@@ -112,6 +122,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 }
 
 export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
+    const session = await getServerSession(authOptions);
+    
+    if(!session) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (session && session.user.role !== "ADMIN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    
     try {
         const { id } = await props.params;
         const data = await request.json();

@@ -44,9 +44,11 @@ export async function GET(req : Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // if (session.user.role !== "ADMIN") {
-  //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  // }
+  // console.log(session);
+  if (session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const users = await prisma.user.findMany({
     select: {
       id: true,
@@ -114,6 +116,7 @@ export interface UserPostResponse {
  */
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
+
   // console.log("SESSION FROM POST: ",session);
 
   if (session?.user.role != "ADMIN") {
